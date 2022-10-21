@@ -8,6 +8,7 @@ import connection from './config/dbConnection';
 import helmet from 'helmet';
 import authRouter from './routes/auth.route';
 import userRouter from './routes/users.route';
+import refreshRouter from './routes/refreshToken.route';
 
 
 
@@ -34,6 +35,7 @@ app.use(cors(corsOptions))
 // Routes
 app.use('/api/v1', authRouter)
 app.use('/api/v1', userRouter)
+app.use('api/v1', refreshRouter)
 
 
 app.listen(PORT || 5000, () => {

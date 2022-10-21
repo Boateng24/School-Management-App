@@ -1,8 +1,10 @@
 import express from 'express';
-import {deleteUser, findUsers} from '../controllers/user.controller'
+import {deleteUser, findUsers, forgotPassword} from '../controllers/user.controller'
+import { verifyAccessToken, verifyUser } from '../middlewares/verifyToken';
 const userRouter = express.Router();
 
 userRouter.delete('/user/:id', deleteUser)
 userRouter.get('/users', findUsers)
+userRouter.post('/forgotPassword', verifyUser, forgotPassword)
 
 export default userRouter

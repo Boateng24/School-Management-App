@@ -22,3 +22,11 @@ interface loginUser{
     email: string;
     password: string;
 }
+
+interface tokenRenewType{
+    id: string;
+    iat: number;
+    exp: number;
+    aud: string;
+    iss: string
+}
