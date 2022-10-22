@@ -65,11 +65,13 @@ model Class{
 model School{
   id String @id @default(cuid())
   schoolName String
-  dateOfestablishment DateTime
+  email String @unique
+  password String
+  dateOfestablishment String?
   address SchoolAddress[]
-  NumOfStudents Int
-  NumOfTeachers Int
-  NumOfNonTeachingStaff Int
+  NumOfStudents Int?
+  NumOfTeachers Int?
+  NumOfNonTeachingStaff Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

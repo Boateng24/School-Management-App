@@ -30,3 +30,10 @@ interface tokenRenewType{
     aud: string;
     iss: string
 }
+
+interface createSchool {
+  schoolName:string;
+  email:string;
+  password: string;
+  confirmPassword: string
+}
