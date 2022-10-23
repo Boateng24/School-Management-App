@@ -3,17 +3,11 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { studentLogin } from "../../features/auth/studentLoginSlice";
 
-const SignIn = () => {
+const ForgotPassword = () => {
   const dispatch = useDispatch();
 
-  const handleStudentLogin = (e) => {
+  const handleForgotPassword = (e) => {
     e.preventDefault();
-    dispatch(
-      studentLogin({
-        email: "robertsam@email.com",
-        password: "Robertsam@123",
-      })
-    );
   };
   return (
     <div className="flex">
@@ -21,65 +15,60 @@ const SignIn = () => {
         <img src={background} alt="endophin" width={"100%"} />
       </div>
       <div className=" flex h-[100vh] flex-1 justify-center items-center">
-        <form action="" onSubmit={handleStudentLogin}>
+        <form action="" onSubmit={handleForgotPassword}>
           <h1 className="text-3xl text-gray-700 text-center font-[600] mb-8">
-            Welcome Back, Log in.
+            Reset Password
           </h1>
 
           <div className="grid grid-cols-1 gap-4 mb-4">
-            <label htmlFor="email" className="font-[500] text-[#344054]">
-              Email
+            <label htmlFor="newPassword" className="font-[500] text-[#344054]">
+              New Password
             </label>
             <input
               // onChange={onChange}
               //   value={title}
-              type="email"
+              type="password"
               required
-              name="email"
-              placeholder="Eg. johndoe@gmail.com"
+              name="newPassword"
+              placeholder="Password must be more than 8 letters"
+              className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-4 mb-4">
+            <label
+              htmlFor="confirmNewPassword"
+              className="font-[500] text-[#344054]"
+            >
+              Confirm New Password
+            </label>
+            <input
+              // onChange={onChange}
+              //   value={title}
+              type="password"
+              required
+              name="confirmNewPassword"
+              placeholder="Password must be more than 8 letters"
               className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-4 mb-4">
-            <label htmlFor="passoword" className="font-[500] text-[#344054]">
-              Password
-            </label>
-            <input
-              // onChange={onChange}
-              // value={id_number}
-              type="password"
-              name="password"
-              required
-              placeholder="Enter your password"
-              className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-            />
-          </div>
-          <div className="w-[360px]  text-gray-500 h-6 text-right rounded-[8px] mt-4">
-            <span className="w-[360px] text-right">
-              {" "}
-              <Link to="/forgotpassword" className="underline">
-                Forgot Password
-              </Link>
-            </span>
-          </div>
           <div className="grid">
             <button
               className="w-[360px] bg-blue-700 hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] mt-6 cursor-pointer"
               // disabled={!canSubmit}
               type="submit"
             >
-              Log in
+              Save new password
             </button>
-            <div className="w-[360px]  text-gray-500 h-[44px] text-center rounded-[8px] mt-4">
+            {/* <div className="w-[360px]  text-gray-500 h-[44px] text-center rounded-[8px] mt-4">
               Already have an account?{" "}
               <span>
                 {" "}
-                <Link to="/signUp" className="underline">
-                  Sign Up
+                <Link to="/" className="underline">
+                  Login
                 </Link>
               </span>
-            </div>
+            </div> */}
           </div>
         </form>
       </div>
@@ -87,4 +76,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default ForgotPassword;

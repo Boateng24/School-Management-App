@@ -15,7 +15,7 @@ export const registerSchool = createAsyncThunk(
 
       const data = await response.json();
 
-      if (data.status === 200) {
+      if (response.status === 201) {
         return data;
       } else {
         return rejectWithValue(data);
@@ -29,7 +29,7 @@ export const registerSchool = createAsyncThunk(
 const initialState = {
   currentUser: null,
   isRegistering: false,
-  errorMessage: "This is the error message",
+  errorMessage: "",
 };
 const signUpSlice = createSlice({
   name: "signUp",
