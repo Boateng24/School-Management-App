@@ -1,4 +1,4 @@
-import {role} from '@prisma/client'
+import {Role, User} from '@prisma/client'
 
 declare global {
   namespace Express {
@@ -36,4 +36,22 @@ interface createSchool {
   email:string;
   password: string;
   confirmPassword: string
+}
+
+
+interface updateSchool{
+  schoolName?: string, 
+  email?: string, 
+  dateOfestablishment?:string, 
+  address?:schoolAddress[], 
+  NumOfNonTeachingStaff?:number, 
+  NumOfStudents?:number, 
+  NumOfTeachers?:number
+}
+
+interface schoolAddress{
+  location: string[]
+  POBox: string
+  website?: string
+  GPS: string
 }

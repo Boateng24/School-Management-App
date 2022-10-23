@@ -83,7 +83,6 @@ model SchoolAddress{
   schoolId String
   location String[]
   POBox String
-  email String
   website String?
   GPS String
   createdAt DateTime @default(now())

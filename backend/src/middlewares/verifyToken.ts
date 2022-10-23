@@ -49,7 +49,7 @@ export const verifyAccessToken = (
               next()
             }
             else{
-              return next(new createHttpError.Unauthorized("User not found please sign up"))
+              return next(res.json({message: "User not found please sign up"}))
             }
           })
       }catch(error){
@@ -69,7 +69,7 @@ export const verifyAccessToken = (
               next()
             }
             else{
-              return next(new createHttpError.Unauthorized("You are not authorized"))
+              return next(res.json({message: "You are not authorized"}))
             }
           })
       }catch(error){
