@@ -22,7 +22,7 @@ export const signUp = async (req:Request, res:Response, next:NextFunction) => {
         if(userExists) throw new createHttpError.Conflict("User already exists")
 
         // check if password matches
-        if (!(password.match(confirmPassword))) throw new createHttpError.ExpectationFailed('Passwords do not match');
+        if (!(password.match(confirmPassword))) return res.json({message:'Passwords do not match'});
 
 
         const newUser = await prisma.user.create({
