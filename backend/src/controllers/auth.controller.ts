@@ -50,7 +50,7 @@ export const login = async (req:Request, res:Response, next:NextFunction) => {
                 email
             }
         })
-        if(!foundUser) throw new createHttpError.ExpectationFailed("User not registered")
+        if(!foundUser) res.json({message:"User not registered"})
 
         const matchPassword = await compare(password, foundUser?.password)
         if(!matchPassword) throw new createHttpError.NotAcceptable("Invalid credentials")
