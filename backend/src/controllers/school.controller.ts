@@ -9,15 +9,15 @@ export const newSchool = async (req:Request, res:Response, next:NextFunction) =>
     try {
         const {schoolName, email, password, confirmPassword} = req.body as createSchool
 
-        const schoolExits = await prisma.school.findUnique({
+        const schoolExists = await prisma.school.findFirst({
             where:{
                 email
             }
         })
+        if(schoolExists) res.json(`${schoolExists.schoolName} already exists`)
 
-        if (schoolExits) return res.json({message: `${schoolExits.schoolName} already exist`})
-
-        if (!(password.match(confirmPassword))) return res.json({message:'Passwords do not match'});
+        // check if password matches
+        if (password !== confirmPassword) return res.json({message:'Passwords do not match'});
 
         const createnewSchool = await prisma.school.create({
             data:{
@@ -65,7 +65,7 @@ export const updateSchoolDetails = async (req:Request, res:Response, next: NextF
     try {
             const id = req["payload"].id
 
-            const {schoolName, email, dateOfestablishment, address, NumOfNonTeachingStaff, NumOfStudents, NumOfTeachers } = req.body as updateSchool
+            const {schoolName, email, dateOfestablishment, NumOfNonTeachingStaff, NumOfStudents, NumOfTeachers } = req.body as updateSchool
             // check for who can perform this operation
             const permittedUser = await prisma.user.findFirst({
                 where:{
@@ -73,7 +73,7 @@ export const updateSchoolDetails = async (req:Request, res:Response, next: NextF
                 }
             })
 
-            if(!(["Admin"].includes(permittedUser.role))) return res.json({message: "Not allowed for this operation"})
+            if(!(["Admin"].includes(permittedUser.role))) return res.status(401).json({message: "Not allowed for this operation"})
 
             // update school
 
@@ -102,5 +102,64 @@ export const updateSchoolDetails = async (req:Request, res:Response, next: NextF
             res.json({updateSchool, success:true})
     } catch (error) {
          next(error)
+    }
+}
+
+
+
+export const deleteSchool = async (req:Request, res:Response,next:NextFunction) => {
+    try {
+        // check if school exists in db
+        const schoolExists = await prisma.school.findFirst({
+            where:{
+                id: req.body.id
+            }
+        })
+        if(!schoolExists) res.status(404).json({message: "school not found", sucess: false})
+
+        const permittedRole = await prisma.user.findFirst({
+            where:{
+                id: req["payload"].id
+            }
+        })
+
+        if(!(["Admin"].includes(permittedRole.role))) res.status(401).json({message: "unauthorized for this operation", success: false})
+
+         await prisma.school.delete({
+            where:{
+                id: req.body.schoolId
+            }
+        })
+
+        res.status(200).json({message: `${schoolExists.schoolName} is deleted successfully`, success: true})
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const findAllSchools = async (req:Request, res:Response, next:NextFunction) => {
+    try {
+        
+        const permittedRole = await prisma.user.findFirst({
+            where:{
+                id: req["payload"].id
+            }
+        })
+
+        if(!(["Admin"].includes(permittedRole.role))) res.status(401).json({message: "unauthorized for this operation", success: false})
+
+        const allSchools = await prisma.school.findMany({
+          select:{
+            id: true,
+            schoolName: true,
+            email: true,
+            address: true
+          }  
+        })
+
+        res.status(200).json({allSchools, success: true})
+    } catch (error) {
+        next(error)
     }
 }

@@ -19,7 +19,7 @@ export const signUp = async (req:Request, res:Response, next:NextFunction) => {
                 email
             }
         })
-        if(userExists) throw new createHttpError.Conflict("User already exists")
+        if(userExists) res.status(403).json({message:"User already exists"})
 
         // check if password matches
         if (!(password.match(confirmPassword))) return res.json({message:'Passwords do not match'});

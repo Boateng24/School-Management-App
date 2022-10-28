@@ -91,12 +91,12 @@ export const deleteUser = async (req:Request, res:Response, next:NextFunction) =
 
 export const forgotPassword = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const {email, password} = req.body as createUser
+        const {email} = req.body as createUser
         const userId = req["payload"].id
         console.log(userId)
-        const currentUser = await prisma.user.findFirst({
+        const currentUser = await prisma.user.findUnique({
             where:{
-                id: userId
+                email
             }
         })
         console.log(currentUser.id)
@@ -142,7 +142,7 @@ export const forgotPassword = async (req:Request, res:Response, next:NextFunctio
                 id: currentUser.id
             },
             data:{
-                password
+                password: req.body.password as string
             }
          })
          res.json({success:true})

@@ -67,6 +67,7 @@ model School{
   schoolName String
   email String @unique
   password String
+  phoneNumber String?
   dateOfestablishment String?
   address SchoolAddress[]
   NumOfStudents Int?
