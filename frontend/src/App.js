@@ -20,7 +20,7 @@ function App() {
             <Route element={<ForgotPassword />} path="/forgotpassword" />
             <Route element={<VerifyAccount />} path="/verifyaccount" />
             <Route element={<ResetPassword />} path="resetpassword" />
-            <Route element={<Dashboard />} path="dashboard" />
+            <Route element={<Dashboard />} path="dashboard/:schoolId" />
           </Routes>
         </Router>
       </Provider>
