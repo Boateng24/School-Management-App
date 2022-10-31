@@ -19,10 +19,10 @@ export const signUp = async (req:Request, res:Response, next:NextFunction) => {
                 email
             }
         })
-        if(userExists) throw new createHttpError.Conflict("User already exists")
+        if(userExists) res.status(403).json({message:"User already exists"})
 
         // check if password matches
-        if (!(password.match(confirmPassword))) throw new createHttpError.ExpectationFailed('Passwords do not match');
+        if (!(password.match(confirmPassword))) return res.json({message:'Passwords do not match'});
 
 
         const newUser = await prisma.user.create({
@@ -60,7 +60,7 @@ export const login = async (req:Request, res:Response, next:NextFunction) => {
         const refreshToken = await createRefreshToken(foundUser.id)
 
         res.cookie('jwt-access', refreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge})
-        const loggedInUser = {id: foundUser.id, firstname: foundUser.firstname, email:foundUser.email, accessToken}
+        const loggedInUser = {id: foundUser.id, firstname: foundUser.firstname, email:foundUser.email, role: foundUser.role, accessToken}
         res.status(200).json({loggedInUser, success: true})
     } catch (error) {
         next(error)

@@ -65,11 +65,14 @@ model Class{
 model School{
   id String @id @default(cuid())
   schoolName String
-  dateOfestablishment DateTime
+  email String @unique
+  password String
+  phoneNumber String?
+  dateOfestablishment String?
   address SchoolAddress[]
-  NumOfStudents Int
-  NumOfTeachers Int
-  NumOfNonTeachingStaff Int
+  NumOfStudents Int?
+  NumOfTeachers Int?
+  NumOfNonTeachingStaff Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -81,7 +84,6 @@ model SchoolAddress{
   schoolId String
   location String[]
   POBox String
-  email String
   website String?
   GPS String
   createdAt DateTime @default(now())
@@ -89,6 +91,7 @@ model SchoolAddress{
 }
 
 enum Role {
+  admin
   student
   teacher
   headmaster
