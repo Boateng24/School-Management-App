@@ -5,6 +5,6 @@ const userRouter = express.Router();
 
 userRouter.delete('/user/:id', deleteUser)
 userRouter.get('/users', findUsers)
-userRouter.post('/forgotPassword', verifyUser, forgotPassword)
+userRouter.post('/forgotPassword', forgotPassword)
 
 export default userRouter

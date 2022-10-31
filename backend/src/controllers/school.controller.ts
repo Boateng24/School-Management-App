@@ -2,9 +2,12 @@ import { prisma } from "../config/prismaInit";
 import { NextFunction, Request, Response } from "express";
 import { createSchool, updateSchool } from "../@types";
 import createHttpError from "http-errors";
+import { compare, hashedPassword } from "../helpers/bcryptConfig";
+import { createAccessToken } from "../helpers/accessToken";
+import { createRefreshToken } from "../helpers/refreshToken";
 
 
-
+const maxAge = 7 * 24 * 60 * 60 * 1000
 export const newSchool = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const {schoolName, email, password, confirmPassword} = req.body as createSchool
@@ -17,16 +20,44 @@ export const newSchool = async (req:Request, res:Response, next:NextFunction) =>
         if(schoolExists) res.json(`${schoolExists.schoolName} already exists`)
 
         // check if password matches
-        if (password !== confirmPassword) return res.json({message:'Passwords do not match'});
+        if (!password.match(confirmPassword)) return res.json({message:'Passwords do not match'});
 
         const createnewSchool = await prisma.school.create({
             data:{
                 schoolName,
                 email, 
-                password
+                password: await hashedPassword(password)
             }
         })
         res.json({createnewSchool, success:true})
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const loginSchool = async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const {email, password} = req.body as createSchool
+
+        const schoolExists = await prisma.school.findFirst({
+            where:{
+                email
+            }
+        })
+        if(!schoolExists) return res.status(404).json({message: "School not Found"})
+
+        const verifyPassword = await compare(password, schoolExists?.password)
+        if(!verifyPassword) return res.status(401).json({message: "Invalid Credentials"})
+
+        const accessToken = await createAccessToken(schoolExists.id)
+        const refreshToken = await createRefreshToken(schoolExists.id)
+
+        res.cookie("jwt-acess", refreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge})
+
+        const loggedInSchool = {id: schoolExists.id, name: schoolExists.schoolName, email:schoolExists.email, accessToken}
+
+        res.json({loggedInSchool, success: true})
     } catch (error) {
         next(error)
     }
@@ -73,7 +104,7 @@ export const updateSchoolDetails = async (req:Request, res:Response, next: NextF
                 }
             })
 
-            if(!(["Admin"].includes(permittedUser.role))) return res.status(401).json({message: "Not allowed for this operation"})
+            if(!(["admin"].includes(permittedUser.role))) return res.status(401).json({message: "Not allowed for this operation"})
 
             // update school
 
@@ -147,7 +178,7 @@ export const findAllSchools = async (req:Request, res:Response, next:NextFunctio
             }
         })
 
-        if(!(["Admin"].includes(permittedRole.role))) res.status(401).json({message: "unauthorized for this operation", success: false})
+        if(!(["admin"].includes(permittedRole.role))) res.status(401).json({message: "unauthorized for this operation", success: false})
 
         const allSchools = await prisma.school.findMany({
           select:{

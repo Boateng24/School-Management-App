@@ -60,7 +60,7 @@ export const login = async (req:Request, res:Response, next:NextFunction) => {
         const refreshToken = await createRefreshToken(foundUser.id)
 
         res.cookie('jwt-access', refreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge})
-        const loggedInUser = {id: foundUser.id, firstname: foundUser.firstname, email:foundUser.email, accessToken}
+        const loggedInUser = {id: foundUser.id, firstname: foundUser.firstname, email:foundUser.email, role: foundUser.role, accessToken}
         res.status(200).json({loggedInUser, success: true})
     } catch (error) {
         next(error)

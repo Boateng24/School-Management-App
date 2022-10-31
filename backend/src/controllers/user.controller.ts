@@ -92,24 +92,23 @@ export const deleteUser = async (req:Request, res:Response, next:NextFunction) =
 export const forgotPassword = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const {email} = req.body as createUser
-        const userId = req["payload"].id
-        console.log(userId)
+        // const userId = req["payload"].id
+        // console.log(userId)
         const currentUser = await prisma.user.findUnique({
             where:{
                 email
             }
         })
         console.log(currentUser.id)
-        if(!currentUser) throw new createHttpError.NotFound("user not found")
 
         const token = await createAccessToken(currentUser.id)
 
         const transporter = nodemailer.createTransport({
-            host:'smtp.gmail.com',
-            port: 587,      
+            host:process.env.NODEMAILER_HOST,
+            port: <unknown>process.env.NODEMAILER_PORT as number,      
             auth:{
-             user: "tuffourboateng2@gmail.com", 
-             pass: "fiqwmlszdtfywrjw"
+             user: process.env.SENDER_EMAIL, 
+             pass: process.env.GOOGLE_APP_PASSWORD
             }
          })
 
@@ -122,7 +121,7 @@ export const forgotPassword = async (req:Request, res:Response, next:NextFunctio
           });
  
          const mailDetails ={
-             from: "tuffourboateng2@gmail.com",
+             from: process.env.SENDER_EMAIL,
              to: email,
              subject: "Password reset link",
              html:   `<a href="/forgotPassword/" + ${currentUser.id} + '/' + ${token}>click this link to confirm password reset</a>`
@@ -137,7 +136,7 @@ export const forgotPassword = async (req:Request, res:Response, next:NextFunctio
              }
          })
 
-         await prisma.user.update({
+     await prisma.user.update({
             where:{
                 id: currentUser.id
             },

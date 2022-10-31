@@ -91,6 +91,7 @@ model SchoolAddress{
 }
 
 enum Role {
+  admin
   student
   teacher
   headmaster
