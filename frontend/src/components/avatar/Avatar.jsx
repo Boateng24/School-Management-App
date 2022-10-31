@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
+import AccountMenu from "./Menu";
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
@@ -33,12 +34,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-const SmallAvatar = styled(Avatar)(({ theme }) => ({
-  width: 22,
-  height: 22,
-  border: `2px solid ${theme.palette.background.paper}`,
-}));
-
 export default function BadgeAvatars() {
   return (
     <Stack direction="row" spacing={2}>
@@ -47,10 +42,7 @@ export default function BadgeAvatars() {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         variant="dot"
       >
-        <Avatar
-          alt="Remy Sharp"
-          src="https://fakeimg.pl/350x200/?text=World&font=lobster"
-        />
+        <AccountMenu />
       </StyledBadge>
     </Stack>
   );
