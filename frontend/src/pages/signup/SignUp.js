@@ -1,12 +1,13 @@
 import background from "../../assets/background.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { registerSchool } from "../../features/auth/schoolRegistrationSlice";
+import { createNewSchool } from "../../features/auth/createSchoolSlice";
 import { useState } from "react";
 
 const SignUp = () => {
-  const navigate = useNavigate();
-  // const {currentUser, isRegistering} = useSelector((state) => state.schoolRegistration);
+  const { isCreating, currentSchool } = useSelector(
+    (state) => state.createSchool
+  );
   const [formData, setFormData] = useState({
     schoolName: "",
     email: "",
@@ -21,17 +22,17 @@ const SignUp = () => {
   const { schoolName, email, password, confirmPassword } = formData;
 
   const dispatch = useDispatch();
-  const { currentUser, isRegistering } = useSelector(
-    (state) => state.schoolRegistration
-  );
-  console.log("Current User", currentUser);
 
   // Create a new organization
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(registerSchool({ schoolName, email, password }));
+    dispatch(createNewSchool({ schoolName, email, password }));
     // navigate("/cool");
   };
+
+  if (currentSchool) {
+    return <Navigate to={"/"} />;
+  }
 
   return (
     <div className="flex bg-slate-50">
@@ -107,10 +108,10 @@ const SignUp = () => {
           <div className="grid">
             <button
               className="w-[360px] bg-blue-700 hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] mt-6 cursor-pointer"
-              disabled={isRegistering}
+              disabled={isCreating}
               type="submit"
             >
-              {isRegistering ? "Creating school..." : "Create school"}
+              {isCreating ? "Creating school..." : "Create school"}
             </button>
             <div className="w-[360px]  text-gray-500 h-[44px] text-center rounded-[8px] mt-4">
               Already have an account?{" "}

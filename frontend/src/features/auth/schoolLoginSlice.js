@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-export const studentLogin = createAsyncThunk(
-  "login/studentLogin",
+export const schoolLogin = createAsyncThunk(
+  "login/schoolLogin",
   async (args, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/api/v1/login", {
+      const response = await fetch("http://localhost:5000/api/v1/schoolLogin", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -28,28 +28,30 @@ export const studentLogin = createAsyncThunk(
 );
 
 const initialState = {
-  loggedInStudent: null,
+  loggedInSchool: null,
   isLoggingIn: false,
   errorMessage: null,
 };
-const studentLoginSlice = createSlice({
-  name: " login",
+const schoolLoginSlice = createSlice({
+  name: "login",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(studentLogin.pending, (state) => {
+      .addCase(schoolLogin.pending, (state) => {
         state.isLoggingIn = true;
       })
-      .addCase(studentLogin.fulfilled, (state, action) => {
+      .addCase(schoolLogin.fulfilled, (state, action) => {
+        const { loggedInSchool } = action.payload;
         state.isLoggingIn = false;
-        state.loggedInStudent = action.payload;
+        state.loggedInSchool = loggedInSchool;
       })
-      .addCase(studentLogin.rejected, (state, action) => {
+      .addCase(schoolLogin.rejected, (state, action) => {
+        const { message } = action.payload;
         state.isLoggingIn = false;
-        state.errorMessage = action.payload;
+        state.errorMessage = message;
       });
   },
 });
 
-export default studentLoginSlice.reducer;
+export default schoolLoginSlice.reducer;

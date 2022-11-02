@@ -20,6 +20,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 // import MailIcon from "@mui/icons-material/MailIcon";
 import EmailIcon from "@mui/icons-material/Email";
 import BadgeAvatars from "../avatar/Avatar";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -89,6 +90,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 export default function MiniDrawer() {
+  const { loggedInSchool } = useSelector((state) => state.schoolLogin);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
@@ -123,7 +125,7 @@ export default function MiniDrawer() {
             component="div"
             style={{ marginRight: "auto" }}
           >
-            School name here
+            {loggedInSchool.name}
           </Typography>
           <Typography variant="h6" noWrap component="div">
             <BadgeAvatars />

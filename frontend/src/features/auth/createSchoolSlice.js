@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-export const registerSchool = createAsyncThunk(
-  "signUp/registerSchool",
+export const createNewSchool = createAsyncThunk(
+  "create/createNewSchool",
   async (args, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/v1/createSchool",
+        `http://localhost:5000/api/v1/createSchool`,
         {
           method: "POST",
           headers: {
@@ -18,7 +18,7 @@ export const registerSchool = createAsyncThunk(
 
       const data = await response.json();
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         return data;
       } else {
         return rejectWithValue(data);
@@ -30,28 +30,29 @@ export const registerSchool = createAsyncThunk(
 );
 
 const initialState = {
-  currentUser: null,
-  isRegistering: false,
-  errorMessage: "",
+  currentSchool: null,
+  isCreating: false,
+  error: "",
 };
-const signUpSlice = createSlice({
-  name: "signUp",
+
+const createSchoolSlice = createSlice({
+  name: "create",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(registerSchool.pending, (state) => {
-        state.isRegistering = true;
+      .addCase(createNewSchool.pending, (state) => {
+        state.isCreating = true;
       })
-      .addCase(registerSchool.fulfilled, (state, action) => {
-        state.isRegistering = false;
-        state.currentUser = action.payload;
+      .addCase(createNewSchool.fulfilled, (state, action) => {
+        state.isCreating = false;
+        state.currentSchool = action.payload;
       })
-      .addCase(registerSchool.rejected, (state, action) => {
-        state.isRegistering = false;
-        state.errorMessage = action.payload;
+      .addCase(createNewSchool.rejected, (state, action) => {
+        state.isCreating = false;
+        state.error = action.payload;
       });
   },
 });
 
-export default signUpSlice.reducer;
+export default createSchoolSlice.reducer;
