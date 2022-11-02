@@ -10,7 +10,7 @@ import { createRefreshToken } from "../helpers/refreshToken";
 const maxAge = 7 * 24 * 60 * 60 * 1000
 export const newSchool = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const {schoolName, email, password, confirmPassword} = req.body as createSchool
+        const {schoolName, email, password, confirmPassword} = req.body as createSchool // take details from the body
 
         const schoolExists = await prisma.school.findFirst({
             where:{
