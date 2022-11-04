@@ -1,17 +1,11 @@
-import { Divider, IconButton, Paper } from "@mui/material";
+import { IconButton } from "@mui/material";
 import React from "react";
-import MiniDrawer from "../../components/sidebar/Sidebar";
-import SchoolIcon from "@mui/icons-material/School";
-import background from "../../assets/background.png";
-import Chart from "../../components/chart/Chart";
-import Chart1 from "../../components/chart/Chart1";
 import Sidebar from "../../components/sidebar/Sidebar";
-import BadgeAvatars from "../../components/avatar/Avatar";
-import { ChatWidget } from "../../components/chat/Chat";
+import SchoolIcon from "@mui/icons-material/School";
 
-const Dashboard = () => {
+const Students = () => {
   return (
-    <div className=" w-[99vw] mt-[-65px] ">
+    <div className=" w-[99vw] mt-[-65px]">
       <Sidebar />
       <div className="flex justify-center">
         {/* <Sidebar /> */}
@@ -72,35 +66,9 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-center">
-        <div className="w-[61vw] ml-4  p-2 mt-8 h-[65vh]">
-          <Chart />{" "}
-        </div>
-        <div className="w-[30vw] mx-4  p-2 mt-8 h-[65vh]">
-          {/* <Chart1 /> */}
-          <div className="bg-white w-[30vw] h-[90%] mt-4 border-2 rounded-lg p-4  border-gray-100">
-            <div className="flex items-center">
-              <IconButton color="secondary" sx={{ mr: 1 }}>
-                <div className="grid place-items-center h-10 w-10 bg-[#fbe9ff] rounded-full">
-                  <SchoolIcon fontSize="medium" />
-                </div>
-              </IconButton>
-              <h5 className="font-bold text-gray-600 mt-2 text-2xl">
-                Recent Chats
-              </h5>
-            </div>
-            <div className="flex flex-col items-center mt-4">
-              <ChatWidget />
-
-              <ChatWidget />
-              <ChatWidget />
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* </div> */}
+      <div className="bg-green-400 h-[70vh] w-[90vw]">Student space</div>
     </div>
   );
 };
 
-export default Dashboard;
+export default Students;

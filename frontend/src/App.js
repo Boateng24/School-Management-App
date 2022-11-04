@@ -11,6 +11,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import PageNotFound from "./pages/pagenotfound/PageNotFound";
 import Sidebar from "./components/sidebar/Sidebar";
 import Navbar from "./components/sidebar/Navbar";
+import Students from "./pages/students/Students";
 
 function App() {
   return (
@@ -24,7 +25,10 @@ function App() {
             <Route element={<ForgotPassword />} path="/forgotpassword" />
             <Route element={<VerifyAccount />} path="/verifyaccount" />
             <Route element={<ResetPassword />} path="resetpassword" />
-            <Route element={<Dashboard />} path="dashboard/:schoolId" />
+            <Route element={<Dashboard />} path="dashboard/:schoolId/">
+              {/* <Route element={<Students />} path="students" /> */}
+            </Route>
+            <Route element={<Students />} path="dashboard/:schoolId/students" />
             <Route element={<PageNotFound />} path="*" />
           </Routes>
         </Router>

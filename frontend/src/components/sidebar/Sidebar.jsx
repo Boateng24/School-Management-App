@@ -1,20 +1,25 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import BadgeAvatars from "../avatar/Avatar";
+import { useSelector } from "react-redux";
 
 const Sidebar = () => {
+  const { name, id } = useSelector((state) => state.schoolLogin.loggedInSchool);
   return (
     <div className="bg-[#29365F] h-48 w-screen flex ">
-      <div className="flex justify-between items-start w-[97vw]">
+      <div className="flex justify-around items-start w-[97vw]">
+        <div className="text-white mt-8 text-xl font-bold p-8 pt-12 pl-16">
+          {name}
+        </div>
         <div className="flex justify-between items-start mr-auto">
           <NavLink
-            to="/dashboard"
+            to={`/`}
             className="text-white mt-8 text-base font-bold p-8 pt-12 pl-16"
           >
             Dashboard
           </NavLink>
           <NavLink
-            to="/dashboard"
+            to={`students`}
             className="text-white mt-8 text-base font-bold p-8 pt-12 pl-16"
           >
             Students

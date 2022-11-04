@@ -23,7 +23,7 @@ const Chart = () => {
         backgroundColor: ["#3C84F3"],
         borderRadius: 4,
         borderWidth: 1,
-        barThickness: 30,
+        barThickness: 20,
         // borderColor: ["#FF6384"],
       },
       {
@@ -38,7 +38,7 @@ const Chart = () => {
         borderRadius: 2,
         // borderColor: ["#36A2EB"],
         borderWidth: 1,
-        barThickness: 30,
+        barThickness: 20,
       },
     ],
   });
