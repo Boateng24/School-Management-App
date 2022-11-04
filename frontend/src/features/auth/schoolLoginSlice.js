@@ -30,7 +30,7 @@ export const schoolLogin = createAsyncThunk(
 const initialState = {
   loggedInSchool: null,
   isLoggingIn: false,
-  errorMessage: null,
+  error: "",
 };
 const schoolLoginSlice = createSlice({
   name: "login",
@@ -49,7 +49,7 @@ const schoolLoginSlice = createSlice({
       .addCase(schoolLogin.rejected, (state, action) => {
         const { message } = action.payload;
         state.isLoggingIn = false;
-        state.errorMessage = message;
+        state.error = message;
       });
   },
 });

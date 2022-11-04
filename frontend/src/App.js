@@ -9,13 +9,15 @@ import ForgotPassword from "./pages/forgotpassword/ForgotPassword";
 import ResetPassword from "./pages/resetpassword/ResetPassword";
 import Dashboard from "./pages/dashboard/Dashboard";
 import PageNotFound from "./pages/pagenotfound/PageNotFound";
-
+import Sidebar from "./components/sidebar/Sidebar";
+import Navbar from "./components/sidebar/Navbar";
 
 function App() {
   return (
     <>
       <Provider store={store}>
         <Router>
+          {/* <Navbar /> */}
           <Routes>
             <Route element={<SignIn />} path="/" />
             <Route element={<SignUp />} path="/signup" />
