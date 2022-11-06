@@ -4,14 +4,12 @@ import BadgeAvatars from "../avatar/Avatar";
 import { useSelector } from "react-redux";
 
 const Sidebar = () => {
-  // const { name, id } = useSelector((state) => state.schoolLogin.loggedInSchool);
+  const { name, id } = useSelector((state) => state.schoolLogin.loggedInSchool);
   return (
     <div className="bg-[#29365F] h-48 w-screen ">
       <div className="">
-        {/* <div className="text-white mt-8 text-xl font-bold p-8 pt-12 pl-16"> */}
-        {/* {name} */}
-        {/* </div> */}
         <div className="flex justify-between items-center w-[97vw]">
+          <div className="text-white text-xl font-bold pl-16">{name}</div>
           <div>
             <NavLink
               to={`/`}
