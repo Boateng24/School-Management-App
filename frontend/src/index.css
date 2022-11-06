@@ -24,3 +24,7 @@ input:focus {
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+p {
+  color: #344054;
+}
