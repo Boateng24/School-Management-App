@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import schoolRegistrationSlice from "../../features/auth/schoolRegistrationSlice";
-import studentLoginSlice from "../../features/auth/studentLoginSlice";
+import createSchoolSlice from "../../features/auth/createSchoolSlice";
+import schoolLoginSlice from "../../features/auth/schoolLoginSlice";
 
 const store = configureStore({
   reducer: {
-    schoolRegistration: schoolRegistrationSlice,
-    studentLogin: studentLoginSlice,
+    createSchool: createSchoolSlice,
+    schoolLogin: schoolLoginSlice,
   },
 });
 
