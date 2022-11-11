@@ -16,7 +16,7 @@ import refreshRouter from './routes/refreshToken.route';
 const app:Application = express();
 
 // Configuring our environmental variables
-config()
+config({path: '.env'})
 const PORT = process.env.PORT_NUM
 
 // Db connection configuration
