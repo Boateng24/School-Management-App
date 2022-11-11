@@ -10,6 +10,7 @@ import authRouter from './routes/auth.route';
 import userRouter from './routes/users.route';
 import refreshRouter from './routes/refreshToken.route';
 import schoolRouter from './routes/school.route';
+import studentRouter from './routes/student.route';
 
 
 
@@ -38,6 +39,7 @@ app.use('/api/v1', authRouter)
 app.use('/api/v1', userRouter)
 app.use('/api/v1', refreshRouter)
 app.use('/api/v1', schoolRouter)
+app.use('/api/v1', studentRouter)
 
 
 app.listen(PORT || 5000, () => {

@@ -77,10 +77,7 @@ export const getSchool = async (req:Request, res:Response, next:NextFunction) =>
                 schoolName: true,
                 email: true,
                 address: true,
-                dateOfestablishment: true,
-                NumOfStudents: true,
-                NumOfTeachers: true,
-                NumOfNonTeachingStaff: true
+                dateOfestablishment: true
             }
         })
 
@@ -123,10 +120,7 @@ export const updateSchoolDetails = async (req:Request, res:Response, next: NextF
 
                         }
                     },
-                    dateOfestablishment,
-                    NumOfStudents,
-                    NumOfTeachers,
-                    NumOfNonTeachingStaff,
+                    dateOfestablishment
                 }
             })
 
