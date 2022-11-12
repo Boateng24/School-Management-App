@@ -1,7 +1,13 @@
 import { Button } from "@mui/material";
 import React from "react";
+import { useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Student = () => {
+  const navigate = useNavigate();
+  const { isLoggingIn, loggedInSchool } = useSelector(
+    (state) => state.schoolLogin
+  );
   return (
     <div className="flex justify-start mb-1 even:bg-slate-50 px-3 cursor-pointer">
       <div className="flex justify-between w-[60%] mr-auto py-4">

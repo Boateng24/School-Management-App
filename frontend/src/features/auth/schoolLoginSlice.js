@@ -47,9 +47,9 @@ const schoolLoginSlice = createSlice({
         state.loggedInSchool = loggedInSchool;
       })
       .addCase(schoolLogin.rejected, (state, action) => {
-        const { message } = action.payload;
+        // const { message } = action.payload;
         state.isLoggingIn = false;
-        state.error = message;
+        state.error = action.payload;
       });
   },
 });

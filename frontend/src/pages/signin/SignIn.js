@@ -28,7 +28,7 @@ const SignIn = () => {
   };
 
   if (loggedInSchool) {
-    return <Navigate to={`dashboard/${loggedInSchool.id}`} />;
+    return <Navigate to={`dashboard/${loggedInSchool.id}/home`} />;
   }
 
   return (
