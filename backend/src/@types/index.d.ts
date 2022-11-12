@@ -55,3 +55,8 @@ interface schoolAddress{
   website?: string
   GPS: string
 }
+
+interface refreshTokenType {
+  user: string;
+  refreshToken: string
+}
