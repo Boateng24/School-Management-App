@@ -38,21 +38,39 @@ export const allPrefects = async(req:Request, res:Response, next:NextFunction) =
 
         const countfemalePrefects = await prisma.user.count({
             where:{
-                    gender: {
-                        equals: "female",
-                        mode: "insensitive"
-                    }
+                    AND:[
+                        {
+                            isPrefect: {
+                                equals: true
+                            }
+                        },
+                        {
+                            gender:{
+                                equals: "female",
+                                mode: "insensitive"
+                            }
+                        }
+                    ]
             }
         })
 
         const countmalePrefects = await prisma.user.count({
-            where:{
-                    gender: {
-                        equals: "male",
-                        mode: "insensitive"
-                    }
-            }
-        })
+          where: {
+            AND: [
+              {
+                isPrefect: {
+                  equals: true,
+                },
+              },
+              {
+                gender: {
+                  equals: 'male',
+                  mode: 'insensitive',
+                },
+              },
+            ],
+          },
+        });
         res.status(200).json({fetchPrefects, countfemalePrefects, countmalePrefects, success: true})
     } catch (error) {
         next(error)
