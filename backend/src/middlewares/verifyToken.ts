@@ -38,22 +38,23 @@ export const verifyAccessToken = (
   //  will work on the verify user middleware later
   export const verifyUser = (req:Request, res:Response, next:NextFunction) => {
       try{
-        const id = req["payload"].id
+        const id = req["payload"].id as string
           verifyAccessToken(req, res, async() => {
             const findUser = await prisma.user.findFirst({
               where:{
                 id
               }
             })
-            if(findUser?.id === id || (["Admin"].includes(findUser?.role))){
+          
+            if(findUser){
               next()
             }
             else{
-              return next(new createHttpError.Unauthorized("User not found please sign up"))
+              return next(res.json({message: "User not found please sign up"}))
             }
           })
       }catch(error){
-        next(error)
+        next(res.json(error.message))
       }
   }
 
@@ -65,11 +66,12 @@ export const verifyAccessToken = (
                 id: req["payload"].id
               }
              })
-            if((["Admin"].includes(permittedUser?.role))){
+             if (!permittedUser) return res.json("Not permitted for this action")
+            if((["admin"].includes(permittedUser?.role))){
               next()
             }
             else{
-              return next(new createHttpError.Unauthorized("You are not authorized"))
+              return next(res.json({message: "You are not authorized"}))
             }
           })
       }catch(error){

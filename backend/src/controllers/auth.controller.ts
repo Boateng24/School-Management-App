@@ -11,7 +11,7 @@ import {config} from 'dotenv'
 config()
 
 const maxAge = 7 * 24 * 60 * 60 * 1000
-export const signUp = async (req:Request, res:Response, next:NextFunction) => {
+export const userSignup = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const {firstname, email, password, confirmPassword} = req.body as createUser
         const userExists =   await prisma.user.findFirst({
@@ -19,10 +19,10 @@ export const signUp = async (req:Request, res:Response, next:NextFunction) => {
                 email
             }
         })
-        if(userExists) throw new createHttpError.Conflict("User already exists")
+        if(userExists) res.status(403).json({message:"User already exists"})
 
         // check if password matches
-        if (!(password.match(confirmPassword))) throw new createHttpError.ExpectationFailed('Passwords do not match');
+        if (!(password.match(confirmPassword))) return res.json({message:'Passwords do not match'});
 
 
         const newUser = await prisma.user.create({
@@ -42,7 +42,7 @@ export const signUp = async (req:Request, res:Response, next:NextFunction) => {
 }
 
 
-export const login = async (req:Request, res:Response, next:NextFunction) => {
+export const userLogin = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const {email, password} = req.body as loginUser
         const foundUser = await prisma.user.findUnique({
@@ -60,7 +60,7 @@ export const login = async (req:Request, res:Response, next:NextFunction) => {
         const refreshToken = await createRefreshToken(foundUser.id)
 
         res.cookie('jwt-access', refreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge})
-        const loggedInUser = {id: foundUser.id, firstname: foundUser.firstname, email:foundUser.email, accessToken}
+        const loggedInUser = {id: foundUser.id, firstname: foundUser.firstname, email:foundUser.email, role: foundUser.role, accessToken}
         res.status(200).json({loggedInUser, success: true})
     } catch (error) {
         next(error)

@@ -1,10 +1,13 @@
 import background from "../../assets/background.png";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { registerSchool } from "../../features/auth/schoolRegistrationSlice";
+import { createNewSchool } from "../../features/auth/createSchoolSlice";
 import { useState } from "react";
 
 const SignUp = () => {
+  const { isCreating, currentSchool } = useSelector(
+    (state) => state.createSchool
+  );
   const [formData, setFormData] = useState({
     schoolName: "",
     email: "",
@@ -16,18 +19,20 @@ const SignUp = () => {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const { schoolName, email, phoneNumber, password, confirmPassword } =
-    formData;
+  const { schoolName, email, password, confirmPassword } = formData;
 
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.schoolRegistration);
-  console.log("Current User", currentUser);
 
   // Create a new organization
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(registerSchool(formData));
+    dispatch(createNewSchool({ schoolName, email, password }));
+    // navigate("/cool");
   };
+
+  if (currentSchool) {
+    return <Navigate to={"/"} />;
+  }
 
   return (
     <div className="flex bg-slate-50">
@@ -68,20 +73,7 @@ const SignUp = () => {
               className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
             />
           </div>
-          <div className="grid grid-cols-1 gap-4 mb-4">
-            <label htmlFor="phoneNumber" className="font-[500] text-[#344054]">
-              Phone number
-            </label>
-            <input
-              onChange={onChange}
-              value={phoneNumber}
-              type="tel"
-              name="phoneNumber"
-              required
-              placeholder="Eg. +233 20 344 3212"
-              className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-            />
-          </div>
+
           <div className="grid grid-cols-1 gap-4 mb-4">
             <label htmlFor="passoword" className="font-[500] text-[#344054]">
               Password
@@ -116,10 +108,10 @@ const SignUp = () => {
           <div className="grid">
             <button
               className="w-[360px] bg-blue-700 hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] mt-6 cursor-pointer"
-              // disabled={!canSubmit}
+              disabled={isCreating}
               type="submit"
             >
-              Create Organization
+              {isCreating ? "Creating school..." : "Create school"}
             </button>
             <div className="w-[360px]  text-gray-500 h-[44px] text-center rounded-[8px] mt-4">
               Already have an account?{" "}

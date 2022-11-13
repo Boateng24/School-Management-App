@@ -1,7 +1,7 @@
 import background from "../../assets/background.png";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { studentLogin } from "../../features/auth/studentLoginSlice";
+// import { schoolLogin } from "../../features/auth/schoolLoginSlice";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();

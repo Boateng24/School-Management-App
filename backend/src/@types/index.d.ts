@@ -30,3 +30,33 @@ interface tokenRenewType{
     aud: string;
     iss: string
 }
+
+interface createSchool {
+  schoolName:string;
+  email:string;
+  password: string;
+  confirmPassword: string
+}
+
+
+interface updateSchool{
+  schoolName?: string, 
+  email?: string, 
+  dateOfestablishment?:string, 
+  address?:schoolAddress[], 
+  NumOfNonTeachingStaff?:number, 
+  NumOfStudents?:number, 
+  NumOfTeachers?:number
+}
+
+interface schoolAddress{
+  location: string[]
+  POBox: string
+  website?: string
+  GPS: string
+}
+
+interface refreshTokenType {
+  user: string;
+  refreshToken: string
+}

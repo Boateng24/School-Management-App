@@ -9,7 +9,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+ 
 
 // DB Tables
 
@@ -20,20 +20,31 @@ model User{
   password String
   age Int?
   role Role @default(student)
-  address UserAddress[]
-  profilePic String?
+  gender String?
+  isPrefect Boolean? @default(false)
   guardian Guardian[]
   class Class[]
+  address UserAddress[]
+  profilePic String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+// model Students{
+//   id String @id @default(cuid())
+//   class Class @relation(fields: [classId], references: [id])
+//   classId String
+//   isPrefect Boolean @default(false)
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
 model Guardian{
   id String @id @default(cuid())
-  father String
-  mother String
-  other String
-  user User @relation(fields: [userId], references: [id])
+  father String?
+  mother String?
+  other String?
+  student User @relation(fields: [userId], references: [id])
   userId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -52,11 +63,10 @@ model UserAddress{
 
 model Class{
   id String @id @default(cuid())
-  classType String
-  numOfStudents Int
-  teacher Role
-  user User @relation(fields: [userId], references: [id])
+  classType classCategory @default(Primary)
+  student User @relation(fields: [userId], references: [id])
   userId String
+  teacher String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -65,11 +75,11 @@ model Class{
 model School{
   id String @id @default(cuid())
   schoolName String
-  dateOfestablishment DateTime
+  email String @unique
+  password String
+  phoneNumber String?
+  dateOfestablishment String?
   address SchoolAddress[]
-  NumOfStudents Int
-  NumOfTeachers Int
-  NumOfNonTeachingStaff Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -81,7 +91,6 @@ model SchoolAddress{
   schoolId String
   location String[]
   POBox String
-  email String
   website String?
   GPS String
   createdAt DateTime @default(now())
@@ -89,9 +98,17 @@ model SchoolAddress{
 }
 
 enum Role {
+  superAdmin
+  admin
   student
   teacher
   headmaster
   proprietor
   nonteaching
+}
+
+enum classCategory {
+  Nursery
+  Primary
+  JuniorHigh
 }

@@ -1,12 +1,22 @@
 import { configureStore } from "@reduxjs/toolkit";
-import schoolRegistrationSlice from "../../features/auth/schoolRegistrationSlice";
-import studentLoginSlice from "../../features/auth/studentLoginSlice";
+import createSchoolSlice from "../../features/auth/createSchoolSlice";
+import logoutSchoolSlice from "../../features/auth/logoutSchoolSlice";
+import loginSchoolSlice, {
+  localStorageMiddleware,
+  reHydrateStore,
+} from "../../features/auth/loginSchoolSlice";
+import { studentsApi } from "../../api/students/StudentsApi";
 
 const store = configureStore({
   reducer: {
-    schoolRegistration: schoolRegistrationSlice,
-    studentLogin: studentLoginSlice,
+    createSchool: createSchoolSlice,
+    loginSchool: loginSchoolSlice,
+    logoutSchool: logoutSchoolSlice,
+    [studentsApi.reducerPath]: studentsApi.reducer,
   },
+  preloadedState: reHydrateStore(),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(localStorageMiddleware),
 });
 
 export default store;
