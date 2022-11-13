@@ -76,8 +76,10 @@ export const loginSchool = async (
       return res.status(404).json({ message: 'School not Found' });
 
     const verifyPassword = await compare(password, schoolExists?.password);
-    if (!verifyPassword)
-      return res.status(401).json({ message: 'Invalid Credentials' });
+    if (!verifyPassword){
+        const Errors = {message: "Invalid Credentials", params: 'password', value: password}
+      return res.status(401).json(Array(Errors));
+    }
 
     const accessToken = await createAccessToken(schoolExists.id);
     const refreshToken = await createRefreshToken(schoolExists.id);
