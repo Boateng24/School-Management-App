@@ -1,12 +1,12 @@
 import express from 'express';
-import { signUp, login} from '../controllers/auth.controller';
+import {  userSignup, userLogin} from '../controllers/auth.controller';
 import { passwordValidator, validatorSchema } from '../middlewares/validators';
 import { verifyAdmin } from '../middlewares/verifyToken';
 
 const authRouter = express.Router();
 
-authRouter.post('/signup', validatorSchema, passwordValidator, verifyAdmin, signUp)
-authRouter.post('/login', login)
+authRouter.post('/usersignup', validatorSchema, passwordValidator,  userSignup) //will add the verifyAdmin middleware later
+authRouter.post('/userlogin', userLogin)
 
 
 export default authRouter;
