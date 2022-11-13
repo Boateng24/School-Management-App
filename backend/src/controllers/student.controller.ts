@@ -3,12 +3,29 @@ import { prisma } from '../config/prismaInit';
 
 
 
+export const findallStudents = async (req:Request, res:Response, next:NextFunction) => {
+    try {
+     
+        const fetchstudents = await prisma.user.findMany({
+            where:{
+                role:{
+                    equals: "student"
+                }
+            },
+            select:{
+                firstname: true,
+                id: true,
+                class: true,
+                gender: true
+            }
+        })
 
-
-
-
-
-export const allStudents = async (req:Request, res:Response, next:NextFunction) => {
+        res.status(200).json({fetchstudents, success: true})
+    } catch (error) {
+        next(error)
+    }
+}
+export const countallStudents = async (req:Request, res:Response, next:NextFunction) => {
     try {
      
         const fetchstudents = await prisma.user.count({

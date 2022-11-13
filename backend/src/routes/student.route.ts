@@ -1,9 +1,9 @@
 import express from 'express';
-import { allStudents, allPrefects, allJuniorHighStudents, allPrimaryStudents } from '../controllers/student.controller';
+import { countallStudents, allPrefects, allJuniorHighStudents, allPrimaryStudents, findallStudents } from '../controllers/student.controller';
 const studentRouter = express.Router()
 
-
-studentRouter.get('/allstudents', allStudents)
+studentRouter.get('/findallstudents', findallStudents)
+studentRouter.get('/allstudents', countallStudents)
 studentRouter.get('/allprefects', allPrefects)
 studentRouter.get('/allJhs', allJuniorHighStudents)
 studentRouter.get('/allPrimary', allPrimaryStudents)
