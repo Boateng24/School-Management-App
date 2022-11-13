@@ -5,9 +5,16 @@ import SchoolIcon from "@mui/icons-material/School";
 // import AddIcon from "@mui/icons-material/Add";
 import Student from "./Student";
 import { Navigate, useNavigate } from "react-router-dom";
+import {
+  useGetAllPrefectsQuery,
+  useGetAllPrimaryQuery,
+} from "../../api/students/StudentsApi";
 
 const Students = () => {
   const navigate = useNavigate();
+
+  const { data } = useGetAllPrefectsQuery();
+  // const data = useGetAllPrimaryQuery()
   return (
     <div className=" w-[99vw] mt-[120px] m-auto">
       {/* <Sidebar /> */}
@@ -24,9 +31,12 @@ const Students = () => {
             <h5 className="font-bold text-gray-600 mt-2 text-2xl">Prefects</h5>
           </div>
           <div className="flex items-center mt-4">
-            <p className="font-black text-gray-600 text-3xl px-3">12</p>
+            <p className="font-black text-gray-600 text-3xl px-3">
+              {data?.fetchPrefects}
+            </p>
             <p className="text-gray-400">
-              <span>4</span> males and 8 females
+              <span>{data?.countmalePrefects}</span> males and{" "}
+              <span>{data?.countfemalePrefects}</span> females
             </p>
           </div>
         </div>

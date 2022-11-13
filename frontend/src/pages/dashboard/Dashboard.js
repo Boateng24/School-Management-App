@@ -9,8 +9,11 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import BadgeAvatars from "../../components/avatar/Avatar";
 import { ChatWidget } from "../../components/chat/Chat";
 import { Outlet } from "react-router-dom";
+import { useGetAllStudentsQuery } from "../../api/students/StudentsApi";
 
 const Dashboard = () => {
+  const { data } = useGetAllStudentsQuery();
+  console.log("Students data", data);
   return (
     <>
       <div className=" w-[99vw] mt-[120px] ">
@@ -28,7 +31,9 @@ const Dashboard = () => {
               </h5>
             </div>
             <div className="flex items-center mt-4">
-              <p className="font-black text-gray-600 text-3xl px-3">900</p>
+              <p className="font-black text-gray-600 text-3xl px-3">
+                {data?.fetchstudents}
+              </p>
               <p className="text-gray-400">
                 <span className="text-green-600">+12%</span> compared to last
                 month

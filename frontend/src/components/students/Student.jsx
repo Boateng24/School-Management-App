@@ -6,7 +6,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 const Student = () => {
   const navigate = useNavigate();
   const { isLoggingIn, loggedInSchool } = useSelector(
-    (state) => state.schoolLogin
+    (state) => state.loginSchool.loggedInSchool?.loggedInSchool
   );
 
   return (
