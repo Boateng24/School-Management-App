@@ -1,11 +1,17 @@
 import background from "../../assets/background.png";
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { schoolLogin } from "../../features/auth/schoolLoginSlice";
-import { useState } from "react";
+import { schoolLogin } from "../../features/auth/loginSchoolSlice";
+import { useEffect, useState } from "react";
+
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [showError, setShowError] = useState(false);
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -13,9 +19,35 @@ const SignIn = () => {
 
   const dispatch = useDispatch();
 
-  const { isLoggingIn, loggedInSchool } = useSelector(
-    (state) => state.schoolLogin
+  const { isLoggingIn, loggedInSchool, error } = useSelector(
+    (state) => state.loginSchool
   );
+
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  useEffect(() => {
+    if (error) {
+      setShowError(true);
+      setFormData({ email: "", password: "" });
+    } else {
+      setShowError(false);
+    }
+    setTimeout(() => {
+      setShowError(false);
+    }, 4000);
+  }, [error]);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleschoolLogin = (e) => {
     e.preventDefault();
@@ -28,11 +60,41 @@ const SignIn = () => {
   };
 
   if (loggedInSchool) {
-    return <Navigate to={`dashboard/${loggedInSchool.id}/home`} />;
+    return (
+      <Navigate to={`dashboard/${loggedInSchool.loggedInSchool.id}/home`} />
+    );
   }
+
+  // Display error message
+  const action = (
+    <>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
 
   return (
     <div className="flex">
+      <div>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={showError}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message={error}
+          action={action}
+        />
+      </div>
+
       <div className="hidden lg:flex min-w-[50vw] h-[100vh] ">
         <img src={background} alt="endophin" width={"100%"} />
       </div>

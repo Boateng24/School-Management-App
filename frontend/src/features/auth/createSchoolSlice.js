@@ -36,7 +36,7 @@ const initialState = {
 };
 
 const createSchoolSlice = createSlice({
-  name: "create",
+  name: "auth/create",
   initialState,
   reducers: {},
   extraReducers: (builder) => {

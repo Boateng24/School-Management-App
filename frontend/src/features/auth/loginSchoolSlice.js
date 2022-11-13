@@ -15,6 +15,7 @@ export const schoolLogin = createAsyncThunk(
 
       const data = response.json();
       console.log("Data", data);
+      console.log("Data error", data?.message);
 
       if (response.status === 200) {
         return data;
@@ -32,26 +33,43 @@ const initialState = {
   isLoggingIn: false,
   error: "",
 };
-const schoolLoginSlice = createSlice({
-  name: "login",
+
+export const localStorageMiddleware = ({ getState }) => {
+  return (next) => (action) => {
+    const result = next(action);
+    localStorage.setItem("applicationState", JSON.stringify(getState()));
+    return result;
+  };
+};
+
+export const reHydrateStore = () => {
+  if (localStorage.getItem("applicationState") !== null) {
+    return JSON.parse(localStorage.getItem("applicationState")); // re-hydrate the store
+  }
+};
+
+const loginSchoolSlice = createSlice({
+  name: "auth/login",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(schoolLogin.pending, (state) => {
         state.isLoggingIn = true;
+        state.error = "";
       })
       .addCase(schoolLogin.fulfilled, (state, action) => {
         const { loggedInSchool } = action.payload;
         state.isLoggingIn = false;
-        state.loggedInSchool = loggedInSchool;
+        state.loggedInSchool = action.payload;
+        state.error = "";
       })
       .addCase(schoolLogin.rejected, (state, action) => {
         // const { message } = action.payload;
         state.isLoggingIn = false;
-        state.error = action.payload;
+        state.error = "Invalid credentials";
       });
   },
 });
 
-export default schoolLoginSlice.reducer;
+export default loginSchoolSlice.reducer;

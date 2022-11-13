@@ -4,8 +4,10 @@ import Sidebar from "../sidebar/Sidebar";
 import SchoolIcon from "@mui/icons-material/School";
 // import AddIcon from "@mui/icons-material/Add";
 import Student from "./Student";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Students = () => {
+  const navigate = useNavigate();
   return (
     <div className=" w-[99vw] mt-[120px] m-auto">
       {/* <Sidebar /> */}

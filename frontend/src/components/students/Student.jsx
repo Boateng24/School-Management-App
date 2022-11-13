@@ -8,8 +8,12 @@ const Student = () => {
   const { isLoggingIn, loggedInSchool } = useSelector(
     (state) => state.schoolLogin
   );
+
   return (
-    <div className="flex justify-start mb-1 even:bg-slate-50 px-3 cursor-pointer">
+    <div
+      className="flex justify-start mb-1 even:bg-slate-50 px-3 cursor-pointer"
+      onClick={() => navigate(`${Math.random() * 12000}`)}
+    >
       <div className="flex justify-between w-[60%] mr-auto py-4">
         <p>Name</p>
         <p>Student ID</p>
