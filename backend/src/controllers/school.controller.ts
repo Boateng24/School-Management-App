@@ -108,15 +108,14 @@ export const logoutSchool = (
   next: NextFunction
 ) => {
   try {
-    
     res
       .clearCookie('jwt', {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
       })
+      .status(204)
       .json({ message: 'User logged out successfully' });
-    
   } catch (error) {
     next(error);
   }
@@ -157,14 +156,7 @@ export const updateSchoolDetails = async (
   try {
     const id = req['payload'].id;
 
-    const {
-      schoolName,
-      email,
-      dateOfestablishment,
-      NumOfNonTeachingStaff,
-      NumOfStudents,
-      NumOfTeachers,
-    } = req.body as updateSchool;
+    const { schoolName, email, dateOfestablishment } = req.body as updateSchool;
     // check for who can perform this operation
     const permittedUser = await prisma.user.findFirst({
       where: {

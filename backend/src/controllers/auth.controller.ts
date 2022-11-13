@@ -11,7 +11,7 @@ import {config} from 'dotenv'
 config()
 
 const maxAge = 7 * 24 * 60 * 60 * 1000
-export const signUp = async (req:Request, res:Response, next:NextFunction) => {
+export const userSignup = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const {firstname, email, password, confirmPassword} = req.body as createUser
         const userExists =   await prisma.user.findFirst({
@@ -42,7 +42,7 @@ export const signUp = async (req:Request, res:Response, next:NextFunction) => {
 }
 
 
-export const login = async (req:Request, res:Response, next:NextFunction) => {
+export const userLogin = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const {email, password} = req.body as loginUser
         const foundUser = await prisma.user.findUnique({

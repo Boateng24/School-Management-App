@@ -2,6 +2,12 @@ import {Request, Response, NextFunction} from 'express';
 import { prisma } from '../config/prismaInit';
 
 
+
+
+
+
+
+
 export const allStudents = async (req:Request, res:Response, next:NextFunction) => {
     try {
      
