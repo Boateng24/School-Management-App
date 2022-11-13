@@ -14,6 +14,9 @@ export const studentsApi = createApi({
     getAllPrimary: builder.query({
       query: () => "allPrimary",
     }),
+    getAllJHS: builder.query({
+      query: () => "allJhs",
+    }),
   }),
 });
 
@@ -23,4 +26,5 @@ export const {
   useGetAllStudentsQuery,
   useGetAllPrefectsQuery,
   useGetAllPrimaryQuery,
+  useGetAllJHSQuery,
 } = studentsApi;

@@ -1,7 +1,9 @@
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const Student = () => {
   const navigate = useNavigate();
@@ -21,8 +23,12 @@ const Student = () => {
         <p>Gender</p>
       </div>
       <div className="flex w-[10%] justify-end py-4">
-        <Button style={{ color: "#29365F" }}>Edit</Button>
-        <Button style={{ color: "#29365F" }}>Delete</Button>
+        <IconButton>
+          <EditIcon />
+        </IconButton>
+        <IconButton>
+          <DeleteIcon />
+        </IconButton>
       </div>
     </div>
   );

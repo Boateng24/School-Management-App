@@ -1,20 +1,45 @@
-import { Button, IconButton } from "@mui/material";
-import React from "react";
+import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
+import React, { useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import SchoolIcon from "@mui/icons-material/School";
 // import AddIcon from "@mui/icons-material/Add";
 import Student from "./Student";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
+  useGetAllJHSQuery,
   useGetAllPrefectsQuery,
   useGetAllPrimaryQuery,
+  useGetAllStudentsQuery,
 } from "../../api/students/StudentsApi";
 
 const Students = () => {
   const navigate = useNavigate();
+  const [allJHS, setAllJHS] = useState(useGetAllJHSQuery());
+  const [allStudents, setAllStudents] = useState(useGetAllStudentsQuery());
+  console.log("All students", allStudents);
 
   const { data } = useGetAllPrefectsQuery();
-  // const data = useGetAllPrimaryQuery()
+  const { currentData } = useGetAllPrimaryQuery();
+
+  // Modal
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+  };
+
+  // const {data} = useGetAllJHSQuery()
+  console.log("All JHS", allJHS);
   return (
     <div className=" w-[99vw] mt-[120px] m-auto">
       {/* <Sidebar /> */}
@@ -53,7 +78,9 @@ const Students = () => {
             </h5>
           </div>
           <div className="flex items-center mt-4">
-            <p className="font-black text-gray-600 text-3xl px-3">257</p>
+            <p className="font-black text-gray-600 text-3xl px-3">
+              {currentData?.fetchPrimaryStudents}
+            </p>
             <p className="text-gray-400">
               <span>students</span> from Primary 1 to Primary 6
             </p>
@@ -72,7 +99,9 @@ const Students = () => {
             </h5>
           </div>
           <div className="flex items-center mt-4">
-            <p className="font-black text-gray-600 text-3xl px-3">158</p>
+            <p className="font-black text-gray-600 text-3xl px-3">
+              {allJHS?.data?.fetchJuniorHigh}
+            </p>
             <p className="text-gray-400">
               <span>JHS</span> 1 to JHS 3
             </p>
@@ -93,9 +122,38 @@ const Students = () => {
             />
           </div>
           <div>
-            <Button variant="contained" style={{ backgroundColor: "#29365F" }}>
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "#29365F" }}
+              onClick={handleOpen}
+            >
               Add Student
             </Button>
+            <div
+              className="backdrop-blur-3xl"
+              style={{ backdropFilter: "blur(64px)" }}
+            >
+              <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={style}>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h6"
+                    component="h2"
+                  >
+                    Text in a modal
+                  </Typography>
+                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    Duis mollis, est non commodo luctus, nisi erat porttitor
+                    ligula.
+                  </Typography>
+                </Box>
+              </Modal>
+            </div>
           </div>
         </div>
         <div className="h-[90%] ">
