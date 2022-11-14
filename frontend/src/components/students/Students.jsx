@@ -6,25 +6,38 @@ import SchoolIcon from "@mui/icons-material/School";
 import Student from "./Student";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
+  useAddNewStudentMutation,
+  useFindAllStudentsQuery,
   useGetAllJHSQuery,
   useGetAllPrefectsQuery,
   useGetAllPrimaryQuery,
   useGetAllStudentsQuery,
 } from "../../api/students/StudentsApi";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-const Students = () => {
+const Students = ({ firstname, gender }) => {
   const navigate = useNavigate();
   const [allJHS, setAllJHS] = useState(useGetAllJHSQuery());
   const [allStudents, setAllStudents] = useState(useGetAllStudentsQuery());
-  console.log("All students", allStudents);
+  const [findAllStudents, setFindAllStudents] = useState(
+    useFindAllStudentsQuery()
+  );
 
   const { data } = useGetAllPrefectsQuery();
   const { currentData } = useGetAllPrimaryQuery();
+  const [myData, setMyData] = useState([]);
+  const dispatch = useDispatch();
 
   // Modal
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [age, setAge] = useState("");
+  const [addNewStudent, setAddNewStudent] = useAddNewStudentMutation();
 
   const style = {
     position: "absolute",
@@ -33,13 +46,37 @@ const Students = () => {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "2px solid #000",
+
     boxShadow: 24,
     p: 4,
   };
 
-  // const {data} = useGetAllJHSQuery()
-  console.log("All JHS", allJHS);
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/findallstudents"
+      );
+      const data = await response.json();
+      console.log("My data", data);
+      setMyData(data);
+    };
+    fetchStudents();
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addNewStudent({
+      firstname: fullname,
+      email,
+      password,
+      age: 21,
+    });
+    console.log("Firstname", fullname);
+    console.log("email", email);
+    console.log("Password", password);
+    console.log("Age", age);
+  };
+
   return (
     <div className=" w-[99vw] mt-[120px] m-auto">
       {/* <Sidebar /> */}
@@ -139,31 +176,96 @@ const Students = () => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
               >
-                <Box sx={style}>
-                  <Typography
-                    id="modal-modal-title"
-                    variant="h6"
-                    component="h2"
-                  >
-                    Text in a modal
-                  </Typography>
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Duis mollis, est non commodo luctus, nisi erat porttitor
-                    ligula.
-                  </Typography>
+                <Box sx={style} className="rounded-md">
+                  <p id="modal-modal-title" className="font-bold text-xl mb-4">
+                    Add New Student
+                  </p>
+                  <div id="modal-modal-description" sx={{ mt: 2 }}>
+                    <form action="" onSubmit={handleSubmit}>
+                      <div className="grid grid-cols-1 gap-4 mb-[-8px]">
+                        <label
+                          htmlFor="email"
+                          className="font-[500] text-[#344054] mb-[-6px]"
+                        >
+                          Fullname
+                        </label>
+                        <input
+                          onChange={(e) => setFullname(e.target.value)}
+                          value={fullname}
+                          type="text"
+                          required
+                          name="fullname"
+                          placeholder="John Doe"
+                          className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 gap-4 mb-[-8px] mt-8">
+                        <label
+                          htmlFor="email"
+                          className="font-[500] text-[#344054] mb-[-6px]"
+                        >
+                          Email
+                        </label>
+                        <input
+                          onChange={(e) => setEmail(e.target.value)}
+                          value={email}
+                          type="email"
+                          required
+                          name="email"
+                          placeholder="john.joe@gmail.com"
+                          className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 gap-4 mb-[-8px]  mt-8">
+                        <label
+                          htmlFor="password"
+                          className="font-[500] text-[#344054] mb-[-6px]"
+                        >
+                          Password
+                        </label>
+                        <input
+                          onChange={(e) => setPassword(e.target.value)}
+                          value={password}
+                          type="password"
+                          required
+                          name="password"
+                          placeholder="********"
+                          className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 gap-4  mt-8">
+                        <label
+                          htmlFor="email"
+                          className="font-[500] text-[#344054] mb-[-6px]"
+                        >
+                          Date of birth
+                        </label>
+                        <input
+                          onChange={(e) => setAge(e.target.value)}
+                          value={age}
+                          type="time"
+                          required
+                          name="birthDate"
+                          // placeholder="john.joe@gmail.com"
+                          className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                        />
+                      </div>
+                      <button className="w-[330px] h-[44px] bg-[#334054] rounded-md mt-6 text-white">
+                        ADD NEW STUDENT
+                      </button>
+                    </form>
+                  </div>
                 </Box>
               </Modal>
             </div>
           </div>
         </div>
         <div className="h-[90%] ">
-          <Student />
-          <Student />
-          <Student />
-          <Student />
-          <Student />
-
-          <Student />
+          {myData?.fetchstudents?.map(({ firstname, gender }) => (
+            <div>
+              <Student firstname={firstname} gender={gender} />
+            </div>
+          ))}
         </div>
       </div>
     </div>

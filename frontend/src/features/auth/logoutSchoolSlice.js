@@ -5,16 +5,16 @@ export const logoutSchool = createAsyncThunk(
   async (token, { rejectWithValue }) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/v1/schoolLogout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "Application/json",
-            Accept: "Application/json",
-            Authorization: "Token " + token,
-          },
-          body: JSON.stringify(token),
-        }
+        "http://localhost:5000/api/v1/schoolLogout"
+        // {
+        //   method: "GET",
+        //   headers: {
+        //     "Content-Type": "Application/json",
+        //     Accept: "Application/json",
+        //     Authorization: "Token " + token,
+        //   },
+        //   body: JSON.stringify(token),
+        // }
       );
 
       const data = await response.json();

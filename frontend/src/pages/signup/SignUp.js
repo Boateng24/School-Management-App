@@ -2,12 +2,14 @@ import background from "../../assets/background.png";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewSchool } from "../../features/auth/createSchoolSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SignUp = () => {
-  const { isCreating, currentSchool } = useSelector(
+  const { isCreating, currentSchool, error } = useSelector(
     (state) => state.createSchool
   );
+  const [showError, setShowError] = useState(false);
+  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     schoolName: "",
     email: "",
@@ -15,6 +17,26 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
+
+  useEffect(() => {
+    if (error) {
+      setShowError(true);
+      setFormData({ email: "", password: "" });
+    } else {
+      setShowError(false);
+    }
+    setTimeout(() => {
+      setShowError(false);
+    }, 4000);
+  }, [error]);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });

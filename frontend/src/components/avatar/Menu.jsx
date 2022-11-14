@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { logout, logoutSchool } from "../../features/auth/logoutSchoolSlice";
 
 export default function AccountMenu() {
-  const { id } = useSelector(
+  const {} = useSelector(
     (state) => state.loginSchool?.loggedInSchool?.loggedInSchool
   );
   const [anchorEl, setAnchorEl] = useState(null);
@@ -31,7 +31,7 @@ export default function AccountMenu() {
   };
 
   const handleLogout = (e) => {
-    dispatch(logoutSchool(id));
+    dispatch(logoutSchool());
     dispatch(logout());
     localStorage.clear();
     localStorage.clear("applicationState");

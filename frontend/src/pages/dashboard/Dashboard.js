@@ -32,7 +32,7 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center mt-4">
               <p className="font-black text-gray-600 text-3xl px-3">
-                {data?.fetchstudents}
+                {data?.countstudents}
               </p>
               <p className="text-gray-400">
                 <span className="text-green-600">+12%</span> compared to last

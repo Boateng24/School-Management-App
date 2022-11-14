@@ -5,11 +5,13 @@ import { Navigate, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const Student = () => {
+const Student = ({ firstname, gender }) => {
   const navigate = useNavigate();
   const { isLoggingIn, loggedInSchool } = useSelector(
     (state) => state.loginSchool.loggedInSchool?.loggedInSchool
   );
+
+  const data = useSelector((state) => state.findAllStudents);
 
   return (
     <div
@@ -17,10 +19,12 @@ const Student = () => {
       onClick={() => navigate(`${Math.random() * 12000}`)}
     >
       <div className="flex justify-between w-[60%] mr-auto py-4">
-        <p>Name</p>
-        <p>Student ID</p>
+        <p>Profile</p>
+        <p>{firstname}</p>
+        <p>Email</p>
+        <p>Age</p>
         <p>Class</p>
-        <p>Gender</p>
+        <p>{gender}</p>
       </div>
       <div className="flex w-[10%] justify-end py-4">
         <IconButton>
