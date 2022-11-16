@@ -21,7 +21,7 @@ export const studentsApi = createApi({
     getAllJHS: builder.query({
       query: () => "allJhs",
     }),
-    addNewStudent: builder.mutation({
+    addStudent: builder.mutation({
       query: (payload) => ({
         url: "usersignup",
         method: "POST",
@@ -43,5 +43,5 @@ export const {
   useGetAllPrefectsQuery,
   useGetAllPrimaryQuery,
   useGetAllJHSQuery,
-  useAddNewStudentMutation,
+  useAddStudentMutation,
 } = studentsApi;

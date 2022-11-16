@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@mui/material";
+import { Avatar, Button, IconButton } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -14,13 +14,15 @@ const Student = ({ firstname, gender }) => {
   const data = useSelector((state) => state.findAllStudents);
 
   return (
-    <div
-      className="flex justify-start mb-1 even:bg-slate-50 px-3 cursor-pointer"
-      onClick={() => navigate(`${Math.random() * 12000}`)}
-    >
-      <div className="flex justify-between w-[60%] mr-auto py-4">
-        <p>Profile</p>
-        <p>{firstname}</p>
+    <div className="flex justify-start mb-1  px-3 cursor-pointer hover:bg-slate-50 ">
+      <div
+        className="flex justify-between w-[60%] mr-auto py-4"
+        onClick={() => navigate(`${Math.random() * 12000}`)}
+      >
+        <div className="flex items-center">
+          <Avatar alt="profile" />
+          <p className="ml-4">{firstname}</p>
+        </div>
         <p>Email</p>
         <p>Age</p>
         <p>Class</p>

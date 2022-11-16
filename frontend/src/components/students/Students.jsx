@@ -6,7 +6,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import Student from "./Student";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
-  useAddNewStudentMutation,
+  useAddStudentMutation,
   useFindAllStudentsQuery,
   useGetAllJHSQuery,
   useGetAllPrefectsQuery,
@@ -37,7 +37,20 @@ const Students = ({ firstname, gender }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [age, setAge] = useState("");
-  const [addNewStudent, setAddNewStudent] = useAddNewStudentMutation();
+
+  const filterThis = [
+    "red",
+    "blue",
+    "green",
+    "Brown",
+    "Indigo",
+    "Gray",
+    "Grey",
+  ];
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [addNewStudent, setAddNewStudent] = useAddStudentMutation();
+  const [filterList, setFilterList] = useState(filterThis);
 
   const style = {
     position: "absolute",
@@ -46,10 +59,15 @@ const Students = ({ firstname, gender }) => {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-
     boxShadow: 24,
     p: 4,
   };
+
+  // useEffect(() => {
+  //   const filtered = filterList.filter((list) => list.includes(searchTerm));
+  //   setFilterList(filtered);
+  //   // return filtered;
+  // }, [filterList, searchTerm]);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -57,7 +75,7 @@ const Students = ({ firstname, gender }) => {
         "http://localhost:5000/api/v1/findallstudents"
       );
       const data = await response.json();
-      console.log("My data", data);
+
       setMyData(data);
     };
     fetchStudents();
@@ -69,19 +87,44 @@ const Students = ({ firstname, gender }) => {
       firstname: fullname,
       email,
       password,
-      age: 21,
+      age: +age,
     });
-    console.log("Firstname", fullname);
-    console.log("email", email);
-    console.log("Password", password);
-    console.log("Age", age);
+    handleClose();
   };
 
+  const handleChange = (e) => {
+    // const filtered = filterList.filter((data) => {
+    //   if (e.target.value === "") return filterList;
+    //   return data.firstname.toLowerCase().includes(searchTerm.toLowerCase());
+    // });
+    // setMyData(filtered);
+
+    setSearchTerm(e.target.value);
+  };
+
+  const [opened, setOpened] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  useEffect(() => {
+    if (opened) {
+      setShowSuccess(true);
+      setFullname("");
+      setPassword("");
+    } else {
+      setShowSuccess(false);
+    }
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 4000);
+  }, [opened]);
+
   return (
-    <div className=" w-[99vw] mt-[120px] m-auto">
-      {/* <Sidebar /> */}
+    <div className=" w-[99vw]  mt-[120px] m-auto">
       <div className="flex justify-center">
-        {/* <Sidebar /> */}
         {/* First item */}
         <div className="bg-white w-[30vw] h-fit ml-4 mt-[-50px] border-2 rounded-lg p-4  border-gray-100">
           <div className="flex items-center">
@@ -145,15 +188,14 @@ const Students = ({ firstname, gender }) => {
           </div>
         </div>
       </div>
-      <div className="rounded-lg h-[70vh] w-[92vw] flex flex-col m-auto mt-4 p-4 border-2 border-gray-100">
+      <div className="rounded-lg max-h-[70vh] w-[92vw] flex flex-col m-auto mt-4 p-4 border-2 border-gray-100 overflow-y-scroll scrollbar-hide ">
         <div className="h-[10%] flex justify-between">
           <div>
             <input
-              // onChange={onChange}
-              // value={email}
-              type="text"
-              required
-              name="search"
+              onChange={handleChange}
+              value={searchTerm}
+              type="search"
+              name="searchTerm"
               placeholder="Search students"
               className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
             />
@@ -177,7 +219,10 @@ const Students = ({ firstname, gender }) => {
                 aria-describedby="modal-modal-description"
               >
                 <Box sx={style} className="rounded-md">
-                  <p id="modal-modal-title" className="font-bold text-xl mb-4">
+                  <p
+                    id="modal-modal-title"
+                    className="font-bold text-xl mb-4 -mt-2"
+                  >
                     Add New Student
                   </p>
                   <div id="modal-modal-description" sx={{ mt: 2 }}>
@@ -243,10 +288,11 @@ const Students = ({ firstname, gender }) => {
                         <input
                           onChange={(e) => setAge(e.target.value)}
                           value={age}
-                          type="time"
+                          type="number"
                           required
                           name="birthDate"
-                          // placeholder="john.joe@gmail.com"
+                          placeholder="Eg 21"
+                          min={8}
                           className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
                         />
                       </div>
@@ -261,12 +307,21 @@ const Students = ({ firstname, gender }) => {
           </div>
         </div>
         <div className="h-[90%] ">
-          {myData?.fetchstudents?.map(({ firstname, gender }) => (
-            <div>
-              <Student firstname={firstname} gender={gender} />
-            </div>
-          ))}
+          {myData?.fetchstudents
+            ?.filter(({ firstname }) =>
+              firstname.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+            )
+            .map(({ firstname, gender }) => (
+              <div>
+                <Student firstname={firstname} gender={gender} />
+              </div>
+            ))}
         </div>
+        {/* <div className="h-[90%] ">
+          {filterList.map((list) => (
+            <h1>{list}</h1>
+          ))}
+        </div> */}
       </div>
     </div>
   );
