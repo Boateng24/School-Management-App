@@ -16,9 +16,11 @@ import { useNavigate } from "react-router-dom";
 import { logout, logoutSchool } from "../../features/auth/logoutSchoolSlice";
 
 export default function AccountMenu() {
-  const {} = useSelector(
-    (state) => state.loginSchool?.loggedInSchool?.loggedInSchool
+  const { loggedInSchool } = useSelector(
+    (state) => state.loginSchool?.loggedInSchool
   );
+
+  console.log("Heyyyyy", loggedInSchool);
   const [anchorEl, setAnchorEl] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -94,25 +96,18 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem>
+        <MenuItem onClick={() => navigate(`schoolProfile`)}>
           <Avatar /> Profile
         </MenuItem>
-        <MenuItem>
-          <Avatar /> My account
-        </MenuItem>
+
         <Divider />
-        <MenuItem>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={() => navigate(`schoolSettings`)}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
-          Settings
+          Settings and Preferences
         </MenuItem>
+        <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
