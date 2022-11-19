@@ -30,10 +30,10 @@ function App() {
             <Route element={<ResetPassword />} path="resetpassword" />
             {/* <Route element={<Dashboard />} path="dashboard/:schoolId/" /> */}
             <Route element={<Sidebar />} path="dashboard/:schooldId/">
-              <Route element={<Dashboard />}  path='home' />
+              <Route element={<Dashboard />} path="home" />
               <Route element={<Students />} path="students" />
               {/* </Route> */}
-                <Route element={<StudentDetails />} path='students/:studentId' />
+              <Route element={<StudentDetails />} path="students/:studentId" />
               <Route element={<Staffs />} path="staffs" />
             </Route>
             <Route element={<PageNotFound />} path="*" />

@@ -21,7 +21,9 @@ const Student = ({ firstname, gender }) => {
       >
         <div className="flex items-center">
           <Avatar alt="profile" />
-          <p className="ml-4">{firstname}</p>
+          <p className="ml-4" title={firstname}>
+            {firstname}
+          </p>
         </div>
         <p>Email</p>
         <p>Age</p>

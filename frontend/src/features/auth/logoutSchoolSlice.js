@@ -18,6 +18,7 @@ export const logoutSchool = createAsyncThunk(
       );
 
       const data = await response.json();
+      console.log("Log out ", data);
 
       if (response.status === 204) {
         return data;

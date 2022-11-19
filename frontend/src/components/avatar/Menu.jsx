@@ -36,7 +36,7 @@ export default function AccountMenu() {
     localStorage.clear();
     localStorage.clear("applicationState");
     navigate("/");
-    window.location.reload();
+    // window.location.reload();
   };
 
   return (

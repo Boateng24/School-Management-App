@@ -63,12 +63,6 @@ const Students = ({ firstname, gender }) => {
     p: 4,
   };
 
-  // useEffect(() => {
-  //   const filtered = filterList.filter((list) => list.includes(searchTerm));
-  //   setFilterList(filtered);
-  //   // return filtered;
-  // }, [filterList, searchTerm]);
-
   useEffect(() => {
     const fetchStudents = async () => {
       const response = await fetch(
@@ -93,12 +87,6 @@ const Students = ({ firstname, gender }) => {
   };
 
   const handleChange = (e) => {
-    // const filtered = filterList.filter((data) => {
-    //   if (e.target.value === "") return filterList;
-    //   return data.firstname.toLowerCase().includes(searchTerm.toLowerCase());
-    // });
-    // setMyData(filtered);
-
     setSearchTerm(e.target.value);
   };
 
@@ -123,8 +111,8 @@ const Students = ({ firstname, gender }) => {
   }, [opened]);
 
   return (
-    <div className=" w-[99vw]  mt-[120px] m-auto">
-      <div className="flex justify-center">
+    <div className=" w-[94vw]  mt-[120px] m-auto">
+      <div className="flex justify-center items-center">
         {/* First item */}
         <div className="bg-white w-[30vw] h-fit ml-4 mt-[-50px] border-2 rounded-lg p-4  border-gray-100">
           <div className="flex items-center">
@@ -296,7 +284,7 @@ const Students = ({ firstname, gender }) => {
                           className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
                         />
                       </div>
-                      <button className="w-[330px] h-[44px] bg-[#334054] rounded-md mt-6 text-white">
+                      <button className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white">
                         ADD NEW STUDENT
                       </button>
                     </form>

@@ -1,4 +1,4 @@
-import background from "../../assets/background.png";
+import pic from "../../assets/pic.png";
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { schoolLogin } from "../../features/auth/loginSchoolSlice";
@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { Avatar, AvatarGroup } from "@mui/material";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -28,9 +29,6 @@ const SignIn = () => {
   const handleClick = () => {
     setOpen(true);
   };
-
-
-  
 
   useEffect(() => {
     if (error) {
@@ -98,8 +96,17 @@ const SignIn = () => {
         />
       </div>
 
-      <div className="hidden lg:flex min-w-[50vw] h-[100vh] ">
-        <img src={background} alt="endophin" width={"100%"} />
+      <div className="hidden lg:flex min-w-[50vw] h-[100vh] bg-[#29365f] align-center justify-center flex-col">
+        <h1 className="text-5xl mt-16 px-16 text-white font-bold">
+          School Management System
+        </h1>
+        <p className="w-[47vw] text-gray-300 px-16 py-12 text-base leading-8">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis modi
+          magnam quasi! Dolor provident, nam quaerat recusandae aperiam
+          voluptates quisquam, reiciendis a est at deleniti esse debitis, sed
+          odit sequi?
+        </p>
+        <img src={pic} width="700" alt="background" />
       </div>
       <div className=" flex h-[100vh] flex-1 justify-center items-center">
         <form action="" onSubmit={handleschoolLogin}>
@@ -123,7 +130,7 @@ const SignIn = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-4 mb-4">
-            <label htmlFor="passoword" className="font-[500] text-[#344054]">
+            <label htmlFor="password" className="font-[500] text-[#344054]">
               Password
             </label>
             <input
@@ -146,7 +153,7 @@ const SignIn = () => {
           </div>
           <div className="grid">
             <button
-              className="w-[360px] bg-blue-700 hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] mt-6 cursor-pointer"
+              className="w-[360px] bg-[#29365f] hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] mt-6 cursor-pointer"
               // disabled={!canSubmit}
               type="submit"
             >
