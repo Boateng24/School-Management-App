@@ -38,19 +38,8 @@ const Students = ({ firstname, gender }) => {
   const [password, setPassword] = useState("");
   const [age, setAge] = useState("");
 
-  const filterThis = [
-    "red",
-    "blue",
-    "green",
-    "Brown",
-    "Indigo",
-    "Gray",
-    "Grey",
-  ];
-
   const [searchTerm, setSearchTerm] = useState("");
   const [addNewStudent, setAddNewStudent] = useAddStudentMutation();
-  const [filterList, setFilterList] = useState(filterThis);
 
   const style = {
     position: "absolute",
@@ -196,15 +185,13 @@ const Students = ({ firstname, gender }) => {
             >
               Add Student
             </Button>
-            <div
-              className="backdrop-blur-3xl"
-              style={{ backdropFilter: "blur(64px)" }}
-            >
+            <div className="bg-green-400">
               <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
+                className="backdrop-blur-md"
               >
                 <Box sx={style} className="rounded-md">
                   <p

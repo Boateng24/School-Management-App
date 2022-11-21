@@ -24,7 +24,9 @@ const Sidebar = () => {
     <div className="bg-[#29365F] h-48 w-[99vw] scrollbar-hide">
       <div className="">
         <div className="flex justify-between items-center w-[97vw]">
-          <div className="text-white text-xl font-bold pl-16">{name}</div>
+          <div className="text-white text-xl font-bold pl-16">
+            <NavLink to={"home"}>{name}</NavLink>
+          </div>
           <div>
             <NavLink
               to={`home`}
