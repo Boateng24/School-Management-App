@@ -2,6 +2,7 @@ import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import React, { useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import SchoolIcon from "@mui/icons-material/School";
+import VerifiedIcon from "@mui/icons-material/Verified";
 // import AddIcon from "@mui/icons-material/Add";
 import Student from "./Student";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -288,9 +289,17 @@ const Students = ({ firstname, gender }) => {
             ?.filter(({ firstname }) =>
               firstname.toLowerCase().includes(searchTerm.toLocaleLowerCase())
             )
-            .map(({ firstname, gender, id }) => (
+            .map(({ firstname, gender, id, profilePic, isPrefect, level }) => (
               <div>
-                <Student firstname={firstname} gender={gender} id={id} />
+                <Student
+                  // className="text-left"
+                  firstname={firstname}
+                  gender={gender || "Unknown"}
+                  id={id}
+                  profilePic={profilePic}
+                  isPrefect={isPrefect}
+                  // level={level}
+                />
               </div>
             ))}
         </div>
