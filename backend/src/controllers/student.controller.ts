@@ -14,9 +14,12 @@ export const findallStudents = async (req:Request, res:Response, next:NextFuncti
             },
             select:{
                 firstname: true,
-                id: true,
                 class: true,
-                gender: true
+                gender: true,
+                profilePic:true,
+                isPrefect: true,
+                guardian: true,
+                role: true
             }
         })
 

@@ -77,12 +77,13 @@ export const deleteUser = async (req:Request, res:Response, next:NextFunction) =
 
         const userDelete = await prisma.user.delete({
             where:{
-                id: req["payload"].id
+                id: req.params.id
             }
         })
 
+        if(!userDelete) return res.json({msg: "user not found"})
         
-       res.json(`${userDelete.firstname} deleted from database`)
+       res.json({msg:`${userDelete.firstname} deleted from your school`})
     } catch (error) {
         next(error)
     }
