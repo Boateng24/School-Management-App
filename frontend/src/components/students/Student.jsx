@@ -4,14 +4,23 @@ import { useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useRemoveStudentMutation } from "../../api/students/StudentsApi";
 
-const Student = ({ firstname, gender }) => {
+const Student = ({ firstname, gender, id }) => {
   const navigate = useNavigate();
   const { isLoggingIn, loggedInSchool } = useSelector(
     (state) => state.loginSchool.loggedInSchool?.loggedInSchool
   );
 
-  const data = useSelector((state) => state.findAllStudents);
+  // const data = useSelector((state) => state.findAllStudents);
+
+  // const data = useRemoveStudentMutation("32323");
+
+  // const handleStudentDelete = (id) => {
+  //   window.location.reload();
+  // };
+
+  // console.log("Deleted", data);
 
   return (
     <div className="flex justify-start mb-1  px-3 cursor-pointer hover:bg-slate-50 ">

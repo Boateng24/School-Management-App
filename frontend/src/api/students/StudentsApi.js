@@ -9,7 +9,7 @@ export const studentsApi = createApi({
     findAllStudents: builder.query({
       query: () => "findallstudents",
     }),
-    getAllStudents: builder.query({
+    countAllStudents: builder.query({
       query: () => "countallstudents",
     }),
     getAllPrefects: builder.query({
@@ -30,6 +30,20 @@ export const studentsApi = createApi({
         //   "Content-Type": "Application/json",
         // },
       }),
+      removeStudent: builder.mutation({
+        query: (id) => ({
+          url: `/user/${id}`,
+          method: "DELETE",
+          body: id,
+        }),
+      }),
+      editStudent: builder.mutation({
+        query: (id) => ({
+          url: `/user/${id}`,
+          method: "PUT",
+          body: id,
+        }),
+      }),
       invalidatesTags: ["students"],
     }),
   }),
@@ -39,9 +53,10 @@ export const studentsApi = createApi({
 // auto-generated based on the defined endpoints
 export const {
   useFindAllStudentsQuery,
-  useGetAllStudentsQuery,
+  useCountAllStudentsQuery,
   useGetAllPrefectsQuery,
   useGetAllPrimaryQuery,
   useGetAllJHSQuery,
   useAddStudentMutation,
+  useRemoveStudentMutation,
 } = studentsApi;

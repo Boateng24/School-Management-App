@@ -11,7 +11,7 @@ import {
   useGetAllJHSQuery,
   useGetAllPrefectsQuery,
   useGetAllPrimaryQuery,
-  useGetAllStudentsQuery,
+  useCountAllStudentsQuery,
 } from "../../api/students/StudentsApi";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -19,7 +19,7 @@ import { useDispatch } from "react-redux";
 const Students = ({ firstname, gender }) => {
   const navigate = useNavigate();
   const [allJHS, setAllJHS] = useState(useGetAllJHSQuery());
-  const [allStudents, setAllStudents] = useState(useGetAllStudentsQuery());
+  const [allStudents, setAllStudents] = useState(useCountAllStudentsQuery());
   const [findAllStudents, setFindAllStudents] = useState(
     useFindAllStudentsQuery()
   );
@@ -63,6 +63,8 @@ const Students = ({ firstname, gender }) => {
     };
     fetchStudents();
   }, []);
+
+  console.log("All students data", myData);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -286,9 +288,9 @@ const Students = ({ firstname, gender }) => {
             ?.filter(({ firstname }) =>
               firstname.toLowerCase().includes(searchTerm.toLocaleLowerCase())
             )
-            .map(({ firstname, gender }) => (
+            .map(({ firstname, gender, id }) => (
               <div>
-                <Student firstname={firstname} gender={gender} />
+                <Student firstname={firstname} gender={gender} id={id} />
               </div>
             ))}
         </div>
