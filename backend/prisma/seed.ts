@@ -36,7 +36,7 @@ const userMain = async () => {
               other: faker.name.fullName(),
             },
           },
-          class: {
+          stage: {
             create: {
               classType: classCategory[Object.keys(classCategory)[category]],
               teacher: faker.name.firstName(),
