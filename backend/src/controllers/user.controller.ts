@@ -75,15 +75,20 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
 export const deleteUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
 
+        const findUser = await prisma.user.findFirst({
+            where:{
+                id: req.params.id
+            }
+        })
+        if(!findUser) return res.json({msg: 'user not found'})
+
         const userDelete = await prisma.user.delete({
             where:{
                 id: req.params.id
             }
         })
-
-        if(!userDelete) return res.json({msg: "user not found"})
         
-       res.json({msg:`${userDelete.firstname} deleted from your school`})
+       res.json({msg:`${userDelete.firstname} deleted from your school}`})
     } catch (error) {
         next(error)
     }

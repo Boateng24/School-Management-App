@@ -14,12 +14,13 @@ export const findallStudents = async (req:Request, res:Response, next:NextFuncti
             },
             select:{
                 firstname: true,
-                class: true,
+                stage: true,
                 gender: true,
                 profilePic:true,
                 isPrefect: true,
-                guardian: true,
-                role: true
+                age: true,
+                email: true,
+                guardian: true
             }
         })
 
@@ -102,7 +103,7 @@ export const allPrimaryStudents = async(req:Request, res:Response, next:NextFunc
     try {
         const fetchPrimaryStudents = await prisma.user.count({
             where:{
-                class:{
+                stage:{
                     some:{
                         classType:{
                             equals: "Primary"
@@ -120,7 +121,7 @@ export const allJuniorHighStudents = async(req:Request, res:Response, next:NextF
     try {
         const fetchJuniorHigh = await prisma.user.count({
             where:{
-                class:{
+                stage:{
                     some:{
                         classType:{
                             equals: "JuniorHigh"
