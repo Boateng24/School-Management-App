@@ -15,7 +15,7 @@ const store = configureStore({
 
     [studentsApi.reducerPath]: studentsApi.reducer,
   },
-  preloadedState: reHydrateStore(),
+  // preloadedState: reHydrateStore(),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(localStorageMiddleware),
 });
