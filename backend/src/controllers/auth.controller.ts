@@ -31,7 +31,13 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
                 email,
                 password: await hashedPassword(password),
                 role: req.body?.role,
-                age: req.body?.age
+                age: req.body?.age,
+                stage:{
+                    create:{
+                        classType: req.body?.classType
+                    }
+                },
+                gender: req.body?.gender
             }
         })
         const createdUser = newUser.id
