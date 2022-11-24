@@ -42,11 +42,11 @@ export const localStorageMiddleware = ({ getState }) => {
   };
 };
 
-// export const reHydrateStore = () => {
-//   if (localStorage.getItem("applicationState") !== null) {
-//     return JSON.parse(localStorage.getItem("applicationState")); // re-hydrate the store
-//   }
-// };
+export const reHydrateStore = () => {
+  if (localStorage.getItem("applicationState") !== null) {
+    return JSON.parse(localStorage.getItem("applicationState")); // re-hydrate the store
+  }
+};
 
 const loginSchoolSlice = createSlice({
   name: "auth/login",
