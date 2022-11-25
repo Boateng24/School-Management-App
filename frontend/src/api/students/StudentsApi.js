@@ -8,6 +8,7 @@ export const studentsApi = createApi({
   endpoints: (builder) => ({
     findAllStudents: builder.query({
       query: () => "findallstudents",
+      providesTags: ["students"],
     }),
     countAllStudents: builder.query({
       query: () => "countallstudents",
@@ -27,21 +28,23 @@ export const studentsApi = createApi({
         method: "POST",
         body: payload,
       }),
-      removeStudent: builder.mutation({
-        query: (payload) => ({
-          url: `/user/${payload}`,
-          method: "DELETE",
-          body: payload,
-        }),
-        invalidatesTags: ["students"],
+      invalidatesTags: ["students"],
+    }),
+    removeStudent: builder.mutation({
+      query: ({ id }) => ({
+        url: `/user/${id}`,
+        method: "DELETE",
+        body: id,
       }),
-      editStudent: builder.mutation({
-        query: (payload) => ({
-          url: `/user/${payload}`,
-          method: "PUT",
-          body: payload,
-        }),
+      invalidatesTags: ["students"],
+    }),
+    editStudent: builder.mutation({
+      query: (payload) => ({
+        url: `/user/${payload.id}`,
+        method: "PUT",
+        body: payload,
       }),
+      invalidatesTags: ["students"],
     }),
   }),
 });
@@ -55,4 +58,6 @@ export const {
   useGetAllPrimaryQuery,
   useGetAllJHSQuery,
   useAddStudentMutation,
+  useEditStudentMutation,
+  useRemoveStudentMutation,
 } = studentsApi;
