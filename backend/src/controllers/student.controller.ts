@@ -13,7 +13,7 @@ export const findallStudents = async (req:Request, res:Response, next:NextFuncti
                 }
             },
             select:{
-                firstname: true,
+                fullname: true,
                 stage: true,
                 gender: true,
                 profilePic:true,

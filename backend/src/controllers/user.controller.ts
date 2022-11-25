@@ -30,7 +30,7 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
         const getUsers = await prisma.user.findMany({
           select:{
             id: true,
-            firstname:true,
+            fullname:true,
             email:true,
             role: true
           }
@@ -45,7 +45,7 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const{firstname, email, age} = req.body as createUser
+        const{fullname, email, age} = req.body as createUser
         const userExits = await prisma.user.findFirst({
             where:{
                 id: req.params.id
@@ -58,7 +58,7 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
             id: req.params.id
            },
            data:{
-            firstname,
+            fullname,
             email,
             age
            }
@@ -88,7 +88,7 @@ export const deleteUser = async (req:Request, res:Response, next:NextFunction) =
             }
         })
         
-       res.json({msg:`${userDelete.firstname} deleted from your school}`})
+       res.json({msg:`${userDelete.fullname} deleted from your school}`})
     } catch (error) {
         next(error)
     }
