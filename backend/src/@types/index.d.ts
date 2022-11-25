@@ -10,7 +10,7 @@ declare global {
 
 
 interface createUser{
-    firstname: string;
+    fullname: string;
     email: string;
     password: string;
     confirmPassword:string
