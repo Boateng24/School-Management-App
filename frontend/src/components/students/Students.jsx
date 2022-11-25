@@ -75,8 +75,6 @@ const Students = () => {
     fetchStudents();
   }, []);
 
-  console.log("All students data", myData);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     addNewStudent({
@@ -86,7 +84,7 @@ const Students = () => {
       stage,
     });
     handleClose();
-    // window.location.reload();
+    window.location.reload();
   };
 
   const handleChange = (e) => {
@@ -116,18 +114,6 @@ const Students = () => {
       setShowSuccess(false);
     }, 4000);
   }, [opened]);
-
-  const currentDate = new Date();
-
-  console.log(myData?.fetchstudents, "This is it");
-
-  // const generateStudentDefaultPassword = () => {
-  //   setPassword(`${fullname.slice(0, 4)} ${email.slice(5, 7)}`);
-  // };
-
-  // useEffect(() => {
-  //   setPassword(generateStudentDefaultPassword());
-  // }, [fullname, email]);
 
   return (
     <div className=" w-[94vw]  mt-[120px] m-auto">
@@ -274,12 +260,9 @@ const Students = () => {
                           Password
                         </label>
                         <input
+                          type="password"
+                          value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          // value={password}
-                          value={`${fullname.slice(0, 4)}${email.slice(
-                            -4
-                          )}${currentDate.getFullYear()}`}
-                          type="text"
                           required
                           name="password"
                           placeholder="********"
@@ -346,9 +329,9 @@ const Students = () => {
             // )
             ?.map(
               ({
+                id,
                 fullname,
                 gender,
-                id,
                 profilePic,
                 isPrefect,
                 stage,
