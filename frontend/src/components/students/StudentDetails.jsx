@@ -1,4 +1,4 @@
-import { Divider } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import React from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -57,7 +57,6 @@ const StudentDetails = () => {
     setValue(index);
   };
 
-  console.log(studentId);
   return (
     <div className="flex">
       <div className="flex flex-col items-center m-5 w-[20vw] text-left">
@@ -91,10 +90,13 @@ const StudentDetails = () => {
             </span>
             +233243232123
           </p>
+          <button className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white">
+            EDIT STUDENT DETAILS
+          </button>
         </div>
         {/* <img src="" alt="Student Profiles" /> */}
       </div>
-      <div className=" w-[80vw] mt-[53px] h-[74vh] ">
+      <div className=" w-[77vw] mt-[53px] h-[74vh] ">
         <Box sx={{ width: "100%" }}>
           <AppBar
             position="static"

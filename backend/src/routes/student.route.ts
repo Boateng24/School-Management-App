@@ -3,7 +3,7 @@ import { countallStudents, allPrefects, allJuniorHighStudents, allPrimaryStudent
 const studentRouter = express.Router()
 
 studentRouter.get('/findallstudents', findallStudents)
-studentRouter.get('/allstudents', countallStudents)
+studentRouter.get('/countallstudents', countallStudents)
 studentRouter.get('/allprefects', allPrefects)
 studentRouter.get('/allJhs', allJuniorHighStudents)
 studentRouter.get('/allPrimary', allPrimaryStudents)

@@ -1,10 +1,10 @@
 import { prisma } from '../config/prismaInit';
 import { NextFunction, Request, Response } from 'express';
 import { createSchool, updateSchool } from '../@types';
-import createHttpError from 'http-errors';
 import { compare, hashedPassword } from '../helpers/bcryptConfig';
 import { createAccessToken } from '../helpers/accessToken';
 import { createRefreshToken } from '../helpers/refreshToken';
+import { refreshTokens, removeRefreshToken } from './renewtoken.controller';
 
 // export type RefreshTokenUser = {
 //   id: string;
@@ -76,8 +76,12 @@ export const loginSchool = async (
       return res.status(404).json({ message: 'School not Found' });
 
     const verifyPassword = await compare(password, schoolExists?.password);
-    if (!verifyPassword){
-        const Errors = {message: "Invalid Credentials", params: 'password', value: password}
+    if (!verifyPassword) {
+      const Errors = {
+        message: 'Invalid Credentials',
+        params: 'password',
+        value: password,
+      };
       return res.status(401).json(Array(Errors));
     }
 
@@ -110,14 +114,29 @@ export const logoutSchool = (
   next: NextFunction
 ) => {
   try {
+    // const cookies = req.cookies;
+    // if(!cookies?.jwt) return res.status(204)
+    // const refreshToken = cookies.jwt;
+
+    // let foundToken!: string;
+    // refreshTokens.forEach((item) => {
+    //   if(Object.values(item)[1] === refreshToken){
+    //     foundToken = Object.values(item)[1] as string
+    //   }
+    // })
+
+    // if (!foundToken) {
+    //   res.clearCookie('jwt', {httpOnly: true})
+    //   return res.status(204)
+    // }
+
+    // removeRefreshToken(refreshToken)
     res
       .clearCookie('jwt', {
         httpOnly: true,
         sameSite: 'none',
         secure: true,
       })
-      .status(204)
-      .json({ message: 'User logged out successfully' });
   } catch (error) {
     next(error);
   }

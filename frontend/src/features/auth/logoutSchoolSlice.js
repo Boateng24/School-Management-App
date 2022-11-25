@@ -4,20 +4,10 @@ export const logoutSchool = createAsyncThunk(
   "auth/logoutSchool",
   async (token, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/schoolLogout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "Application/json",
-            Accept: "Application/json",
-            Authorization: "Token " + token,
-          },
-          body: JSON.stringify(token),
-        }
-      );
+      const response = await fetch("http://localhost:5000/api/v1/schoolLogout");
 
       const data = await response.json();
+      console.log("Log out ", data);
 
       if (response.status === 204) {
         return data;

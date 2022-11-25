@@ -13,7 +13,7 @@ config()
 const maxAge = 7 * 24 * 60 * 60 * 1000
 export const userSignup = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const {firstname, email, password, confirmPassword} = req.body as createUser
+        const {fullname, email, password, confirmPassword} = req.body as createUser
         const userExists =   await prisma.user.findFirst({
             where:{
                 email
@@ -27,11 +27,17 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
 
         const newUser = await prisma.user.create({
             data:{
-                firstname,
+                fullname,
                 email,
                 password: await hashedPassword(password),
                 role: req.body?.role,
-                age: req.body?.age
+                age: req.body?.age,
+                stage:{
+                    create:{
+                        classType: req.body?.classType
+                    }
+                },
+                gender: req.body?.gender
             }
         })
         const createdUser = newUser.id
@@ -60,7 +66,7 @@ export const userLogin = async (req:Request, res:Response, next:NextFunction) =>
         const refreshToken = await createRefreshToken(foundUser.id)
 
         res.cookie('jwt-access', refreshToken, {httpOnly: true, sameSite: 'none', secure: true, maxAge})
-        const loggedInUser = {id: foundUser.id, firstname: foundUser.firstname, email:foundUser.email, role: foundUser.role, accessToken}
+        const loggedInUser = {id: foundUser.id, firstname: foundUser.fullname, email:foundUser.email, role: foundUser.role, accessToken}
         res.status(200).json({loggedInUser, success: true})
     } catch (error) {
         next(error)

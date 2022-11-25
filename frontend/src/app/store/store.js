@@ -12,6 +12,7 @@ const store = configureStore({
     createSchool: createSchoolSlice,
     loginSchool: loginSchoolSlice,
     logoutSchool: logoutSchoolSlice,
+
     [studentsApi.reducerPath]: studentsApi.reducer,
   },
   preloadedState: reHydrateStore(),

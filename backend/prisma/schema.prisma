@@ -15,7 +15,7 @@ datasource db {
 
 model User{
   id String @id @default(cuid())
-  firstname String
+  fullname String
   email String @unique
   password String
   age Int?
@@ -23,28 +23,19 @@ model User{
   gender String?
   isPrefect Boolean? @default(false)
   guardian Guardian[]
-  class Class[]
+  stage Stage[]
   address UserAddress[]
   profilePic String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-// model Students{
-//   id String @id @default(cuid())
-//   class Class @relation(fields: [classId], references: [id])
-//   classId String
-//   isPrefect Boolean @default(false)
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
-
 model Guardian{
   id String @id @default(cuid())
   father String?
   mother String?
   other String?
-  student User @relation(fields: [userId], references: [id])
+  student User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -55,18 +46,18 @@ model UserAddress{
   phoneNumber String
   GPS String
   NearestLandMark String
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Class{
+model Stage{
   id String @id @default(cuid())
   classType classCategory @default(Primary)
-  student User @relation(fields: [userId], references: [id])
+  student User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
-  teacher String
+  teacher String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -87,7 +78,7 @@ model School{
 
 model SchoolAddress{
   id String @id @default(cuid())
-  school School @relation(fields: [schoolId], references: [id])
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   schoolId String
   location String[]
   POBox String

@@ -1,5 +1,5 @@
 import { Divider, IconButton, Paper } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MiniDrawer from "../../components/sidebar/Sidebar";
 import SchoolIcon from "@mui/icons-material/School";
 import background from "../../assets/background.png";
@@ -9,11 +9,32 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import BadgeAvatars from "../../components/avatar/Avatar";
 import { ChatWidget } from "../../components/chat/Chat";
 import { Outlet } from "react-router-dom";
-import { useGetAllStudentsQuery } from "../../api/students/StudentsApi";
+import {
+  useFindAllStudentsQuery,
+  useCountAllStudentsQuery,
+} from "../../api/students/StudentsApi";
 
 const Dashboard = () => {
-  const { data } = useGetAllStudentsQuery();
-  console.log("Students data", data);
+  const [studentCount, setStudentCount] = useState();
+  // const { data } = useFindAllStudentsQuery();
+  // console.log("Find all students", data);
+  const data = useCountAllStudentsQuery();
+  console.log("Students data count", studentCount);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/countallstudents"
+      );
+      const data = await response.json();
+
+      setStudentCount(data?.countstudents);
+    };
+    fetchStudents();
+  }, []);
+
+  // const deleted = useDeleteStudentMutation("/clar1vqa30004udo4qhub4hzr");
+  // console.log(deleted, "deleted");
   return (
     <>
       <div className=" w-[99vw] mt-[120px] ">
@@ -32,7 +53,8 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center mt-4">
               <p className="font-black text-gray-600 text-3xl px-3">
-                {data?.fetchstudents}
+                {studentCount || "na"}
+                {/* {data?.findallstudents} */}
               </p>
               <p className="text-gray-400">
                 <span className="text-green-600">+12%</span> compared to last

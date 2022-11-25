@@ -1,13 +1,15 @@
-import background from "../../assets/background.png";
+import pic from "../../assets/pic.png";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewSchool } from "../../features/auth/createSchoolSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const SignUp = () => {
-  const { isCreating, currentSchool } = useSelector(
+  const { isCreating, currentSchool, error } = useSelector(
     (state) => state.createSchool
   );
+  const [showError, setShowError] = useState(false);
+  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     schoolName: "",
     email: "",
@@ -15,6 +17,26 @@ const SignUp = () => {
     password: "",
     confirmPassword: "",
   });
+
+  useEffect(() => {
+    if (error) {
+      setShowError(true);
+      setFormData({ email: "", password: "" });
+    } else {
+      setShowError(false);
+    }
+    setTimeout(() => {
+      setShowError(false);
+    }, 4000);
+  }, [error]);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,8 +58,17 @@ const SignUp = () => {
 
   return (
     <div className="flex bg-slate-50">
-      <div className="hidden lg:flex min-w-[50vw] h-[100vh] ">
-        <img src={background} alt="endophin" width={"100%"} />
+      <div className="hidden lg:flex min-w-[50vw] h-[100vh] bg-[#29365f] align-center justify-center flex-col">
+        <h1 className="text-5xl mt-16 px-16 text-white font-bold">
+          School Management System
+        </h1>
+        <p className="w-[47vw] text-gray-300 px-16 py-12 text-base leading-8">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis modi
+          magnam quasi! Dolor provident, nam quaerat recusandae aperiam
+          voluptates quisquam, reiciendis a est at deleniti esse debitis, sed
+          odit sequi?
+        </p>
+        <img src={pic} width="700" alt="background" />
       </div>
       <div className=" flex h-[100vh] flex-1 justify-center items-center">
         <form action="" onSubmit={onSubmit}>
@@ -107,7 +138,7 @@ const SignUp = () => {
           </div>
           <div className="grid">
             <button
-              className="w-[360px] bg-blue-700 hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] mt-6 cursor-pointer"
+              className="w-[360px] bg-[#29365F] hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] mt-6 cursor-pointer"
               disabled={isCreating}
               type="submit"
             >

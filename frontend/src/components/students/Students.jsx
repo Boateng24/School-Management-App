@@ -2,29 +2,45 @@ import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
 import React, { useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import SchoolIcon from "@mui/icons-material/School";
+import VerifiedIcon from "@mui/icons-material/Verified";
 // import AddIcon from "@mui/icons-material/Add";
 import Student from "./Student";
 import { Navigate, useNavigate } from "react-router-dom";
 import {
+  useAddStudentMutation,
+  useFindAllStudentsQuery,
   useGetAllJHSQuery,
   useGetAllPrefectsQuery,
   useGetAllPrimaryQuery,
-  useGetAllStudentsQuery,
+  useCountAllStudentsQuery,
 } from "../../api/students/StudentsApi";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
-const Students = () => {
+const Students = ({ firstname, gender }) => {
   const navigate = useNavigate();
   const [allJHS, setAllJHS] = useState(useGetAllJHSQuery());
-  const [allStudents, setAllStudents] = useState(useGetAllStudentsQuery());
-  console.log("All students", allStudents);
+  const [allStudents, setAllStudents] = useState(useCountAllStudentsQuery());
+  const [findAllStudents, setFindAllStudents] = useState(
+    useFindAllStudentsQuery()
+  );
 
   const { data } = useGetAllPrefectsQuery();
   const { currentData } = useGetAllPrimaryQuery();
+  const [myData, setMyData] = useState([]);
+  const dispatch = useDispatch();
 
   // Modal
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [age, setAge] = useState("");
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [addNewStudent, setAddNewStudent] = useAddStudentMutation();
 
   const style = {
     position: "absolute",
@@ -33,18 +49,63 @@ const Students = () => {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "2px solid #000",
     boxShadow: 24,
     p: 4,
   };
 
-  // const {data} = useGetAllJHSQuery()
-  console.log("All JHS", allJHS);
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/findallstudents"
+      );
+      const data = await response.json();
+
+      setMyData(data);
+    };
+    fetchStudents();
+  }, []);
+
+  console.log("All students data", myData);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addNewStudent({
+      firstname: fullname,
+      email,
+      password,
+      age: +age,
+    });
+    handleClose();
+    window.location.reload();
+  };
+
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const [opened, setOpened] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  useEffect(() => {
+    if (opened) {
+      setShowSuccess(true);
+      setFullname("");
+      setPassword("");
+    } else {
+      setShowSuccess(false);
+    }
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 4000);
+  }, [opened]);
+
   return (
-    <div className=" w-[99vw] mt-[120px] m-auto">
-      {/* <Sidebar /> */}
-      <div className="flex justify-center">
-        {/* <Sidebar /> */}
+    <div className=" w-[94vw]  mt-[120px] m-auto">
+      <div className="flex justify-center items-center">
         {/* First item */}
         <div className="bg-white w-[30vw] h-fit ml-4 mt-[-50px] border-2 rounded-lg p-4  border-gray-100">
           <div className="flex items-center">
@@ -108,15 +169,14 @@ const Students = () => {
           </div>
         </div>
       </div>
-      <div className="rounded-lg h-[70vh] w-[92vw] flex flex-col m-auto mt-4 p-4 border-2 border-gray-100">
+      <div className="rounded-lg max-h-[70vh] w-[92vw] flex flex-col m-auto mt-4 p-4 border-2 border-gray-100 overflow-y-scroll scrollbar-hide ">
         <div className="h-[10%] flex justify-between">
           <div>
             <input
-              // onChange={onChange}
-              // value={email}
-              type="text"
-              required
-              name="search"
+              onChange={handleChange}
+              value={searchTerm}
+              type="search"
+              name="searchTerm"
               placeholder="Search students"
               className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
             />
@@ -129,42 +189,126 @@ const Students = () => {
             >
               Add Student
             </Button>
-            <div
-              className="backdrop-blur-3xl"
-              style={{ backdropFilter: "blur(64px)" }}
-            >
+            <div className="bg-green-400">
               <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
+                className="backdrop-blur-md"
               >
-                <Box sx={style}>
-                  <Typography
+                <Box sx={style} className="rounded-md">
+                  <p
                     id="modal-modal-title"
-                    variant="h6"
-                    component="h2"
+                    className="font-bold text-xl mb-4 -mt-2"
                   >
-                    Text in a modal
-                  </Typography>
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Duis mollis, est non commodo luctus, nisi erat porttitor
-                    ligula.
-                  </Typography>
+                    Add New Student
+                  </p>
+                  <div id="modal-modal-description" sx={{ mt: 2 }}>
+                    <form action="" onSubmit={handleSubmit}>
+                      <div className="grid grid-cols-1 gap-4 mb-[-8px]">
+                        <label
+                          htmlFor="email"
+                          className="font-[500] text-[#344054] mb-[-6px]"
+                        >
+                          Fullname
+                        </label>
+                        <input
+                          onChange={(e) => setFullname(e.target.value)}
+                          value={fullname}
+                          type="text"
+                          required
+                          name="fullname"
+                          placeholder="John Doe"
+                          className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 gap-4 mb-[-8px] mt-8">
+                        <label
+                          htmlFor="email"
+                          className="font-[500] text-[#344054] mb-[-6px]"
+                        >
+                          Email
+                        </label>
+                        <input
+                          onChange={(e) => setEmail(e.target.value)}
+                          value={email}
+                          type="email"
+                          required
+                          name="email"
+                          placeholder="john.joe@gmail.com"
+                          className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 gap-4 mb-[-8px]  mt-8">
+                        <label
+                          htmlFor="password"
+                          className="font-[500] text-[#344054] mb-[-6px]"
+                        >
+                          Password
+                        </label>
+                        <input
+                          onChange={(e) => setPassword(e.target.value)}
+                          value={password}
+                          type="password"
+                          required
+                          name="password"
+                          placeholder="********"
+                          className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 gap-4  mt-8">
+                        <label
+                          htmlFor="email"
+                          className="font-[500] text-[#344054] mb-[-6px]"
+                        >
+                          Date of birth
+                        </label>
+                        <input
+                          onChange={(e) => setAge(e.target.value)}
+                          value={age}
+                          type="number"
+                          required
+                          name="birthDate"
+                          placeholder="Eg 21"
+                          min={8}
+                          className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                        />
+                      </div>
+                      <button className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white">
+                        ADD NEW STUDENT
+                      </button>
+                    </form>
+                  </div>
                 </Box>
               </Modal>
             </div>
           </div>
         </div>
         <div className="h-[90%] ">
-          <Student />
-          <Student />
-          <Student />
-          <Student />
-          <Student />
-
-          <Student />
+          {myData?.fetchstudents
+            ?.filter(({ firstname }) =>
+              firstname.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+            )
+            .map(({ firstname, gender, id, profilePic, isPrefect, level }) => (
+              <div>
+                <Student
+                  // className="text-left"
+                  firstname={firstname}
+                  gender={gender || "Unknown"}
+                  id={id}
+                  profilePic={profilePic}
+                  isPrefect={isPrefect}
+                  // level={level}
+                />
+              </div>
+            ))}
         </div>
+        {/* <div className="h-[90%] ">
+          {filterList.map((list) => (
+            <h1>{list}</h1>
+          ))}
+        </div> */}
       </div>
     </div>
   );

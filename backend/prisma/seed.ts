@@ -14,7 +14,7 @@ const userMain = async () => {
       );
       await prisma.user.create({
         data: {
-          firstname: faker.name.firstName(),
+          fullname: faker.name.fullName(),
           email: faker.helpers.unique(faker.internet.email),
           password: await hashedPassword(faker.internet.password()),
           role: Role[Object.keys(Role)[createRole]],
@@ -36,7 +36,7 @@ const userMain = async () => {
               other: faker.name.fullName(),
             },
           },
-          class: {
+          stage: {
             create: {
               classType: classCategory[Object.keys(classCategory)[category]],
               teacher: faker.name.firstName(),

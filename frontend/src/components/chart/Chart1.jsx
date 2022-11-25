@@ -23,7 +23,7 @@ const Chart1 = () => {
 
   return (
     <div>
-      <PieChart data={studentsPopulation} />
+      <LineChart data={studentsPopulation} />
     </div>
   );
 };

@@ -13,10 +13,14 @@ export const findallStudents = async (req:Request, res:Response, next:NextFuncti
                 }
             },
             select:{
-                firstname: true,
-                id: true,
-                class: true,
-                gender: true
+                fullname: true,
+                stage: true,
+                gender: true,
+                profilePic:true,
+                isPrefect: true,
+                age: true,
+                email: true,
+                guardian: true
             }
         })
 
@@ -28,7 +32,7 @@ export const findallStudents = async (req:Request, res:Response, next:NextFuncti
 export const countallStudents = async (req:Request, res:Response, next:NextFunction) => {
     try {
      
-        const fetchstudents = await prisma.user.count({
+        const countstudents = await prisma.user.count({
             where:{
                 role:{
                     equals: "student"
@@ -36,7 +40,7 @@ export const countallStudents = async (req:Request, res:Response, next:NextFunct
             }
         })
 
-        res.status(200).json({fetchstudents, success: true})
+        res.status(200).json({countstudents, success: true})
     } catch (error) {
         next(error)
     }
@@ -99,7 +103,7 @@ export const allPrimaryStudents = async(req:Request, res:Response, next:NextFunc
     try {
         const fetchPrimaryStudents = await prisma.user.count({
             where:{
-                class:{
+                stage:{
                     some:{
                         classType:{
                             equals: "Primary"
@@ -117,7 +121,7 @@ export const allJuniorHighStudents = async(req:Request, res:Response, next:NextF
     try {
         const fetchJuniorHigh = await prisma.user.count({
             where:{
-                class:{
+                stage:{
                     some:{
                         classType:{
                             equals: "JuniorHigh"
