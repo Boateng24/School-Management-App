@@ -26,25 +26,22 @@ export const studentsApi = createApi({
         url: "usersignup",
         method: "POST",
         body: payload,
-        // headers: {
-        //   "Content-Type": "Application/json",
-        // },
       }),
       removeStudent: builder.mutation({
-        query: (id) => ({
-          url: `/user/${id}`,
+        query: (payload) => ({
+          url: `/user/${payload}`,
           method: "DELETE",
-          body: id,
+          body: payload,
         }),
+        invalidatesTags: ["students"],
       }),
       editStudent: builder.mutation({
-        query: (id) => ({
-          url: `/user/${id}`,
+        query: (payload) => ({
+          url: `/user/${payload}`,
           method: "PUT",
-          body: id,
+          body: payload,
         }),
       }),
-      invalidatesTags: ["students"],
     }),
   }),
 });
@@ -58,5 +55,4 @@ export const {
   useGetAllPrimaryQuery,
   useGetAllJHSQuery,
   useAddStudentMutation,
-  useRemoveStudentMutation,
 } = studentsApi;

@@ -5,6 +5,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VerifiedIcon from "@mui/icons-material/Verified";
+import { useEditStudentMutation } from "../../api/students/StudentsApi";
 
 const Student = ({ firstname, gender, id, profilePic, isPrefect }) => {
   const navigate = useNavigate();
@@ -12,6 +13,8 @@ const Student = ({ firstname, gender, id, profilePic, isPrefect }) => {
     (state) => state.loginSchool.loggedInSchool?.loggedInSchool
   );
 
+  // const data = useEditStudentMutation("1212");
+  // console.log("Edit student", data);
   return (
     <div className="flex justify-start mb-1  px-3 cursor-pointer hover:bg-slate-50 ">
       <div

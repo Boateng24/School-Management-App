@@ -76,6 +76,7 @@ const Students = ({ firstname, gender }) => {
       age: +age,
     });
     handleClose();
+    window.location.reload();
   };
 
   const handleChange = (e) => {
