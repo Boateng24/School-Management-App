@@ -7,7 +7,7 @@ const schoolRouter = express.Router()
 
 schoolRouter.post('/createSchool', validatorSchema, passwordValidator, newSchool)
 schoolRouter.post('/schoolLogin', loginSchool)
-schoolRouter.get('/schoolLogout', logoutSchool)
+schoolRouter.delete('/schoolLogout', logoutSchool)
 schoolRouter.get('/school', getSchool)
 schoolRouter.patch('/school/update', verifyAccessToken, updateSchoolDetails)
 schoolRouter.delete('school/delete', verifyAccessToken, deleteSchool)

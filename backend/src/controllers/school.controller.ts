@@ -6,25 +6,6 @@ import { createAccessToken } from '../helpers/accessToken';
 import { createRefreshToken } from '../helpers/refreshToken';
 import { refreshTokens, removeRefreshToken } from './renewtoken.controller';
 
-// export type RefreshTokenUser = {
-//   id: string;
-//   firstname: string;
-//   role: string;
-// };
-
-// export type RefreshTokensType = {
-//   user: RefreshTokenUser;
-//   refreshToken: string;
-// };
-
-// export let refreshTokens: RefreshTokensType[] = [];
-
-// const removeRefreshToken = (tokenGiven: string) => {
-//   refreshTokens = refreshTokens.filter((token) => {
-//     return token.refreshToken !== tokenGiven;
-//   });
-// };
-
 const maxAge = 7 * 24 * 60 * 60 * 1000;
 export const newSchool = async (
   req: Request,
@@ -114,29 +95,25 @@ export const logoutSchool = (
   next: NextFunction
 ) => {
   try {
-    // const cookies = req.cookies;
-    // if(!cookies?.jwt) return res.status(204)
-    // const refreshToken = cookies.jwt;
+    const cookies = req.cookies;
+    if (!cookies?.jwt) return res.sendStatus(204); //no cookies or no jwt
+    const refreshToken = cookies.jwt;
 
-    // let foundToken!: string;
-    // refreshTokens.forEach((item) => {
-    //   if(Object.values(item)[1] === refreshToken){
-    //     foundToken = Object.values(item)[1] as string
-    //   }
-    // })
-
-    // if (!foundToken) {
-    //   res.clearCookie('jwt', {httpOnly: true})
-    //   return res.status(204)
-    // }
-
-    // removeRefreshToken(refreshToken)
+    let foundToken!: string;
+    refreshTokens.forEach((item) => {
+      if (Object.values(item)[1] === refreshToken) {
+        foundToken = Object.values(item)[1] as string;
+      }
+    });
+    if (!foundToken) {
+      res.clearCookie('jwt', { httpOnly: true });
+      return res.sendStatus(204);
+    }
+    removeRefreshToken(refreshToken);
     res
-      .clearCookie('jwt', {
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-      })
+      .clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true })
+      .status(204)
+      .json({ message: 'User logged out successfully' });
   } catch (error) {
     next(error);
   }

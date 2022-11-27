@@ -88,7 +88,7 @@ export const deleteUser = async (req:Request, res:Response, next:NextFunction) =
             }
         })
         
-       res.json({msg:`${userDelete.fullname} deleted from your school}`})
+       res.json({msg:`${userDelete.fullname} deleted from your school`})
     } catch (error) {
         next(error)
     }
