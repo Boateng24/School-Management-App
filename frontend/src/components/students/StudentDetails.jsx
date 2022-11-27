@@ -1,5 +1,5 @@
 import { Button, Divider } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import SwipeableViews from "react-swipeable-views";
@@ -10,9 +10,13 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import StudentClasses from "./StudentClasses";
+import { useGetStudentDetailsQuery } from "../../api/students/StudentsApi";
+import { useState } from "react";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
+
+  // console.log("my", details?.fetchstudents);
 
   return (
     <div
@@ -45,9 +49,10 @@ function a11yProps(index) {
 }
 
 const StudentDetails = () => {
-  const { studentId } = useParams();
   const theme = useTheme();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [details, setDetails] = useState([]);
+  const { studentId } = useParams();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -57,25 +62,44 @@ const StudentDetails = () => {
     setValue(index);
   };
 
+  useEffect(() => {
+    const studentsDetails = async () => {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/findallstudents"
+      );
+      const data = await response.json();
+      console.log("All students", data?.fetchstudents);
+      // setDetails(data);
+      setDetails(data?.fetchstudents?.filter(({ id }) => id !== studentId));
+    };
+    studentsDetails();
+  }, [studentId, details?.fetchstudents]);
+
+  const studentDetails = details?.fetchstudents?.filter(
+    (detail) => detail.id === studentId
+  );
+  console.log("my", details);
   return (
     <div className="flex">
       <div className="flex flex-col items-center m-5 w-[20vw] text-left">
         <div className="flex h-64 w-64 rounded-full mb-5 border-4 border-white text-9xl text-white bg-slate-800 text-center items-center justify-center">
-          RS
+          {details[0]?.fullname?.slice(0, 2)}
         </div>
         <div className="text-left">
-          <h1 className="text-4xl text-gray-500 mb-2">Robert Sam</h1>
-          <p className="text-gray-500 mb-4">robert.sam@gmail.com</p>
+          <h1 className="text-4xl text-gray-500 mb-2">
+            {details[0]?.fullname}
+          </h1>
+          <p className="text-gray-500 mb-4"> {details[0]?.email}</p>
           <hr />
           <p className="text-gray-500 my-4">
             <span className="font-semibold text-gray-500">Gender : </span>
-            Male
+            {details[0]?.gender || "Unknown"}
           </p>
 
           <hr />
           <p className="text-gray-500 my-4">
             <span className="font-semibold text-gray-500">Class : </span>
-            JHS 1
+            {details[0]?.stage[0]?.classType}
           </p>
           <hr />
           <p className="text-gray-500 my-4">

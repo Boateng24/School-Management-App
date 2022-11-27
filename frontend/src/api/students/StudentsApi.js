@@ -6,6 +6,10 @@ export const studentsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api/v1/" }),
   tagTypes: ["students"],
   endpoints: (builder) => ({
+    getStudentDetails: builder.query({
+      query: ({ id }) => `users/${id}`,
+      providesTags: ["students"],
+    }),
     findAllStudents: builder.query({
       query: () => "findallstudents",
       providesTags: ["students"],
@@ -52,12 +56,13 @@ export const studentsApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+  useGetStudentDetailsQuery,
   useFindAllStudentsQuery,
   useCountAllStudentsQuery,
   useGetAllPrefectsQuery,
   useGetAllPrimaryQuery,
   useGetAllJHSQuery,
   useAddStudentMutation,
-  useEditStudentMutation,
+  // useEditStudentMutation,
   useRemoveStudentMutation,
 } = studentsApi;

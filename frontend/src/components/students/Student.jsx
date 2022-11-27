@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VerifiedIcon from "@mui/icons-material/Verified";
@@ -34,11 +34,15 @@ const Student = ({
   const { name } = useSelector(
     (state) => state.loginSchool.loggedInSchool.loggedInSchool || ""
   );
+  const { loggedInSchool } = useSelector(
+    (state) => state.loginSchool.loggedInSchool || ""
+  );
 
   const [open, setOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("Hdfldfldfli");
-  const [removeStudent, data] = useRemoveStudentMutation();
+  const [removeStudent] = useRemoveStudentMutation();
+  const { studentId } = useParams();
 
   const handleStudentDelete = () => {
     removeStudent({ id });
@@ -46,7 +50,7 @@ const Student = ({
     window.location.reload();
     setShowSuccess(true);
   };
-
+  const [details, setDetails] = useState([]);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -60,6 +64,20 @@ const Student = ({
     boxShadow: 24,
     p: 4,
   };
+
+  useEffect(() => {
+    const studentsDetails = async () => {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/findallstudents"
+      );
+      const data = await response.json();
+
+      setDetails(data?.fetchstudents);
+    };
+    studentsDetails();
+  }, []);
+
+  console.log("Deee", details[0]?.id);
 
   return (
     <div className="flex justify-start mb-1  px-3 cursor-pointer hover:bg-slate-50 ">
@@ -100,7 +118,8 @@ const Student = ({
       </Modal>
       <div
         className="flex justify-between w-[60%] mr-auto py-4"
-        onClick={() => navigate(`${Math.random() * 12000}`)}
+        onClick={() => navigate(`${details[0]?.id}`)}
+        // onClick={() => navigate(`2`)}
       >
         <div className="flex items-center justify-space-around">
           <Avatar alt="profile" src={profilePic} />
