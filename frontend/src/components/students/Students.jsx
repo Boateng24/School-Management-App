@@ -262,6 +262,9 @@ const Students = () => {
                         <input
                           type="password"
                           value={password}
+                          // defaultValue="Hi"
+                          // defaultValue={`Welcome@123`}
+                          // readOnly
                           onChange={(e) => setPassword(e.target.value)}
                           required
                           name="password"
@@ -354,11 +357,6 @@ const Students = () => {
               )
             )}
         </div>
-        {/* <div className="h-[90%] ">
-          {filterList.map((list) => (
-            <h1>{list}</h1>
-          ))}
-        </div> */}
       </div>
     </div>
   );

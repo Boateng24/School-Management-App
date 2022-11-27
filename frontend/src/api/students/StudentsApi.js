@@ -42,14 +42,14 @@ export const studentsApi = createApi({
       }),
       invalidatesTags: ["students"],
     }),
-    // editStudent: builder.mutation({
-    //   query: (payload) => ({
-    //     url: `/user/clawfmnvw002qudsgfkr1p4dv`,
-    //     method: "PATCH",
-    //     body: payload,
-    //   }),
-    //   invalidatesTags: ["students"],
-    // }),
+    editStudent: builder.mutation({
+      query: (payload) => ({
+        url: `/user/${payload.id}`,
+        method: "PATCH",
+        body: payload,
+      }),
+      invalidatesTags: ["students"],
+    }),
   }),
 });
 
@@ -63,6 +63,6 @@ export const {
   useGetAllPrimaryQuery,
   useGetAllJHSQuery,
   useAddStudentMutation,
-  // useEditStudentMutation,
+  useEditStudentMutation,
   useRemoveStudentMutation,
 } = studentsApi;

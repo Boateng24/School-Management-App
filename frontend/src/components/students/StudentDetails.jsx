@@ -10,7 +10,10 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import StudentClasses from "./StudentClasses";
-import { useGetStudentDetailsQuery } from "../../api/students/StudentsApi";
+import {
+  useEditStudentMutation,
+  useGetStudentDetailsQuery,
+} from "../../api/students/StudentsApi";
 import { useState } from "react";
 
 function TabPanel(props) {
@@ -62,40 +65,71 @@ const StudentDetails = () => {
     setValue(index);
   };
 
+  useEffect(() => {
+    const studentsDetails = async () => {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/findallstudents"
+      );
+      const data = await response.json();
+
+      setDetails(data?.fetchstudents);
+    };
+    studentsDetails();
+  }, []);
+
+  const currentStudentDetails = details.filter(({ id }) => id === studentId);
+
+  console.log("Params value", currentStudentDetails);
+
+  const [editStudent] = useEditStudentMutation();
+
+  const handleStudentDetailsUpdate = () => {
+    editStudent({ id: studentId });
+    // window.location.reload();
+  };
+
   return (
     <div className="flex">
       <div className="flex flex-col items-center m-5 w-[20vw] text-left">
         <div className="flex h-64 w-64 rounded-full mb-5 border-4 border-white text-9xl text-white bg-slate-800 text-center items-center justify-center">
-          AB
+          {currentStudentDetails[0]?.fullname.slice(0, 2)}
         </div>
         <div className="text-left">
-          <h1 className="text-4xl text-gray-500 mb-2">Abraham Nsiah</h1>
-          <p className="text-gray-500 mb-4"> robertksam2000@gmail.com</p>
+          <h1 className="text-4xl text-gray-500 mb-2">
+            {currentStudentDetails[0]?.fullname}
+          </h1>
+          <p className="text-gray-500 mb-4">
+            {" "}
+            {currentStudentDetails[0]?.email}
+          </p>
           <hr />
-          <p className="text-gray-500 my-4">
+          <p className="text-gray-500 my-4 outline-none" contentEditable>
             <span className="font-semibold text-gray-500">Gender : </span>
-            {"Male" || "Unknown"}
+            {currentStudentDetails[0]?.gender || "Unknown"}
           </p>
 
           <hr />
-          <p className="text-gray-500 my-4">
+          <p className="text-gray-500 my-4 outline-none" contentEditable>
             <span className="font-semibold text-gray-500">Class : </span>
-            Stage 1
+            {currentStudentDetails[0]?.stage[0]?.classType}
           </p>
           <hr />
-          <p className="text-gray-500 my-4">
+          <p className="text-gray-500 my-4 outline-none" contentEditable>
             <span className="font-semibold text-gray-500">Guardian : </span>
             Mrs. Kumah Abigail
           </p>
           <hr />
 
-          <p className="text-gray-500 my-4">
+          <p className="text-gray-500 my-4 outline-none" contentEditable>
             <span className="font-semibold text-gray-500">
               Guardian number:
             </span>
             +233243232123
           </p>
-          <button className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white">
+          <button
+            className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white"
+            onClick={handleStudentDetailsUpdate}
+          >
             EDIT STUDENT DETAILS
           </button>
         </div>

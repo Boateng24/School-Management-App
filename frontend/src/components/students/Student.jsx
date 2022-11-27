@@ -39,8 +39,9 @@ const Student = ({
   );
 
   const [open, setOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("Hdfldfldfli");
+  const [successMessage, setSuccessMessage] = useState("");
   const [removeStudent] = useRemoveStudentMutation();
   const { studentId } = useParams();
 
@@ -77,10 +78,20 @@ const Student = ({
     studentsDetails();
   }, []);
 
-  console.log("Deee", details[0]?.id);
+  const handleMouseOver = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHovered(false);
+  };
 
   return (
-    <div className="flex justify-start mb-1  px-3 cursor-pointer hover:bg-slate-50 ">
+    <div
+      onMouseOver={handleMouseOver}
+      onMouseOut={handleMouseOut}
+      className="flex justify-start mb-1  px-3 cursor-pointer hover:bg-slate-50 "
+    >
       <Modal
         open={open}
         onClose={handleClose}
@@ -117,14 +128,16 @@ const Student = ({
         </Box>
       </Modal>
       <div
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
         className="flex justify-between w-[60%] mr-auto py-4"
-        onClick={() => navigate(`${details[0]?.id}`)}
+        onClick={() => navigate(`${id}`)}
         // onClick={() => navigate(`2`)}
       >
         <div className="flex items-center justify-space-around">
           <Avatar alt="profile" src={profilePic} />
           <p
-            className="ml-4 w-64
+            className="ml-4 w-80
            "
             title={fullname}
           >
@@ -134,18 +147,17 @@ const Student = ({
             </span>
           </p>
         </div>
-        <p className="text-right w-64 mt-2">{email}</p>
-        <p className="w-36 text-right mt-2 ">{age}</p>
-        <p className="w-48 text-right mt-2">{stage}</p>
-        <p className="w-48 text-right mt-2">{gender}</p>
+        <p className="text-right min-w-[320px] mt-2 mx-8">{email}</p>
+        <p className="w-96 text-right mt-2 mx-8">{age}</p>
+        <p className="w-96 text-right mt-2 mx-8">{stage}</p>
+        <p className="w-96 text-right mt-2 mx-8">{gender}</p>
       </div>
       <div className="flex w-[10%] justify-end py-4">
-        <IconButton>
-          <EditIcon />
-        </IconButton>
-        <IconButton onClick={handleOpen}>
-          <DeleteIcon />
-        </IconButton>
+        {isHovered && (
+          <IconButton onClick={handleOpen}>
+            <DeleteIcon />
+          </IconButton>
+        )}
       </div>
     </div>
   );
