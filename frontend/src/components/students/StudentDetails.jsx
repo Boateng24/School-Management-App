@@ -62,44 +62,25 @@ const StudentDetails = () => {
     setValue(index);
   };
 
-  useEffect(() => {
-    const studentsDetails = async () => {
-      const response = await fetch(
-        "http://localhost:5000/api/v1/findallstudents"
-      );
-      const data = await response.json();
-      console.log("All students", data?.fetchstudents);
-      // setDetails(data);
-      setDetails(data?.fetchstudents?.filter(({ id }) => id !== studentId));
-    };
-    studentsDetails();
-  }, [studentId, details?.fetchstudents]);
-
-  const studentDetails = details?.fetchstudents?.filter(
-    (detail) => detail.id === studentId
-  );
-  console.log("my", details);
   return (
     <div className="flex">
       <div className="flex flex-col items-center m-5 w-[20vw] text-left">
         <div className="flex h-64 w-64 rounded-full mb-5 border-4 border-white text-9xl text-white bg-slate-800 text-center items-center justify-center">
-          {details[0]?.fullname?.slice(0, 2)}
+          AB
         </div>
         <div className="text-left">
-          <h1 className="text-4xl text-gray-500 mb-2">
-            {details[0]?.fullname}
-          </h1>
-          <p className="text-gray-500 mb-4"> {details[0]?.email}</p>
+          <h1 className="text-4xl text-gray-500 mb-2">Abraham Nsiah</h1>
+          <p className="text-gray-500 mb-4"> robertksam2000@gmail.com</p>
           <hr />
           <p className="text-gray-500 my-4">
             <span className="font-semibold text-gray-500">Gender : </span>
-            {details[0]?.gender || "Unknown"}
+            {"Male" || "Unknown"}
           </p>
 
           <hr />
           <p className="text-gray-500 my-4">
             <span className="font-semibold text-gray-500">Class : </span>
-            {details[0]?.stage[0]?.classType}
+            Stage 1
           </p>
           <hr />
           <p className="text-gray-500 my-4">
@@ -118,6 +99,7 @@ const StudentDetails = () => {
             EDIT STUDENT DETAILS
           </button>
         </div>
+
         {/* <img src="" alt="Student Profiles" /> */}
       </div>
       <div className=" w-[77vw] mt-[53px] h-[74vh] ">
