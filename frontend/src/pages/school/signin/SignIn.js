@@ -1,22 +1,34 @@
-import pic from "../../assets/pic.png";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import pic from "../../../assets/pic.png";
+import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createNewSchool } from "../../features/auth/createSchoolSlice";
+import { schoolLogin } from "../../../features/auth/loginSchoolSlice";
 import { useEffect, useState } from "react";
 
-const SignUp = () => {
-  const { isCreating, currentSchool, error } = useSelector(
-    (state) => state.createSchool
-  );
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import { Avatar, AvatarGroup } from "@mui/material";
+
+const SignIn = () => {
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [showError, setShowError] = useState(false);
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const { email, password } = formData;
+
+  const dispatch = useDispatch();
+
+  const { isLoggingIn, loggedInSchool, error } = useSelector(
+    (state) => state.loginSchool
+  );
+
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    schoolName: "",
-    email: "",
-    phoneNumber: "",
-    password: "",
-    confirmPassword: "",
-  });
+
+  const handleClick = () => {
+    setOpen(true);
+  };
 
   useEffect(() => {
     if (error) {
@@ -38,26 +50,52 @@ const SignUp = () => {
     setOpen(false);
   };
 
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const { schoolName, email, password, confirmPassword } = formData;
-
-  const dispatch = useDispatch();
-
-  // Create a new organization
-  const onSubmit = (e) => {
+  const handleschoolLogin = (e) => {
     e.preventDefault();
-    dispatch(createNewSchool({ schoolName, email, password }));
-    // navigate("/cool");
+    dispatch(
+      schoolLogin({
+        email,
+        password,
+      })
+    );
   };
 
-  if (currentSchool) {
-    return <Navigate to={"/"} />;
+  if (loggedInSchool) {
+    return (
+      <Navigate to={`dashboard/${loggedInSchool.loggedInSchool.id}/home`} />
+    );
   }
 
+  // Display error message
+  const action = (
+    <>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+
   return (
-    <div className="flex bg-slate-50">
+    <div className="flex">
+      <div>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={showError}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message={error}
+          action={action}
+        />
+      </div>
+
       <div className="hidden lg:flex min-w-[50vw] h-[100vh] bg-[#29365f] align-center justify-center flex-col">
         <h1 className="text-5xl mt-16 px-16 text-white font-bold">
           School Management System
@@ -71,25 +109,11 @@ const SignUp = () => {
         <img src={pic} width="700" alt="background" />
       </div>
       <div className=" flex h-[100vh] flex-1 justify-center items-center">
-        <form action="" onSubmit={onSubmit}>
+        <form action="" onSubmit={handleschoolLogin}>
           <h1 className="text-3xl text-gray-700 text-center font-[600] mb-8">
-            Register Your School
+            Welcome Back, Log in.
           </h1>
 
-          <div className="grid grid-cols-1 gap-4 mb-4">
-            <label htmlFor="School name" className="font-[500] text-[#344054]">
-              School name
-            </label>
-            <input
-              onChange={onChange}
-              value={schoolName}
-              type="text"
-              name="schoolName"
-              required
-              placeholder="Eg. Neumann International School"
-              className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-            />
-          </div>
           <div className="grid grid-cols-1 gap-4 mb-4">
             <label htmlFor="email" className="font-[500] text-[#344054]">
               Email
@@ -106,7 +130,7 @@ const SignUp = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-4 mb-4">
-            <label htmlFor="passoword" className="font-[500] text-[#344054]">
+            <label htmlFor="password" className="font-[500] text-[#344054]">
               Password
             </label>
             <input
@@ -119,37 +143,28 @@ const SignUp = () => {
               className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
             />
           </div>
-          <div className="grid grid-cols-1 gap-4 mb-4">
-            <label
-              htmlFor="confirmPassoword"
-              className="font-[500] text-[#344054]"
-            >
-              Confirm Password
-            </label>
-            <input
-              onChange={onChange}
-              value={confirmPassword}
-              type="password"
-              name="confirmPassword"
-              required
-              placeholder="Enter your password"
-              className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-            />
+          <div className="w-[360px]  text-gray-500 h-6 text-right rounded-[8px] mt-4">
+            <span className="w-[360px] text-right">
+              {" "}
+              <Link to="/forgotpassword" className="underline">
+                Forgot Password
+              </Link>
+            </span>
           </div>
           <div className="grid">
             <button
-              className="w-[360px] bg-[#29365F] hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] mt-6 cursor-pointer"
-              disabled={isCreating}
+              className="w-[360px] bg-[#29365f] hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] mt-6 cursor-pointer"
+              // disabled={!canSubmit}
               type="submit"
             >
-              {isCreating ? "Creating school..." : "Create school"}
+              {isLoggingIn ? "Logging in" : "Log in"}
             </button>
             <div className="w-[360px]  text-gray-500 h-[44px] text-center rounded-[8px] mt-4">
               Already have an account?{" "}
               <span>
                 {" "}
-                <Link to="/" className="underline">
-                  Log in
+                <Link to="/signUp" className="underline">
+                  Sign Up
                 </Link>
               </span>
             </div>
@@ -160,4 +175,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

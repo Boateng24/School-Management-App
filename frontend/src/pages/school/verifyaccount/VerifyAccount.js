@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import background from "../../assets/background.png";
+import background from "../../../assets/background.png";
 
 const VerifyAccount = () => {
   return (
