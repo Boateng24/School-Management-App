@@ -1,9 +1,9 @@
-import usersLogin from "../../../assets/usersLogin.png";
+// import usersLogin from "../../../assets/usersLogin.png";
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { schoolLogin } from "../../../features/auth/loginSchoolSlice";
-import { useEffect, useState } from "react";
 
+import { useEffect, useState } from "react";
+import { usersLogin } from "../../../features/auth/loginUserSlice";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
@@ -20,8 +20,8 @@ const UsersLogin = () => {
 
   const dispatch = useDispatch();
 
-  const { isLoggingIn, loggedInSchool, error } = useSelector(
-    (state) => state.loginSchool
+  const { isLoggingIn, loggedInUser, error, success } = useSelector(
+    (state) => state.loginUser
   );
 
   const [open, setOpen] = useState(false);
@@ -50,20 +50,18 @@ const UsersLogin = () => {
     setOpen(false);
   };
 
-  const handleschoolLogin = (e) => {
+  const handleUserLogin = (e) => {
     e.preventDefault();
     dispatch(
-      schoolLogin({
+      usersLogin({
         email,
         password,
       })
     );
   };
 
-  if (loggedInSchool) {
-    return (
-      <Navigate to={`dashboard/${loggedInSchool.loggedInSchool.id}/home`} />
-    );
+  if (loggedInUser) {
+    return <Navigate to={`${loggedInUser.loggedInUser.id}`} />;
   }
 
   // Display error message
@@ -109,7 +107,7 @@ const UsersLogin = () => {
         />
       </div>
       <div className=" flex h-[100vh] flex-1 justify-center items-center">
-        <form action="" onSubmit={handleschoolLogin}>
+        <form action="" onSubmit={handleUserLogin}>
           <h1 className="text-3xl text-gray-700 text-center font-[600] mb-8">
             Student Login
           </h1>
