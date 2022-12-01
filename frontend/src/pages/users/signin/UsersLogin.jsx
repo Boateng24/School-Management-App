@@ -61,7 +61,7 @@ const UsersLogin = () => {
   };
 
   if (loggedInUser) {
-    return <Navigate to={`${loggedInUser.loggedInUser.id}`} />;
+    return <Navigate to={`${loggedInUser?.loggedInUser?.id}`} />;
   }
 
   // Display error message

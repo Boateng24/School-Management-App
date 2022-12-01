@@ -21,6 +21,9 @@ import UsersLogin from "./pages/users/signin/UsersLogin";
 import UsersForgotPassword from "./pages/users/forgotpassword/UsersForgotPassword";
 import StudentsPage from "./pages/students/StudentsPage";
 import StudentsProfile from "./pages/students/StudentsProfile";
+import StudentSidebar from "./components/students/StudentSidebar";
+import StudentReport from "./pages/students/StudentReport";
+import StudentCalender from "./components/students/StudentCalender";
 
 function App() {
   return (
@@ -38,20 +41,25 @@ function App() {
               path="/usersforgotpassword"
             />
             <Route element={<UsersLogin />} path="/userslogin" />
-            <Route element={<StudentsPage />} path="/students/:studentId" />
+            <Route element={<StudentsPage />} path="usersLogin/:studentId">
+              <Route index path="home" element={<StudentsProfile />} />
+              <Route index path="report" element={<StudentReport />} />
+              <Route index path="calendar" element={<StudentCalender />} />
+            </Route>
 
             <Route element={<VerifyAccount />} path="/verifyaccount" />
             <Route element={<ResetPassword />} path="/resetpassword" />
             {/* <Route element={<Dashboard />} path="dashboard/:schoolId/" /> */}
-            <Route element={<Sidebar />} path="dashboard/:schoolId/">
+            <Route element={<Sidebar />} path="dashboard/:schoolId">
               <Route element={<Dashboard />} path="home" />
               <Route element={<Students />} path="students" />
               <Route element={<SchoolProfile />} path="schoolProfile" />
               <Route element={<SchoolSettings />} path="schoolSettings" />
+              <Route element={<StudentDetails />} path="students/:studentId" />
               {/* </Route> */}
               <Route element={<Staffs />} path="staffs" />
             </Route>
-            <Route element={<StudentDetails />} path="/students/:studentId" />
+
             <Route element={<PageNotFound />} path="*" />
           </Routes>
         </Router>
