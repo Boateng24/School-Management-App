@@ -66,7 +66,7 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
           from: process.env.SENDER_EMAIL,
           to: email,
           subject: 'Confirmation of sign up',
-          html: `<a href="/forgotPassword/" + ${newUser.id} + '/' + ${token}>Your account has been created click this link to update your details</a>
+          html: `<a href="http://localhost:3000/usersLogin/" + ${newUser.id} + '/' + ${token}>Your account has been created click this link to update your details</a>
                 <p>This is your password <b>${password}</b> </p>
           `,
         };
