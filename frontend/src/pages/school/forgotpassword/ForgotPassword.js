@@ -1,4 +1,4 @@
-import pic from "../../assets/pic.png";
+import pic from "../../../assets/pic.png";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 // import { schoolLogin } from "../../features/auth/schoolLoginSlice";

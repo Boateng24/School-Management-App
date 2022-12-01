@@ -6,6 +6,10 @@ export const studentsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api/v1/" }),
   tagTypes: ["students"],
   endpoints: (builder) => ({
+    getStudentDetails: builder.query({
+      query: ({ id }) => `users/${id}`,
+      providesTags: ["students"],
+    }),
     findAllStudents: builder.query({
       query: () => "findallstudents",
       providesTags: ["students"],
@@ -38,20 +42,21 @@ export const studentsApi = createApi({
       }),
       invalidatesTags: ["students"],
     }),
-    // editStudent: builder.mutation({
-    //   query: (payload) => ({
-    //     url: `/user/clawfmnvw002qudsgfkr1p4dv`,
-    //     method: "PATCH",
-    //     body: payload,
-    //   }),
-    //   invalidatesTags: ["students"],
-    // }),
+    editStudent: builder.mutation({
+      query: (payload) => ({
+        url: `/user/${payload.id}`,
+        method: "PATCH",
+        body: payload,
+      }),
+      invalidatesTags: ["students"],
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+  useGetStudentDetailsQuery,
   useFindAllStudentsQuery,
   useCountAllStudentsQuery,
   useGetAllPrefectsQuery,
