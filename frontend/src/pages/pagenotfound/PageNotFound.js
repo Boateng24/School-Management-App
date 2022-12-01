@@ -5,7 +5,7 @@ const PageNotFound = () => {
   const navigate = useNavigate();
   return (
     <div className="w-100vw flex justify-center h-screen items-center">
-      <div class=" p-4">
+      <div className="p-4">
         <p className="text-xl text-[#344054]">404 error</p>
         <h1 className="text-6xl py-3 text-[#344054] font-normal">
           We can't find that page
