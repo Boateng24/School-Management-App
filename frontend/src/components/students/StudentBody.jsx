@@ -12,7 +12,7 @@ const StudentBody = () => {
 
   const currentDate = new Date();
   const currentHour = currentDate.getHours();
-  console.log(currentHour, "Hour");
+  console.log(currentHour, "Current hour");
 
   useEffect(() => {
     if (currentHour >= 0 && currentHour <= 11) {
@@ -26,7 +26,7 @@ const StudentBody = () => {
 
   return (
     <div className="w-[85vw] h-screen">
-      <div className="h-[8vh] ml-4 bg-grey-100  border-b-2 border-gray-100 flex items-center">
+      <div className="h-[8vh] ml-[18vw] bg-grey-100  border-b-2 border-gray-100 flex items-center">
         <h3 className="font-bold text-gray-500">
           Good {greetStudent} {firstname} 👋
         </h3>

@@ -1,6 +1,13 @@
-import { Avatar } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
+// import { Stack } from "@mui/system";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useEditStudentMutation } from "../../api/students/StudentsApi";
+import BadgeAvatars from "../../components/avatar/Avatar";
+import Stack from "@mui/material/Stack";
+import { styled } from "@mui/material/styles";
+import Badge from "@mui/material/Badge";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 const StudentsProfile = () => {
   const { firstname, email, role, id } = useSelector(
@@ -19,19 +26,48 @@ const StudentsProfile = () => {
   };
 
   const [formData, setFormData] = useState(studentInfo);
+  const [profilePicture, setProfilePicture] = useState(null);
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  const [editStudent] = useEditStudentMutation();
+
+  const handleStudentDetailsUpdate = () => {
+    //  editStudent({ id });
+    window.location.reload();
+  };
+
+  const handleProfilePicture = (e) => {
+    setProfilePicture(e.target.files[0]);
+  };
   return (
-    <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[102px] mx-4 h-[74vh] ">
-      <div className="mt-24 mb-8">
-        {/* <img src="" alt="profile" /> */}
-        <Avatar sx={{ width: 180, height: 180 }} />
+    <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[102px] mx-[17vw] h-[74vh] ">
+      <div className="mt-48 mb-8 flex items-center flex-col justify-center">
+        <Avatar
+          src={profilePicture && URL.createObjectURL(profilePicture)}
+          sx={{ width: 180, height: 180, marginTop: 8, marginBottom: 6 }}
+        />
+        <label
+          for="profileUpload"
+          type="file"
+          // className="border-2 cursor-pointer border-gray-100 rounded-lg py-3 px-8 mt-24 bg-gray-100 text-gray-800"
+          className="w-[160px] mb-12 text-center bg-[#29365f] hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] cursor-pointer py-2 px-5 "
+        >
+          Upload image
+        </label>
+        <input
+          id="profileUpload"
+          style={{ display: "none" }}
+          size={60}
+          type="file"
+          onChange={handleProfilePicture}
+        />
       </div>
       <form
         sx={{ width: "100%" }}
         className="grid place-items-center grid-cols-2"
+        onSubmit={handleStudentDetailsUpdate}
       >
         <div className="grid grid-cols-1 gap-4 mb-4">
           <label htmlFor="fullname" className="font-[500] text-[#344054]">
@@ -97,9 +133,10 @@ const StudentsProfile = () => {
           </label>
           <input
             value={formData?.role}
-            onChange={onChange}
+            // onChange={onChange}
             type="text"
             name="role"
+            readOnly
             required
             placeholder="Enter your role"
             className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
@@ -150,8 +187,8 @@ const StudentsProfile = () => {
 
         <div className="flex justify-end ml-[42vw] mt-8 w-[71vw]">
           <button
-            // onClick={handleSchoolEdit}
-            className="w-[160px] bg-[#29365f] hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px]  cursor-pointer "
+            onClick={handleStudentDetailsUpdate}
+            className="w-[160px] mb-12 bg-[#29365f] hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px]  cursor-pointer "
             // disabled={!canSubmit}
             type="submit"
           >

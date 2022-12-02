@@ -19,8 +19,6 @@ import { useState } from "react";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
-  // console.log("my", details?.fetchstudents);
-
   return (
     <div
       role="tabpanel"
@@ -78,15 +76,6 @@ const StudentDetails = () => {
   }, []);
 
   const currentStudentDetails = details.filter(({ id }) => id === studentId);
-
-  console.log("Params value", currentStudentDetails);
-
-  const [editStudent] = useEditStudentMutation();
-
-  const handleStudentDetailsUpdate = () => {
-    editStudent({ id: studentId });
-    // window.location.reload();
-  };
 
   return (
     <div className="flex">
