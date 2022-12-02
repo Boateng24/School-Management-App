@@ -15,7 +15,7 @@ const activeStyle = {
 
 const StudentSidebar = () => {
   return (
-    <div className="h-screen w-[15vw] text-white bg-gray-900 flex flex-col">
+    <div className="h-screen fixed top-0 left-0 w-[15vw] text-white bg-gray-900 flex flex-col">
       <div className="mt-16">
         <NavLink
           to={`home`}

@@ -103,35 +103,40 @@ const StudentDetails = () => {
             {currentStudentDetails[0]?.email}
           </p>
           <hr />
-          <p className="text-gray-500 my-4 outline-none" contentEditable>
+          <p className="text-gray-500 my-3 outline-none">
             <span className="font-semibold text-gray-500">Gender : </span>
             {currentStudentDetails[0]?.gender || "Unknown"}
           </p>
 
           <hr />
-          <p className="text-gray-500 my-4 outline-none" contentEditable>
+          <p className="text-gray-500 my-3 outline-none">
             <span className="font-semibold text-gray-500">Class : </span>
             {currentStudentDetails[0]?.stage[0]?.classType}
           </p>
           <hr />
-          <p className="text-gray-500 my-4 outline-none" contentEditable>
+          <p className="text-gray-500 my-3 outline-none">
+            <span className="font-semibold text-gray-500">Teacher : </span>
+            {currentStudentDetails[0]?.stage[0]?.teacher || "Unknown"}
+          </p>
+          <hr />
+          <p className="text-gray-500 my-4 outline-none">
             <span className="font-semibold text-gray-500">Guardian : </span>
             Mrs. Kumah Abigail
           </p>
           <hr />
 
-          <p className="text-gray-500 my-4 outline-none" contentEditable>
+          <p className="text-gray-500 my-4 outline-none">
             <span className="font-semibold text-gray-500">
               Guardian number:
             </span>
             +233243232123
           </p>
-          <button
+          {/* <button
             className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white"
             onClick={handleStudentDetailsUpdate}
           >
             EDIT STUDENT DETAILS
-          </button>
+          </button> */}
         </div>
 
         {/* <img src="" alt="Student Profiles" /> */}
