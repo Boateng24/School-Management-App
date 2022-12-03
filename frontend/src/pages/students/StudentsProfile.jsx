@@ -52,7 +52,7 @@ const StudentsProfile = () => {
           for="profileUpload"
           type="file"
           // className="border-2 cursor-pointer border-gray-100 rounded-lg py-3 px-8 mt-24 bg-gray-100 text-gray-800"
-          className="w-[160px] mb-12 text-center bg-[#29365f] hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px] cursor-pointer py-2 px-5 "
+          className="w-[160px] mb-12 text-center bg-[#3C0E3C]  text-gray-50 h-[44px] rounded-[8px] cursor-pointer py-2 px-5 "
         >
           Upload image
         </label>
@@ -188,7 +188,7 @@ const StudentsProfile = () => {
         <div className="flex justify-end ml-[42vw] mt-8 w-[71vw]">
           <button
             onClick={handleStudentDetailsUpdate}
-            className="w-[160px] mb-12 bg-[#29365f] hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px]  cursor-pointer "
+            className="w-[160px] mb-12 bg-[#3C0E3C] text-gray-50 h-[44px] rounded-[8px]  cursor-pointer "
             // disabled={!canSubmit}
             type="submit"
           >

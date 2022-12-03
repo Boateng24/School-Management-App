@@ -24,6 +24,7 @@ import StudentsProfile from "./pages/students/StudentsProfile";
 import StudentSidebar from "./components/students/StudentSidebar";
 import StudentReport from "./pages/students/StudentReport";
 import StudentCalender from "./components/students/StudentCalender";
+import StudentsDashboard from "./pages/students/StudentsDashboard";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
               <Route index path="home" element={<StudentsProfile />} />
               <Route index path="report" element={<StudentReport />} />
               <Route index path="calendar" element={<StudentCalender />} />
+              <Route index path="dashboard" element={<StudentsDashboard />} />
             </Route>
 
             <Route element={<VerifyAccount />} path="/verifyaccount" />

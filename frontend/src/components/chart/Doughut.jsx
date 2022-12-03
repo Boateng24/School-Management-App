@@ -1,13 +1,13 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 
-const LineChart = () => {
+const Doughnuts = () => {
   const data = {
     labels: ["English", "Maths", "French", "R.M.E", "Twi", "ICT"],
     datasets: [
       {
-        label: "Performance of subjects",
+        label: "# of Subjects",
         data: [62, 79, 83, 65, 72, 83],
         responsive: true,
         backgroundColor: [
@@ -30,7 +30,12 @@ const LineChart = () => {
       },
     ],
   };
-  return <Line data={data} />;
+
+  return (
+    <div className="">
+      <Doughnut data={data} />
+    </div>
+  );
 };
 
-export default LineChart;
+export default Doughnuts;

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import BarChart from "./BarChart";
+
 import { students_population } from "../dashboardData/DashboardData";
 import LineChart from "./LineGraph";
-import PieChart from "./PieChart";
 
 const Chart1 = () => {
   const [studentsPopulation, setStudentsPopulation] = useState({
