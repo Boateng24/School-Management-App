@@ -1,6 +1,6 @@
 import { prisma } from '../config/prismaInit';
 import { NextFunction, Request, Response } from 'express';
-import { createSchool, updateSchool} from '../@types';
+import { createSchool, schoolAddress, updateSchool} from '../@types';
 import { compare, hashedPassword } from '../helpers/bcryptConfig';
 import { createAccessToken } from '../helpers/accessToken';
 import { createRefreshToken } from '../helpers/refreshToken';
@@ -156,6 +156,7 @@ export const updateSchoolDetails = async (
     // const id = req['payload'].id;
 
     const { schoolName, email, dateOfestablishment } = req.body as updateSchool;
+    const {GPS, POBox, location, website} = req.body as schoolAddress
 
     // will uncomment this code later when we are ready for route protection
     // check for who can perform this operation
@@ -181,9 +182,10 @@ export const updateSchoolDetails = async (
         email,
         address: {
           create: {
-            GPS: req.body.GPS,
-            POBox: req.body.POBox,
-            location: req.body.location,
+           GPS,
+           POBox,
+           location,
+           website
           },
         },
         dateOfestablishment,
