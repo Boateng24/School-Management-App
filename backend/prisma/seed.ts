@@ -1,11 +1,14 @@
 import { prisma } from '../src/config/prismaInit';
-import { faker } from '@faker-js/faker';
+import { faker} from '@faker-js/faker';
 import { hashedPassword } from '../src/helpers/bcryptConfig';
 import { Role, classCategory } from '@prisma/client';
 
+
+let storedArray:any =[]
 const userMain = async () => {
   try {
-    await prisma.user.deleteMany({});
+  const deletedUsers = await prisma.user.deleteMany({});
+    storedArray.push(deletedUsers)
 
     for (let i = 0; i < 100; i++) {
       const createRole = Math.floor(Math.random() * Object.keys(Role).length);
@@ -25,7 +28,7 @@ const userMain = async () => {
             create: {
               phoneNumber: faker.phone.number(),
               GPS: faker.address.buildingNumber(),
-              NearestLandMark: faker.address.street(),
+              location: faker.address.street(),
             },
           },
           isPrefect: faker.datatype.boolean(),
@@ -50,37 +53,73 @@ const userMain = async () => {
   }
 };
 
-const schoolMain = async () => {
+// const schoolMain = async () => {
+//   try {
+//     await prisma.school.deleteMany({});
+//     for (let i = 0; i < 100; i++) {
+//       await prisma.school.create({
+//         data: {
+//           schoolName: faker.company.name(),
+//           email: faker.helpers.unique(faker.internet.email),
+//           password: await hashedPassword(faker.internet.password()),
+//           phoneNumber: faker.phone.number(),
+//           dateOfestablishment: (<unknown>faker.date.past()) as string,
+//           address: {
+//             create: {
+//               GPS: faker.address.buildingNumber(),
+//               POBox: faker.address.secondaryAddress(),
+//               location: faker.address.direction(),
+//               website: faker.internet.domainName(),
+//             },
+//           },
+//         },
+//       });
+//     }
+//   } catch (error: any) {
+//     return error;
+//   }
+// };
+
+const studentScoresMain = async () => {
   try {
-    await prisma.school.deleteMany({});
-    for (let i = 0; i < 100; i++) {
-      await prisma.school.create({
-        data: {
-          schoolName: faker.company.name(),
-          email: faker.helpers.unique(faker.internet.email),
-          password: await hashedPassword(faker.internet.password()),
-          phoneNumber: faker.phone.number(),
-          dateOfestablishment: (<unknown>faker.date.past()) as string,
-          address: {
-            create: {
-              GPS: faker.address.buildingNumber(),
-              POBox: faker.address.secondaryAddress(),
-              location: faker.address.direction(),
-              website: faker.internet.domainName(),
-            },
-          },
-        },
-      });
-    }
-  } catch (error: any) {
-    return error;
+   const deletedScores =  await prisma.scores.deleteMany({})
+    const findStudents = await prisma.user.findMany({
+      where: {
+        role: "student"
+      }
+    })
+    storedArray.push(findStudents, deletedScores)
+    console.log(findStudents.length)
+
+  const studentId= findStudents.forEach((item) => {
+       item.id= findStudents[findStudents.length].id;
+       console.log(item.id)
+      })
+
+   findStudents.forEach( async (item) => {
+  const createscoress =   await prisma.scores.create({
+      data:{
+        examScore: faker.datatype.float({max:100, precision:0.1}),
+        testScore: faker.datatype.float({max:100, precision:0.1}),
+        studentId: item.id
+      }
+    })
+    console.log(createscoress)
+   })
+} catch (error:any) {
+    return error
   }
-};
+}
 
 const Main = async () => {
   try {
-    await userMain();
-    await schoolMain();
+    await userMain().then(async() => {
+      storedArray=[]
+      await studentScoresMain()
+    })
+  
+  
+    // await schoolMain();
   } catch (error) {
     return error;
   }
