@@ -1,56 +1,37 @@
-import { Avatar, Button } from "@mui/material";
-// import { Stack } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import { Avatar } from "@mui/material";
+
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import {
   useEditStudentMutation,
   useGetStudentDetailsQuery,
 } from "../../api/students/StudentsApi";
-import BadgeAvatars from "../../components/avatar/Avatar";
-import Stack from "@mui/material/Stack";
-import { styled } from "@mui/material/styles";
-import Badge from "@mui/material/Badge";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 const StudentsProfile = () => {
-  const { firstname, email, role, id } = useSelector(
+  const { id } = useSelector(
     (state) => state.loginUser?.loggedInUser?.loggedInUser
   );
 
-  const [studentData, setStudentData] = useState([]);
+  const { data } = useGetStudentDetailsQuery(id);
 
-  useEffect(() => {
-    const fetchStudentsData = async () => {
-      const response = await fetch(
-        `http://localhost:5000/api/v1/user/clb9ce8rp0000ud90g2zq6txi`
-      );
-      const data = await response.json();
-      setStudentData([data?.findUser]);
-      console.log(studentData, "Student details");
-    };
-    fetchStudentsData();
-  }, []);
-
-  console.log("Fullname", studentData[0]?.fullname);
   const studentInfo = {
     id,
-    fullname: studentData[0]?.fullname,
-    email,
-    location: "",
-    address: "",
-    profilePic: "",
-    role,
-    stage: "",
-    teacher: "",
-    guardian: "",
-    guardianNumber: "",
+    fullname: data?.findUser?.fullname,
+    email: data?.findUser?.email,
+    gender: data?.findUser?.gender,
+    location: data?.findUser?.address[0]?.location,
+    profilePic: data?.findUser?.profilePic,
+    role: data?.findUser?.role,
+    stage: data?.findUser?.stage[0]?.classType,
+    guardian:
+      data?.findUser?.guardian[0]?.mother ||
+      data?.findUser?.guardian[0]?.father,
+    teacher: data?.findUser?.stage[0]?.teacher,
   };
 
-  // console.log(studentInfo.fullname, "Student Info fullname");
   const [formData, setFormData] = useState(studentInfo);
-  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePicture, setProfilePicture] = useState();
 
-  console.log(studentInfo, "Student Info data ");
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -59,6 +40,7 @@ const StudentsProfile = () => {
   const handleStudentDetailsUpdate = (e) => {
     e.preventDefault();
     editStudent({ id });
+    // useEditStudentMutation({id});
     // window.location.reload();
   };
 
@@ -142,13 +124,13 @@ const StudentsProfile = () => {
             Gender
           </label>
           <input
-            // value={schoolAddress}
+            value={formData?.gender}
             onChange={onChange}
             type="text"
             name="gender"
             required
             placeholder="Enter your gender"
-            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+            className=" w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
           />
         </div>
         <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
@@ -171,7 +153,7 @@ const StudentsProfile = () => {
             Location
           </label>
           <input
-            // value={schoolLocation}
+            value={formData?.location}
             onChange={onChange}
             type="text"
             name="location"
@@ -182,28 +164,28 @@ const StudentsProfile = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
-          <label htmlFor="address" className="font-[500] text-[#344054]">
-            Address
+          <label htmlFor="guardian" className="font-[500] text-[#344054]">
+            Guardian
           </label>
           <input
-            // value={schoolAddress}
+            value={formData?.guardian}
             onChange={onChange}
             type="text"
-            name="address"
+            name="guardian"
             required
-            placeholder="Enter your address"
+            placeholder="Enter your guardian name"
             className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
           />
         </div>
         <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
-          <label htmlFor="registrationId" className="font-[500] text-[#344054]">
-            Student ID
+          <label htmlFor="teacher" className="font-[500] text-[#344054]">
+            Teacher
           </label>
           <input
             onChange={onChange}
-            value={formData?.id || "N/A"}
+            value={formData?.teacher || "N/A"}
             type="text"
-            name="registrationId"
+            name="teacher"
             readOnly
             className="w-[33vw] cursor-not-allowed h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
           />
