@@ -8,10 +8,28 @@ import Doughnuts from "../../components/chart/Doughut";
 import Chart1 from "../../components/chart/Chart1";
 
 const StudentsDashboard = () => {
+  const [quotes, setQuotes] = useState([]);
   const [greetStudent, setGreetStudent] = useState("");
   const { firstname } = useSelector(
     (state) => state.loginUser?.loggedInUser?.loggedInUser
   );
+
+  useEffect(() => {
+    const fetchQuotes = async () => {
+      const response = await fetch(
+        "https://api.api-ninjas.com/v1/quotes?category=education",
+        {
+          method: "GET",
+          headers: { "X-Api-Key": "RtG3uNvmmQrSN+tqeGD9Sg==tpH0xo8xKdxBlC4y" },
+          contentType: "application/json",
+        }
+      );
+      const data = await response.json();
+      console.log("quotes", data);
+      setQuotes(data);
+    };
+    fetchQuotes();
+  }, []);
 
   const currentDate = new Date();
   const currentHour = currentDate.getHours();
@@ -31,20 +49,23 @@ const StudentsDashboard = () => {
     <div className="flex ml-[17vw] w-[80vw] h-[91vh]">
       <div className="w-[70%] ">
         <div className="flex h-[28%] rounded-lg p-4 border-b-2 border-gray-100">
-          <div className="">
+          <div className="min-w-[500px] " style={{ flex: 1 }}>
             <h1 className="text-4xl font-bold text-gray-600 ">
               {" "}
               Good {greetStudent} {firstname}
             </h1>
             <p className="py-3 w-[100%] text-gray-400">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel,
-              temporibus quibusdam. Illum ex beatae, veniam dolores doloremque
-              nulla vero suscipit libero ea, sint quo obcaecati soluta autem
-              uuntur tempore incidunt.
+              {quotes[0]?.quote ||
+                `Hello ${firstname}, we're fetching your quote`}
             </p>
+            <span className="font-bold text-gray-700">{quotes[0]?.author}</span>
           </div>
           <div>
-            <img src={Illustration} width={720} alt="Student Illustration" />
+            <img
+              src={Illustration}
+              style={{ maxWidth: 260 }}
+              alt="Student Illustration"
+            />
           </div>
         </div>
         <div className="flex h-[20%] rounded-lg justify-between">

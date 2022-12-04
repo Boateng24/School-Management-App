@@ -7,7 +7,7 @@ export const studentsApi = createApi({
   tagTypes: ["students"],
   endpoints: (builder) => ({
     getStudentDetails: builder.query({
-      query: ({ id }) => `user/${id}`,
+      query: (id) => ({ url: `user/${id}` }),
       providesTags: ["students"],
     }),
     findAllStudents: builder.query({
@@ -45,7 +45,7 @@ export const studentsApi = createApi({
     editStudent: builder.mutation({
       query: (payload) => ({
         url: `/user/${payload.id}`,
-        method: "PATCH",
+        method: "PUT",
         body: payload,
       }),
       invalidatesTags: ["students"],

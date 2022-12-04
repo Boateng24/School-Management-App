@@ -1,8 +1,11 @@
 import { Avatar, Button } from "@mui/material";
 // import { Stack } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useEditStudentMutation } from "../../api/students/StudentsApi";
+import {
+  useEditStudentMutation,
+  useGetStudentDetailsQuery,
+} from "../../api/students/StudentsApi";
 import BadgeAvatars from "../../components/avatar/Avatar";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
@@ -13,29 +16,50 @@ const StudentsProfile = () => {
   const { firstname, email, role, id } = useSelector(
     (state) => state.loginUser?.loggedInUser?.loggedInUser
   );
+
+  const [studentData, setStudentData] = useState([]);
+
+  useEffect(() => {
+    const fetchStudentsData = async () => {
+      const response = await fetch(
+        `http://localhost:5000/api/v1/user/clb9ce8rp0000ud90g2zq6txi`
+      );
+      const data = await response.json();
+      setStudentData([data?.findUser]);
+      console.log(studentData, "Student details");
+    };
+    fetchStudentsData();
+  }, []);
+
+  console.log("Fullname", studentData[0]?.fullname);
   const studentInfo = {
     id,
-    firstname,
+    fullname: studentData[0]?.fullname,
     email,
     location: "",
     address: "",
+    profilePic: "",
     role,
+    stage: "",
     teacher: "",
     guardian: "",
     guardianNumber: "",
   };
 
+  // console.log(studentInfo.fullname, "Student Info fullname");
   const [formData, setFormData] = useState(studentInfo);
   const [profilePicture, setProfilePicture] = useState(null);
 
+  console.log(studentInfo, "Student Info data ");
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const [editStudent] = useEditStudentMutation();
 
-  const handleStudentDetailsUpdate = () => {
-    //  editStudent({ id });
-    window.location.reload();
+  const handleStudentDetailsUpdate = (e) => {
+    e.preventDefault();
+    editStudent({ id });
+    // window.location.reload();
   };
 
   const handleProfilePicture = (e) => {
@@ -49,7 +73,7 @@ const StudentsProfile = () => {
           sx={{ width: 180, height: 180, marginTop: 8, marginBottom: 6 }}
         />
         <label
-          for="profileUpload"
+          htmlFor="profilePic"
           type="file"
           // className="border-2 cursor-pointer border-gray-100 rounded-lg py-3 px-8 mt-24 bg-gray-100 text-gray-800"
           className="w-[160px] mb-12 text-center bg-[#3C0E3C]  text-gray-50 h-[44px] rounded-[8px] cursor-pointer py-2 px-5 "
@@ -57,7 +81,7 @@ const StudentsProfile = () => {
           Upload image
         </label>
         <input
-          id="profileUpload"
+          id="profilePic"
           style={{ display: "none" }}
           size={60}
           type="file"
@@ -74,10 +98,10 @@ const StudentsProfile = () => {
             Fullname
           </label>
           <input
-            value={formData.firstname}
+            value={formData?.fullname}
             onChange={onChange}
             type="text"
-            name="firstname"
+            name="fullname"
             required
             placeholder="Enter your fullname"
             className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
@@ -104,7 +128,7 @@ const StudentsProfile = () => {
             Class
           </label>
           <input
-            // value={schoolAddress}
+            value={formData?.stage}
             onChange={onChange}
             type="text"
             name="class"
