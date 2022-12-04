@@ -1,29 +1,11 @@
 import { prisma } from '../config/prismaInit';
 import { NextFunction, Request, Response } from 'express';
-import { createSchool, updateSchool } from '../@types';
+import { createSchool, schoolAddress, updateSchool} from '../@types';
 import { compare, hashedPassword } from '../helpers/bcryptConfig';
 import { createAccessToken } from '../helpers/accessToken';
 import { createRefreshToken } from '../helpers/refreshToken';
 import { refreshTokens, removeRefreshToken } from './renewtoken.controller';
-
-// export type RefreshTokenUser = {
-//   id: string;
-//   firstname: string;
-//   role: string;
-// };
-
-// export type RefreshTokensType = {
-//   user: RefreshTokenUser;
-//   refreshToken: string;
-// };
-
-// export let refreshTokens: RefreshTokensType[] = [];
-
-// const removeRefreshToken = (tokenGiven: string) => {
-//   refreshTokens = refreshTokens.filter((token) => {
-//     return token.refreshToken !== tokenGiven;
-//   });
-// };
+import * as nodemailer from 'nodemailer';
 
 const maxAge = 7 * 24 * 60 * 60 * 1000;
 export const newSchool = async (
@@ -114,29 +96,25 @@ export const logoutSchool = (
   next: NextFunction
 ) => {
   try {
-    // const cookies = req.cookies;
-    // if(!cookies?.jwt) return res.status(204)
-    // const refreshToken = cookies.jwt;
+    const cookies = req.cookies;
+    if (!cookies?.jwt) return res.sendStatus(204); //no cookies or no jwt
+    const refreshToken = cookies.jwt;
 
-    // let foundToken!: string;
-    // refreshTokens.forEach((item) => {
-    //   if(Object.values(item)[1] === refreshToken){
-    //     foundToken = Object.values(item)[1] as string
-    //   }
-    // })
-
-    // if (!foundToken) {
-    //   res.clearCookie('jwt', {httpOnly: true})
-    //   return res.status(204)
-    // }
-
-    // removeRefreshToken(refreshToken)
+    let foundToken!: string;
+    refreshTokens.forEach((item) => {
+      if (Object.values(item)[1] === refreshToken) {
+        foundToken = Object.values(item)[1] as string;
+      }
+    });
+    if (!foundToken) {
+      res.clearCookie('jwt', { httpOnly: true });
+      return res.sendStatus(204);
+    }
+    removeRefreshToken(refreshToken);
     res
-      .clearCookie('jwt', {
-        httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-      })
+      .clearCookie('jwt', { httpOnly: true, sameSite: 'none', secure: true })
+      .status(204)
+      .json({ message: 'User logged out successfully' });
   } catch (error) {
     next(error);
   }
@@ -175,20 +153,23 @@ export const updateSchoolDetails = async (
   next: NextFunction
 ) => {
   try {
-    const id = req['payload'].id;
+    // const id = req['payload'].id;
 
     const { schoolName, email, dateOfestablishment } = req.body as updateSchool;
-    // check for who can perform this operation
-    const permittedUser = await prisma.user.findFirst({
-      where: {
-        id,
-      },
-    });
+    const {GPS, POBox, location, website} = req.body as schoolAddress
 
-    if (!['admin'].includes(permittedUser.role))
-      return res
-        .status(401)
-        .json({ message: 'Not allowed for this operation' });
+    // will uncomment this code later when we are ready for route protection
+    // check for who can perform this operation
+    // const permittedUser = await prisma.user.findFirst({
+    //   where: {
+    //     id,
+    //   },
+    // });
+
+    // if (!['admin'].includes(permittedUser.role))
+    //   return res
+    //     .status(401)
+    //     .json({ message: 'Not allowed for this operation' });
 
     // update school
 
@@ -201,9 +182,10 @@ export const updateSchoolDetails = async (
         email,
         address: {
           create: {
-            GPS: req.body.GPS,
-            POBox: req.body.POBox,
-            location: req.body.location,
+           GPS,
+           POBox,
+           location,
+           website
           },
         },
         dateOfestablishment,
@@ -231,16 +213,18 @@ export const deleteSchool = async (
     if (!schoolExists)
       res.status(404).json({ message: 'school not found', sucess: false });
 
-    const permittedRole = await prisma.user.findFirst({
-      where: {
-        id: req['payload'].id,
-      },
-    });
+      // will allow it when we are ready to protect the routes
 
-    if (!['Admin'].includes(permittedRole.role))
-      res
-        .status(401)
-        .json({ message: 'unauthorized for this operation', success: false });
+    // const permittedRole = await prisma.user.findFirst({
+    //   where: {
+    //     id: req['payload'].id,
+    //   },
+    // });
+
+    // if (!['Admin'].includes(permittedRole.role))
+    //   res
+    //     .status(401)
+    //     .json({ message: 'unauthorized for this operation', success: false });
 
     await prisma.school.delete({
       where: {
@@ -286,5 +270,73 @@ export const findAllSchools = async (
     res.status(200).json({ allSchools, success: true });
   } catch (error) {
     next(error);
+  }
+};
+
+
+
+// School forgot password
+
+export const schoolforgotPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email } = req.body as createSchool;
+    // const userId = req["payload"].id
+    // console.log(userId)
+    const currentSchool = await prisma.school.findUnique({
+      where: {
+        email,
+      },
+    });
+    console.log(currentSchool.id);
+
+    const token = await createAccessToken(currentSchool.id);
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.NODEMAILER_HOST,
+      port: (<unknown>process.env.NODEMAILER_PORT) as number,
+      auth: {
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.GOOGLE_APP_PASSWORD,
+      },
+    });
+
+    transporter.verify(function (error, success) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Server is ready to take our messages');
+      }
+    });
+
+    const mailDetails = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: 'Password reset link',
+      html: `<a href="/forgotPassword/" + ${currentSchool.id} + '/' + ${token}>click this link to confirm password reset</a>`,
+    };
+
+    transporter.sendMail(mailDetails, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('email sent successfully');
+      }
+    });
+
+    await prisma.school.update({
+      where: {
+        id: currentSchool.id,
+      },
+      data: {
+        password: req.body.password as string,
+      },
+    });
+    res.json({ success: true });
+  } catch (error) {
+    next(error.message);
   }
 };

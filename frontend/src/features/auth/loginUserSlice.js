@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-export const schoolLogin = createAsyncThunk(
-  "login/schoolLogin",
+export const usersLogin = createAsyncThunk(
+  "login/usersLogin",
   async (args, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/api/v1/schoolLogin", {
+      const response = await fetch("http://localhost:5000/api/v1/userlogin", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -27,7 +27,7 @@ export const schoolLogin = createAsyncThunk(
 );
 
 const initialState = {
-  loggedInSchool: null,
+  loggedInUser: null,
   isLoggingIn: false,
   error: "",
 };
@@ -46,23 +46,23 @@ export const reHydrateStore = () => {
   }
 };
 
-const loginSchoolSlice = createSlice({
+const loginUser = createSlice({
   name: "auth/login",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(schoolLogin.pending, (state) => {
+      .addCase(usersLogin.pending, (state) => {
         state.isLoggingIn = true;
         state.error = "";
       })
-      .addCase(schoolLogin.fulfilled, (state, action) => {
-        const { loggedInSchool } = action.payload;
+      .addCase(usersLogin.fulfilled, (state, action) => {
+        const { loggedInUser } = action.payload;
         state.isLoggingIn = false;
-        state.loggedInSchool = action.payload;
+        state.loggedInUser = action.payload;
         state.error = "";
       })
-      .addCase(schoolLogin.rejected, (state, action) => {
+      .addCase(usersLogin.rejected, (state, action) => {
         // const { message } = action.payload;
         state.isLoggingIn = false;
         state.error = "Invalid credentials";
@@ -70,4 +70,4 @@ const loginSchoolSlice = createSlice({
   },
 });
 
-export default loginSchoolSlice.reducer;
+export default loginUser.reducer;

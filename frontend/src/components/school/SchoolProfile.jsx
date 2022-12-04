@@ -1,12 +1,29 @@
 import { Divider } from "@mui/material";
 import React from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useEditSchoolMutation } from "../../api/school/SchoolApi";
 
 const SchoolProfile = () => {
   const { isLoggingIn, loggedInSchool, error } = useSelector(
     (state) => state.loginSchool.loggedInSchool
   );
+
+  const [schoolLocation, setSchoolLocation] = useState(
+    loggedInSchool?.location
+  );
+
+  const [schoolAddress, setSchoolAdress] = useState(loggedInSchool?.address);
+  const [schoolName, setSchoolName] = useState(loggedInSchool?.name);
+  const [schoolOwner, setSchoolOwner] = useState(loggedInSchool?.owner);
+
+  const [editSchool] = useEditSchoolMutation();
+  const { isFetching } = useEditSchoolMutation();
+
+  const handleSchoolEdit = () => {
+    editSchool({ id: loggedInSchool?.id });
+  };
 
   return (
     <div className="flex">
@@ -54,8 +71,8 @@ const SchoolProfile = () => {
               School name
             </label>
             <input
-              //   onChange={onChange}
-              value={loggedInSchool?.name || "Enter school name"}
+              value={schoolName}
+              onChange={(e) => setSchoolName(e.target.value)}
               type="text"
               name="schoolName"
               required
@@ -63,18 +80,20 @@ const SchoolProfile = () => {
               className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
             />
           </div>
-          <div className="grid grid-cols-1 gap-4 mb-4">
+          <div className="grid grid-cols-1 gap-4 mb-4 ">
             <label htmlFor="schoolMail" className="font-[500] text-[#344054]">
               School email
             </label>
             <input
               //   onChange={onChange}
-              value={loggedInSchool?.email || "Enter school email"}
+              value={loggedInSchool?.email || "Not available"}
               type="email"
               name="schoolEmail"
               required
+              readOnly
+              disabled
               placeholder="Enter your email"
-              className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+              className="w-[33vw] cursor-not-allowed h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
             />
           </div>
           <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
@@ -85,8 +104,8 @@ const SchoolProfile = () => {
               School location
             </label>
             <input
-              //   onChange={onChange}
-              value={loggedInSchool?.location || "Enter school location"}
+              value={schoolLocation}
+              onChange={(e) => setSchoolLocation(e.target.value)}
               type="text"
               name="schoolLocation"
               required
@@ -102,8 +121,8 @@ const SchoolProfile = () => {
               School Address
             </label>
             <input
-              //   onChange={onChange}
-              value={loggedInSchool?.address || "Enter school address"}
+              value={schoolAddress}
+              onChange={(e) => setSchoolAdress(e.target.value)}
               type="text"
               name="schoolAddress"
               required
@@ -132,22 +151,22 @@ const SchoolProfile = () => {
               School Owner
             </label>
             <input
-              //   onChange={onChange}
-              value={loggedInSchool?.owner || "Not known"}
+              value={schoolOwner}
+              onChange={(e) => setSchoolOwner(e.target.value)}
               type="text"
               name="schoolOwner"
-              readOnly
-              className="w-[33vw] cursor-not-allowed h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+              className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
             />
           </div>
           <div className="flex items-center justify-end mt-8 w-[71vw]">
             <button
+              onClick={handleSchoolEdit}
               className="w-[160px] bg-[#29365f] hover:bg-blue-900 text-gray-50 h-[44px] rounded-[8px]  cursor-pointer "
               // disabled={!canSubmit}
               type="submit"
             >
-              {/* {isLoggingIn ? "Logging in" : "Log in"} */}
-              Save Changes
+              {isFetching ? "Saving" : "Save Changes"}
+              {/* Save Changes */}
             </button>
           </div>
         </form>

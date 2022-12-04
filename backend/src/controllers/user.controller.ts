@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import createHttpError from 'http-errors';
-import { createUser } from '../@types';
+import { createUser, userupdate, userGuardian, userStage, userAddress } from '../@types';
 import { prisma } from '../config/prismaInit';
 import { createAccessToken } from '../helpers/accessToken';
 import {config} from 'dotenv';
@@ -14,6 +14,16 @@ export const getUser = async (req:Request, res:Response, next:NextFunction) => {
         const findUser = await prisma.user.findFirst({
             where:{
                 id: req.params.id
+            },
+            select:{
+                fullname: true,
+                email: true,
+                stage: true,
+                address: true,
+                gender: true,
+                profilePic: true,
+                guardian: true,
+                role: true
             }
         })
         res.status(200).json({findUser, success: true})
@@ -45,7 +55,10 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const{fullname, email, age} = req.body as createUser
+        const{fullname, email, age, gender} = req.body as userupdate
+        const {father, mother, other} = req.body as userGuardian
+        const {classType, mainStage} = req.body as userStage
+        const {GPS, location, phoneNumber} = req.body as userAddress
         const userExits = await prisma.user.findFirst({
             where:{
                 id: req.params.id
@@ -60,7 +73,28 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
            data:{
             fullname,
             email,
-            age
+            age,
+            gender,
+            guardian:{
+                create:{
+                    father,
+                    mother, 
+                    other
+                }
+            },
+            address: {
+                create:{
+                    GPS,
+                    location,
+                    phoneNumber
+                }
+            },
+            stage: {
+                create: {
+                    classType,
+                    mainStage
+                }
+            }
            }
         })
 
@@ -88,7 +122,7 @@ export const deleteUser = async (req:Request, res:Response, next:NextFunction) =
             }
         })
         
-       res.json({msg:`${userDelete.fullname} deleted from your school}`})
+       res.json({msg:`${userDelete.fullname} deleted from your school`})
     } catch (error) {
         next(error)
     }

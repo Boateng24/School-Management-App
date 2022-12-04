@@ -6,8 +6,13 @@ export const studentsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api/v1/" }),
   tagTypes: ["students"],
   endpoints: (builder) => ({
+    getStudentDetails: builder.query({
+      query: ({ id }) => `users/${id}`,
+      providesTags: ["students"],
+    }),
     findAllStudents: builder.query({
       query: () => "findallstudents",
+      providesTags: ["students"],
     }),
     countAllStudents: builder.query({
       query: () => "countallstudents",
@@ -27,21 +32,23 @@ export const studentsApi = createApi({
         method: "POST",
         body: payload,
       }),
-      removeStudent: builder.mutation({
-        query: (payload) => ({
-          url: `/user/${payload}`,
-          method: "DELETE",
-          body: payload,
-        }),
-        invalidatesTags: ["students"],
+      invalidatesTags: ["students"],
+    }),
+    removeStudent: builder.mutation({
+      query: ({ id }) => ({
+        url: `/user/${id}`,
+        method: "DELETE",
+        body: id,
       }),
-      editStudent: builder.mutation({
-        query: (payload) => ({
-          url: `/user/${payload}`,
-          method: "PUT",
-          body: payload,
-        }),
+      invalidatesTags: ["students"],
+    }),
+    editStudent: builder.mutation({
+      query: (payload) => ({
+        url: `/user/${payload.id}`,
+        method: "PATCH",
+        body: payload,
       }),
+      invalidatesTags: ["students"],
     }),
   }),
 });
@@ -49,10 +56,13 @@ export const studentsApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+  useGetStudentDetailsQuery,
   useFindAllStudentsQuery,
   useCountAllStudentsQuery,
   useGetAllPrefectsQuery,
   useGetAllPrimaryQuery,
   useGetAllJHSQuery,
   useAddStudentMutation,
+  useEditStudentMutation,
+  useRemoveStudentMutation,
 } = studentsApi;

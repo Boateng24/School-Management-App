@@ -1,4 +1,14 @@
-import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import SchoolIcon from "@mui/icons-material/School";
@@ -17,7 +27,7 @@ import {
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-const Students = ({ firstname, gender }) => {
+const Students = () => {
   const navigate = useNavigate();
   const [allJHS, setAllJHS] = useState(useGetAllJHSQuery());
   const [allStudents, setAllStudents] = useState(useCountAllStudentsQuery());
@@ -37,7 +47,7 @@ const Students = ({ firstname, gender }) => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [age, setAge] = useState("");
+  const [stage, setStage] = useState("");
 
   const [searchTerm, setSearchTerm] = useState("");
   const [addNewStudent, setAddNewStudent] = useAddStudentMutation();
@@ -59,21 +69,19 @@ const Students = ({ firstname, gender }) => {
         "http://localhost:5000/api/v1/findallstudents"
       );
       const data = await response.json();
-
+      console.log("All students", data?.fetchstudents);
       setMyData(data);
     };
     fetchStudents();
   }, []);
 
-  console.log("All students data", myData);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     addNewStudent({
-      firstname: fullname,
+      fullname,
       email,
       password,
-      age: +age,
+      stage,
     });
     handleClose();
     window.location.reload();
@@ -81,6 +89,10 @@ const Students = ({ firstname, gender }) => {
 
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleStage = (e) => {
+    setStage(e.target.value);
   };
 
   const [opened, setOpened] = useState(false);
@@ -248,9 +260,12 @@ const Students = ({ firstname, gender }) => {
                           Password
                         </label>
                         <input
-                          onChange={(e) => setPassword(e.target.value)}
-                          value={password}
                           type="password"
+                          value={password}
+                          // defaultValue="Hi"
+                          // defaultValue={`Welcome@123`}
+                          // readOnly
+                          onChange={(e) => setPassword(e.target.value)}
                           required
                           name="password"
                           placeholder="********"
@@ -259,21 +274,46 @@ const Students = ({ firstname, gender }) => {
                       </div>
                       <div className="grid grid-cols-1 gap-4  mt-8">
                         <label
-                          htmlFor="email"
+                          htmlFor="stage"
                           className="font-[500] text-[#344054] mb-[-6px]"
                         >
-                          Date of birth
+                          Stage
                         </label>
-                        <input
-                          onChange={(e) => setAge(e.target.value)}
-                          value={age}
-                          type="number"
-                          required
-                          name="birthDate"
-                          placeholder="Eg 21"
-                          min={8}
-                          className="w-[330px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-                        />
+                        <FormControl
+                          sx={{ m: 0, minWidth: 120, height: 44 }}
+                          size="small"
+                        >
+                          {/* <InputLabel id="demo-select-small">Stage</InputLabel> */}
+                          <Select
+                            labelId="demo-select-small"
+                            id="demo-select-small"
+                            value={stage}
+                            className="w-[330px] h-[44px] border-[1px] border-gray-50 rounded-[18px] outline-none px-4"
+                            label="Stage"
+                            style={{
+                              borderRadius: "8px",
+                              height: "49px",
+                              width: "330px",
+                              // border: "1px solid rgb(249 250 251)",
+                              outline: "none",
+                              padding: " 8px",
+                            }}
+                            onChange={handleStage}
+                          >
+                            <MenuItem value="">
+                              <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={"Stage 1"}>Stage 1</MenuItem>
+                            <MenuItem value={"Stage 2"}>Stage 2</MenuItem>
+                            <MenuItem value={"Stage 3"}>Stage 3</MenuItem>
+                            <MenuItem value={"Stage 4"}>Stage 4</MenuItem>
+                            <MenuItem value={"Stage 5"}>Stage 5</MenuItem>
+                            <MenuItem value={"Stage 6"}>Stage 6</MenuItem>
+                            <MenuItem value={"JHS 1"}>JHS 1</MenuItem>
+                            <MenuItem value={"JHS 2"}>JHS 2</MenuItem>
+                            <MenuItem value={"JHS 3"}>JHS 3</MenuItem>
+                          </Select>
+                        </FormControl>
                       </div>
                       <button className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white">
                         ADD NEW STUDENT
@@ -287,28 +327,36 @@ const Students = ({ firstname, gender }) => {
         </div>
         <div className="h-[90%] ">
           {myData?.fetchstudents
-            ?.filter(({ firstname }) =>
-              firstname.toLowerCase().includes(searchTerm.toLocaleLowerCase())
-            )
-            .map(({ firstname, gender, id, profilePic, isPrefect, level }) => (
-              <div>
-                <Student
-                  // className="text-left"
-                  firstname={firstname}
-                  gender={gender || "Unknown"}
-                  id={id}
-                  profilePic={profilePic}
-                  isPrefect={isPrefect}
-                  // level={level}
-                />
-              </div>
-            ))}
+            // .filter(({ firstname }) =>
+            // firstname.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+            // )
+            ?.map(
+              ({
+                id,
+                fullname,
+                gender,
+                profilePic,
+                isPrefect,
+                stage,
+                email,
+                age,
+              }) => (
+                <div>
+                  <Student
+                    // className="text-left"
+                    fullname={fullname}
+                    email={email}
+                    age={age || "Unknown"}
+                    gender={gender || "Unknown"}
+                    id={id}
+                    profilePic={profilePic}
+                    isPrefect={isPrefect}
+                    stage={stage[0]?.classType}
+                  />
+                </div>
+              )
+            )}
         </div>
-        {/* <div className="h-[90%] ">
-          {filterList.map((list) => (
-            <h1>{list}</h1>
-          ))}
-        </div> */}
       </div>
     </div>
   );
