@@ -15,7 +15,8 @@ interface createUser{
     password: string;
     confirmPassword:string
     age?: number;
-    role?: Role
+    role?: Role,
+    gender?: string
 }
 
 interface userupdate{
@@ -23,9 +24,7 @@ interface userupdate{
   email?: string;
   age?: number;
   gender?: string
-  guardian: userGuardian
-  stage: userStage
-  address: userAddress
+  profilePic?: string
 }
 
 
@@ -33,6 +32,7 @@ interface userGuardian{
  father?: string;
  mother?: string;
  other?: string;
+ studentId: string
 }
 
 interface userAddress {
@@ -43,7 +43,8 @@ interface userAddress {
 
 interface userStage {
   classType: classCategory;
-  mainStage?: string
+  mainStage?: string,
+  teacher?: string
 }
 
 interface loginUser{
@@ -52,8 +53,8 @@ interface loginUser{
 }
 
 interface studentscores{
-  testscore?: number;
-  examscore?: number;
+  testScore?: number[];
+  examScore?: number;
 }
 
 interface tokenRenewType{
