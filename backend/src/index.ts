@@ -12,6 +12,9 @@ import refreshRouter from './routes/refreshToken.route';
 import schoolRouter from './routes/school.route';
 import studentRouter from './routes/student.route';
 import scoreRouter from './routes/score.route';
+import guardianRouter from './routes/guardian.route';
+import stageRouter from './routes/stage.route';
+import addressRouter from './routes/address.route';
 
 
 
@@ -42,6 +45,9 @@ app.use('/api/v1', refreshRouter)
 app.use('/api/v1', schoolRouter)
 app.use('/api/v1', studentRouter)
 app.use('/api/v1', scoreRouter)
+app.use('/api/v1', guardianRouter)
+app.use('/api/v1', stageRouter)
+app.use('/api/v1', addressRouter)
 
 
 app.listen(PORT || 5000, () => {
