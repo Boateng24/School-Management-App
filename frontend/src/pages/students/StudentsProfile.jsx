@@ -39,7 +39,7 @@ const StudentsProfile = () => {
 
   const handleStudentDetailsUpdate = (e) => {
     e.preventDefault();
-    editStudent({ id });
+    editStudent({ id, formData });
     // useEditStudentMutation({id});
     // window.location.reload();
   };
@@ -47,7 +47,7 @@ const StudentsProfile = () => {
   const handleProfilePicture = (e) => {
     setProfilePicture(e.target.files[0]);
   };
-  
+
   return (
     <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[102px] mx-[17vw] h-[74vh] ">
       <div className="mt-48 mb-8 flex items-center flex-col justify-center">
