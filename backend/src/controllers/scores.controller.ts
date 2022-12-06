@@ -5,15 +5,15 @@ import {studentscores} from '../@types'
 
 export const createStudentScores = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const {examscore, testscore} = req.body as studentscores
+        const {examScore, testScore} = req.body as studentscores
         const createScores = await prisma.scores.create({
           data:{
-            examScore: examscore,
-            testScore: testscore,
+            examScore,
+            testScore,
             studentId: req.params.id
           }
         })
-        res.status(200).json({scoreId: createScores.id, success: true})
+        res.status(200).json({scoreId: createScores.studentId, success: true})
     } catch (error) {
         next(error)
     }
@@ -22,7 +22,7 @@ export const createStudentScores = async (req:Request, res:Response, next:NextFu
 
 export const getStudentScores = async (req:Request, res:Response, next:NextFunction) => {
     try{
-        const getScores = await prisma.scores.findFirst({
+        const getScore = await prisma.scores.findFirst({
             where:{
                 studentId: req.params.id
             },
@@ -31,7 +31,7 @@ export const getStudentScores = async (req:Request, res:Response, next:NextFunct
                 testScore: true
             }
         })
-        res.status(200).json({getScores, success: true})
+        res.status(200).json({getScore, success: true})
     }catch(error){
         next(error)
     }
@@ -40,14 +40,14 @@ export const getStudentScores = async (req:Request, res:Response, next:NextFunct
 
 export const updateScores = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const { examscore, testscore } = req.body as studentscores;
+        const { examScore, testScore } = req.body as studentscores;
         const scoresUpdate = await prisma.scores.update({
             where: {
                 studentId: req.params.id
             },
             data:{
-                examScore: examscore,
-                testScore: testscore
+              examScore,
+              testScore
             }
         })
         res.status(200).json({scoresUpdate, success:true})
@@ -64,6 +64,22 @@ export const deleteScores = async (req:Request, res:Response, next:NextFunction)
             }
         })
         res.status(200).json({id: scoreDelete.studentId, success: true})
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+export const allstudentScores = async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const allScores = await prisma.scores.findMany({
+            select:{
+                studentId: true,
+                testScore: true,
+                examScore: true
+            }
+        })
+        res.status(200).json({allScores, success: true})
     } catch (error) {
         next(error)
     }

@@ -1,14 +1,11 @@
 import { prisma } from '../src/config/prismaInit';
-import { faker} from '@faker-js/faker';
+import { faker, InternetModule } from '@faker-js/faker';
 import { hashedPassword } from '../src/helpers/bcryptConfig';
 import { Role, classCategory } from '@prisma/client';
 
-
-let storedArray:any =[]
 const userMain = async () => {
   try {
-  const deletedUsers = await prisma.user.deleteMany({});
-    storedArray.push(deletedUsers)
+    const deletedUsers = await prisma.user.deleteMany({});
 
     for (let i = 0; i < 100; i++) {
       const createRole = Math.floor(Math.random() * Object.keys(Role).length);
@@ -53,73 +50,70 @@ const userMain = async () => {
   }
 };
 
-// const schoolMain = async () => {
-//   try {
-//     await prisma.school.deleteMany({});
-//     for (let i = 0; i < 100; i++) {
-//       await prisma.school.create({
-//         data: {
-//           schoolName: faker.company.name(),
-//           email: faker.helpers.unique(faker.internet.email),
-//           password: await hashedPassword(faker.internet.password()),
-//           phoneNumber: faker.phone.number(),
-//           dateOfestablishment: (<unknown>faker.date.past()) as string,
-//           address: {
-//             create: {
-//               GPS: faker.address.buildingNumber(),
-//               POBox: faker.address.secondaryAddress(),
-//               location: faker.address.direction(),
-//               website: faker.internet.domainName(),
-//             },
-//           },
-//         },
-//       });
-//     }
-//   } catch (error: any) {
-//     return error;
-//   }
-// };
+const schoolMain = async () => {
+  try {
+    await prisma.school.deleteMany({});
+    for (let i = 0; i < 100; i++) {
+      await prisma.school.create({
+        data: {
+          schoolName: faker.company.name(),
+          email: faker.helpers.unique(faker.internet.email),
+          password: await hashedPassword(faker.internet.password()),
+          phoneNumber: faker.phone.number(),
+          dateOfestablishment: (<unknown>faker.date.past()) as string,
+          address: {
+            create: {
+              GPS: faker.address.buildingNumber(),
+              POBox: faker.address.secondaryAddress(),
+              location: faker.address.direction(),
+              website: faker.internet.domainName(),
+            },
+          },
+        },
+      });
+    }
+  } catch (error: any) {
+    return error;
+  }
+};
 
 const studentScoresMain = async () => {
   try {
-   const deletedScores =  await prisma.scores.deleteMany({})
+    await prisma.scores.deleteMany({});
+    // find students from users and filter out their Id
     const findStudents = await prisma.user.findMany({
       where: {
-        role: "student"
-      }
-    })
-    storedArray.push(findStudents, deletedScores)
+        role: {
+          equals: 'student',
+        },
+      },
+    });
     console.log(findStudents.length)
 
-  const studentId= findStudents.forEach((item) => {
-       item.id= findStudents[findStudents.length].id;
-       console.log(item.id)
-      })
+    findStudents.filter((student) => {
+      return student.id;
+    });
 
-   findStudents.forEach( async (item) => {
-  const createscoress =   await prisma.scores.create({
-      data:{
-        examScore: faker.datatype.float({max:100, precision:0.1}),
-        testScore: faker.datatype.float({max:100, precision:0.1}),
-        studentId: item.id
-      }
-    })
-    console.log(createscoress)
-   })
-} catch (error:any) {
-    return error
+    // create students scores with the relevant info needed
+    findStudents.forEach(async (student) => {
+      await prisma.scores.create({
+        data: {
+          examScore: faker.datatype.float({ max: 100, precision: 0.1 }),
+          testScore: faker.datatype.float({ max: 100, precision: 0.1 }),
+          studentId: student.id,
+        },
+      });
+    });
+  } catch (error: any) {
+    return error;
   }
-}
+};
 
 const Main = async () => {
   try {
-    await userMain().then(async() => {
-      storedArray=[]
-      await studentScoresMain()
-    })
-  
-  
-    // await schoolMain();
+    await userMain()
+      await studentScoresMain();
+    await schoolMain();
   } catch (error) {
     return error;
   }

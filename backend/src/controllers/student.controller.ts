@@ -103,16 +103,14 @@ export const allPrefects = async(req:Request, res:Response, next:NextFunction) =
 export const allPrimaryStudents = async(req:Request, res:Response, next:NextFunction) => {
     try {
         const fetchPrimaryStudents = await prisma.user.count({
-            where:{
-                stage:{
-                    some:{
-                        classType:{
-                            equals: "Primary"
-                        }
-                    }
-                }
-            }
-        })
+          where: {
+            stage: {
+                classType: {
+                  equals: 'Primary',
+                },
+            },
+          },
+        });
         res.status(200).json({fetchPrimaryStudents, success:true})
     } catch (error) {
         next(error)
@@ -121,16 +119,14 @@ export const allPrimaryStudents = async(req:Request, res:Response, next:NextFunc
 export const allJuniorHighStudents = async(req:Request, res:Response, next:NextFunction) => {
     try {
         const fetchJuniorHigh = await prisma.user.count({
-            where:{
-                stage:{
-                    some:{
-                        classType:{
-                            equals: "JuniorHigh"
-                        }
-                    }
+          where: {
+            stage: {
+                classType: {
+                  equals: 'JuniorHigh',
                 }
-            }
-        })
+            },
+          },
+        });
         res.status(200).json({fetchJuniorHigh, success:true})
     } catch (error) {
         next(error)

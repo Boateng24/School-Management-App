@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import createHttpError from 'http-errors';
-import { createUser, loginUser } from '../@types';
+import { createUser, loginUser, userAddress, userGuardian, userStage, studentscores } from '../@types';
 import { prisma } from '../config/prismaInit';
 import { createAccessToken } from '../helpers/accessToken';
 // import {registeruserService} from '../services/user.services'; will improve it later
@@ -14,7 +14,11 @@ config()
 const maxAge = 7 * 24 * 60 * 60 * 1000
 export const userSignup = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const {fullname, email, password, confirmPassword} = req.body as createUser
+        const {fullname, email, password, confirmPassword,age, gender,role} = req.body as createUser
+        const {father, mother, other} = req.body as userGuardian
+        const {classType, mainStage} = req.body as userStage
+        const {GPS, location, phoneNumber} = req.body as userAddress
+        const {examScore, testScore} = req.body as studentscores
         const userExists =   await prisma.user.findFirst({
             where:{
                 email
@@ -31,14 +35,36 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
                 fullname,
                 email,
                 password: await hashedPassword(password),
-                role: req.body?.role,
-                age: req.body?.age,
+                role,
+                age,
+                gender,
                 stage:{
                     create:{
-                        classType: req.body?.classType
+                        classType,
+                        teacher: req.body?.teacher,
+                        mainStage
                     }
                 },
-                gender: req.body?.gender
+                guardian: {
+                  create: {
+                    mother,
+                    father,
+                    other
+                  }
+                },
+               address:{
+                create:{
+                  location,
+                  GPS,
+                  phoneNumber
+                }
+               },
+               score:{
+                create:{
+                  examScore,
+                  testScore
+                }
+               }
             }
         })
 
