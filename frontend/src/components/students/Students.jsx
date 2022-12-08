@@ -1,3 +1,4 @@
+import CloseIcon from "@mui/icons-material/Close";
 import {
   Box,
   Button,
@@ -7,6 +8,7 @@ import {
   MenuItem,
   Modal,
   Select,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -50,7 +52,11 @@ const Students = () => {
   const [stage, setStage] = useState("");
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [addNewStudent, setAddNewStudent] = useAddStudentMutation();
+
+  console.log("Details", setAddNewStudent?.error?.data?.message);
 
   const style = {
     position: "absolute",
@@ -84,7 +90,8 @@ const Students = () => {
       stage,
     });
     handleClose();
-    window.location.reload();
+    setSuccessMessage(`${fullname} has been added to your school successfully`);
+    // window.location.reload();
   };
 
   const handleChange = (e) => {
@@ -96,12 +103,21 @@ const Students = () => {
   };
 
   const [opened, setOpened] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
   };
 
+  useEffect(() => {
+    if (setAddNewStudent?.error || successMessage) {
+      setShowSuccess(true);
+    } else {
+      setShowSuccess(false);
+    }
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 4000);
+  }, [showSuccess, successMessage, setAddNewStudent?.error]);
   useEffect(() => {
     if (opened) {
       setShowSuccess(true);
@@ -115,8 +131,35 @@ const Students = () => {
     }, 4000);
   }, [opened]);
 
+  // Display error message
+  const action = (
+    <>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+
   return (
     <div className=" w-[94vw]  mt-[120px] m-auto">
+      <div>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={showSuccess}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message={setAddNewStudent?.error?.data?.message || successMessage}
+          action={action}
+        />
+      </div>
       <div className="flex justify-center items-center">
         {/* First item */}
         <div className="bg-white w-[30vw] h-fit ml-4 mt-[-50px] border-2 rounded-lg p-4  border-gray-100">
