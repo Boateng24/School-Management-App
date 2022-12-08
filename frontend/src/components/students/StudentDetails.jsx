@@ -77,11 +77,21 @@ const StudentDetails = () => {
 
   const currentStudentDetails = details.filter(({ id }) => id === studentId);
 
+  console.log(currentStudentDetails, "Yeah");
+
   return (
     <div className="flex">
       <div className="flex flex-col items-center m-5 w-[20vw] text-left">
         <div className="flex h-64 w-64 rounded-full mb-5 border-4 border-white text-9xl text-white bg-slate-800 text-center items-center justify-center">
-          {currentStudentDetails[0]?.fullname.slice(0, 2)}
+          {currentStudentDetails[0]?.profilePic ? (
+            <img
+              className="h-64 w-64 text-xl"
+              src={currentStudentDetails[0]?.profilePic}
+              alt={currentStudentDetails[0]?.fullname}
+            />
+          ) : (
+            currentStudentDetails[0]?.fullname.slice(0, 2)
+          )}
         </div>
         <div className="text-left">
           <h1 className="text-4xl text-gray-500 mb-2">
@@ -100,17 +110,18 @@ const StudentDetails = () => {
           <hr />
           <p className="text-gray-500 my-3 outline-none">
             <span className="font-semibold text-gray-500">Class : </span>
-            {currentStudentDetails[0]?.stage[0]?.classType}
+            {currentStudentDetails[0]?.stage?.mainStage}
           </p>
           <hr />
           <p className="text-gray-500 my-3 outline-none">
             <span className="font-semibold text-gray-500">Teacher : </span>
-            {currentStudentDetails[0]?.stage[0]?.teacher || "Unknown"}
+            {currentStudentDetails[0]?.stage?.teacher || "Unknown"}
           </p>
           <hr />
           <p className="text-gray-500 my-4 outline-none">
             <span className="font-semibold text-gray-500">Guardian : </span>
-            Mrs. Kumah Abigail
+            {currentStudentDetails[0]?.guardian?.father ||
+              currentStudentDetails[0]?.guardian?.mother}
           </p>
           <hr />
 

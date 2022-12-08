@@ -1,10 +1,11 @@
 import { Avatar } from "@mui/material";
 
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
-  useEditStudentMutation,
   useGetStudentDetailsQuery,
+  useUpdateStudentStageMutation,
 } from "../../api/students/StudentsApi";
 
 const StudentsProfile = () => {
@@ -12,44 +13,110 @@ const StudentsProfile = () => {
     (state) => state.loginUser?.loggedInUser?.loggedInUser
   );
 
-  const { data } = useGetStudentDetailsQuery(id);
+  const [data, setData] = useState("");
+
+  // const { data } = useGetStudentDetailsQuery(id);
+  console.log("Charely Student data", data);
+
+  useEffect(() => {
+    const studentsDetails = async () => {
+      const response = await fetch(
+        "http://localhost:5000/api/v1/user/clbdc1w1d0000udkkh025yhgi"
+      );
+      const data = await response.json();
+
+      setData(data?.findUser);
+    };
+    studentsDetails();
+  }, []);
+
+  // const studentInfo = {
+  //   id,
+  //   fullname: data?.findUser?.fullname,
+  //   email: data?.findUser?.email,
+  //   gender: data?.findUser?.gender,
+  //   location: data?.findUser?.address[0]?.location,
+  //   profilePic: data?.findUser?.profilePic,
+  //   role: data?.findUser?.role,
+  //   class: data?.findUser?.stage.classType,
+  //   mainStage: data?.findUser?.stage.mainStage,
+  //   guardian:
+  //     data?.findUser?.guardian[0]?.mother ||
+  //     data?.findUser?.guardian[0]?.father,
+  //   teacher: data?.findUser?.stage[0]?.teacher,
+  // };
 
   const studentInfo = {
-    id,
-    fullname: data?.findUser?.fullname,
     email: data?.findUser?.email,
+    stage: {
+      classType: data?.stage?.classType,
+      mainStage: data?.stage?.mainStage,
+      studentId: id,
+      teacher: data?.stage?.teacher,
+    },
+    address: {
+      phoneNumber: "1-896-972-3757 x58557",
+      GPS: "40371",
+      location: data?.findUser?.address[0]?.location,
+      userId: id,
+    },
     gender: data?.findUser?.gender,
-    location: data?.findUser?.address[0]?.location,
     profilePic: data?.findUser?.profilePic,
-    role: data?.findUser?.role,
-    stage: data?.findUser?.stage[0]?.classType,
-    guardian:
-      data?.findUser?.guardian[0]?.mother ||
-      data?.findUser?.guardian[0]?.father,
-    teacher: data?.findUser?.stage[0]?.teacher,
-  };
+    guardian: {
+      father: data?.findUser?.guardian[0]?.father,
+      mother: data?.findUser?.guardian[0]?.mother,
+      other: "",
+      studentId: id,
+    },
 
+    role: data?.findUser?.role,
+  };
+  console.log("Teacher", data?.stage?.teacher);
+
+  const [stageData, setStageData] = useState(studentInfo.stage);
+  const [addressData, setAddressData] = useState(studentInfo.address);
   const [formData, setFormData] = useState(studentInfo);
   const [profilePicture, setProfilePicture] = useState();
+  console.log("Main stage", stageData);
+  // Mutations
+  const [updateStudentStage] = useUpdateStudentStageMutation(
+    "clbdc1w1d0000udkkh025yhgi"
+  );
+
+  const onChangeStage = (e) =>
+    setStageData({ ...formData, [e.target.name]: e.target.value });
 
   const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const [editStudent] = useEditStudentMutation();
+    setStageData({ ...formData, [e.target.name]: e.target.value });
 
   const handleStudentDetailsUpdate = (e) => {
     e.preventDefault();
-    editStudent({ id, formData });
+
     // useEditStudentMutation({id});
     // window.location.reload();
   };
 
+  const handleStudentStageUpdate = (e) => {
+    e.preventDefault();
+    const stage = {
+      ...formData,
+      // stage: {
+      studentId: id,
+      classType: "Primary",
+      mainStage: "1",
+      teacher: "Amo",
+      // },
+    };
+    updateStudentStage({ id, ...stage });
+  };
+
+  // console.log("form data", formData);
   const handleProfilePicture = (e) => {
     setProfilePicture(e.target.files[0]);
   };
 
   return (
-    <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[102px] mx-[17vw] h-[74vh] ">
+    <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[182px] mx-[17vw] h-[74vh] ">
       <div className="mt-48 mb-8 flex items-center flex-col justify-center">
         <Avatar
           src={profilePicture && URL.createObjectURL(profilePicture)}
@@ -106,21 +173,35 @@ const StudentsProfile = () => {
             className="w-[33vw] cursor-not-allowed h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
           />
         </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
-          <label htmlFor="class" className="font-[500] text-[#344054]">
+        <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
+          <label htmlFor="classType" className="font-[500] text-[#344054]">
             Class
           </label>
           <input
-            value={formData?.stage}
-            onChange={onChange}
+            value={stageData?.classType}
+            onChange={onChangeStage}
             type="text"
-            name="class"
+            name="classType"
             required
-            placeholder="Enter your class / stage"
+            placeholder="Eg. Primary , JHS"
             className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
           />
         </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
+        <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
+          <label htmlFor="mainStage" className="font-[500] text-[#344054]">
+            Main stage
+          </label>
+          <input
+            value={stageData?.mainStage === null ? "" : stageData?.mainStage}
+            onChange={onChangeStage}
+            type="text"
+            name="mainStage"
+            required
+            placeholder="Eg. Class 1"
+            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+          />
+        </div>
+        {/* <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
           <label htmlFor="gender" className="font-[500] text-[#344054]">
             Gender
           </label>
@@ -133,8 +214,8 @@ const StudentsProfile = () => {
             placeholder="Enter your gender"
             className=" w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
           />
-        </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
+        </div> */}
+        <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
           <label htmlFor="role" className="font-[500] text-[#344054]">
             Role
           </label>
@@ -149,12 +230,28 @@ const StudentsProfile = () => {
             className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
           />
         </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
+
+        {/* Student Address */}
+        <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
+          <label htmlFor="GPS" className="font-[500] text-[#344054]">
+            GPS
+          </label>
+          <input
+            value={formData?.address?.GPS}
+            onChange={onChange}
+            type="text"
+            name="GPS"
+            required
+            placeholder="Enter your GPS"
+            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
           <label htmlFor="location" className="font-[500] text-[#344054]">
             Location
           </label>
           <input
-            value={formData?.location}
+            value={formData?.address?.location}
             onChange={onChange}
             type="text"
             name="location"
@@ -163,38 +260,84 @@ const StudentsProfile = () => {
             className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
           />
         </div>
-
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
-          <label htmlFor="guardian" className="font-[500] text-[#344054]">
-            Guardian
+        <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
+          <label htmlFor="phoneNumber" className="font-[500] text-[#344054]">
+            Phone number
           </label>
           <input
-            value={formData?.guardian}
+            value={formData?.address?.phoneNumber}
             onChange={onChange}
             type="text"
-            name="guardian"
+            name="phoneNumber"
             required
-            placeholder="Enter your guardian name"
+            placeholder="Enter your phone number"
             className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
           />
         </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
+
+        {/* Student Guardian */}
+
+        <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
+          <label htmlFor="mother" className="font-[500] text-[#344054]">
+            Mother
+          </label>
+          <input
+            value={formData?.guardian?.mother}
+            onChange={onChange}
+            type="text"
+            name="mother"
+            required
+            placeholder="Enter your mother's name"
+            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
+          <label htmlFor="father" className="font-[500] text-[#344054]">
+            Father
+          </label>
+          <input
+            value={formData?.guardian?.father}
+            onChange={onChange}
+            type="text"
+            name="father"
+            required
+            placeholder="Enter your father's name"
+            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
+          <label htmlFor="other" className="font-[500] text-[#344054]">
+            Other Guardian
+          </label>
+          <input
+            value={formData?.guardian?.other}
+            onChange={onChange}
+            type="text"
+            name="other"
+            required
+            placeholder="Enter any guardian's name"
+            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+          />
+        </div>
+
+        {/* Teacher */}
+        <div className="grid grid-cols-1 gap-4 mb-4 mt-4">
           <label htmlFor="teacher" className="font-[500] text-[#344054]">
             Teacher
           </label>
           <input
-            onChange={onChange}
-            value={formData?.teacher || "N/A"}
+            onChange={onChangeStage}
+            value={stageData?.teacher}
             type="text"
             name="teacher"
-            readOnly
-            className="w-[33vw] cursor-not-allowed h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+            // readOnly
+            className="w-[33vw]  h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
           />
         </div>
 
-        <div className="flex justify-end ml-[42vw] mt-8 w-[71vw]">
+        <div className="flex justify-end ml-[42vw] mt-4 w-[71vw]">
           <button
-            onClick={handleStudentDetailsUpdate}
+            onClick={handleStudentStageUpdate}
             className="w-[160px] mb-12 bg-[#3C0E3C] text-gray-50 h-[44px] rounded-[8px]  cursor-pointer "
             // disabled={!canSubmit}
             type="submit"

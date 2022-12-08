@@ -7,7 +7,7 @@ export const studentsApi = createApi({
   tagTypes: ["students"],
   endpoints: (builder) => ({
     getStudentDetails: builder.query({
-      query: (id) => ({ url: `user/${id}` }),
+      query: (id) => ({ url: `user/${id}/` }),
       providesTags: ["students"],
     }),
     findAllStudents: builder.query({
@@ -42,9 +42,9 @@ export const studentsApi = createApi({
       }),
       invalidatesTags: ["students"],
     }),
-    editStudent: builder.mutation({
-      query: (payload) => ({
-        url: `/user/${payload.id}`,
+    updateStudentStage: builder.mutation({
+      query: ({ id, ...payload }) => ({
+        url: `/updateStage/${id}`,
         method: "PATCH",
         body: payload,
       }),
@@ -63,6 +63,6 @@ export const {
   useGetAllPrimaryQuery,
   useGetAllJHSQuery,
   useAddStudentMutation,
-  useEditStudentMutation,
+  useUpdateStudentStageMutation,
   useRemoveStudentMutation,
 } = studentsApi;
