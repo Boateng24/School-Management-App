@@ -43,8 +43,9 @@ export const studentsApi = createApi({
       invalidatesTags: ["students"],
     }),
     updateStudentStage: builder.mutation({
-      query: ({ id, ...payload }) => ({
-        url: `/updateStage/${id}`,
+      query: (payload) => ({
+        // url: `/updateStage/${payload.id}`,
+        url: `/updateStage/clbg73kn40000udw8edruji2e`,
         method: "PATCH",
         body: payload,
       }),

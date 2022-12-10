@@ -63,6 +63,9 @@ const Student = ({
   useEffect(() => {
     if (successMessage) {
       setShowError(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 6000);
     } else {
       setShowError(false);
     }

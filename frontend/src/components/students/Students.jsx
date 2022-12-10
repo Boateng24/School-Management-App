@@ -75,20 +75,25 @@ const Students = () => {
         "http://localhost:5000/api/v1/findallstudents"
       );
       const data = await response.json();
-      console.log("All students", data?.fetchstudents);
+
       setMyData(data);
     };
     fetchStudents();
   }, []);
 
+  console.log("Error message", setAddNewStudent?.error?.data);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // if (!setAddNewStudent?.error?.data) {
     addNewStudent({
       fullname,
       email,
       password,
       stage,
     });
+    // }
     handleClose();
     setSuccessMessage(`${fullname} has been added to your school successfully`);
     // window.location.reload();
@@ -109,15 +114,19 @@ const Students = () => {
   };
 
   useEffect(() => {
-    if (setAddNewStudent?.error || successMessage) {
+    if (setAddNewStudent?.error?.data || successMessage) {
       setShowSuccess(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 6000);
     } else {
       setShowSuccess(false);
     }
     setTimeout(() => {
       setShowSuccess(false);
     }, 4000);
-  }, [showSuccess, successMessage, setAddNewStudent?.error]);
+  }, [showSuccess, successMessage, setAddNewStudent?.error?.data]);
+
   useEffect(() => {
     if (opened) {
       setShowSuccess(true);
@@ -156,7 +165,11 @@ const Students = () => {
           open={showSuccess}
           autoHideDuration={6000}
           onClose={handleClose}
-          message={setAddNewStudent?.error?.data?.message || successMessage}
+          message={
+            setAddNewStudent?.error?.data.map(({ msg }) => (
+              <p style={{ color: "white" }}>{msg}</p>
+            )) || successMessage
+          }
           action={action}
         />
       </div>

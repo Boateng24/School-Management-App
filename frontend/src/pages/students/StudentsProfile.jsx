@@ -77,11 +77,9 @@ const StudentsProfile = () => {
   const [addressData, setAddressData] = useState(studentInfo.address);
   const [formData, setFormData] = useState(studentInfo);
   const [profilePicture, setProfilePicture] = useState();
-  console.log("Main stage", stageData);
+
   // Mutations
-  const [updateStudentStage] = useUpdateStudentStageMutation(
-    "clbdc1w1d0000udkkh025yhgi"
-  );
+  const [updateStudentStage] = useUpdateStudentStageMutation();
 
   const onChangeStage = (e) =>
     setStageData({ ...formData, [e.target.name]: e.target.value });
@@ -89,25 +87,19 @@ const StudentsProfile = () => {
   const onChange = (e) =>
     setStageData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleStudentDetailsUpdate = (e) => {
-    e.preventDefault();
-
-    // useEditStudentMutation({id});
-    // window.location.reload();
-  };
-
-  const handleStudentStageUpdate = (e) => {
+  const updateStudentStageHandler = (e) => {
     e.preventDefault();
     const stage = {
       ...formData,
-      // stage: {
-      studentId: id,
-      classType: "Primary",
-      mainStage: "1",
-      teacher: "Amo",
-      // },
+      stage: {
+        studentId: id,
+        classType: "Primary",
+        mainStage: "21",
+        teacher: "Dan",
+      },
     };
-    updateStudentStage({ id, ...stage });
+
+    updateStudentStage(stage);
   };
 
   // console.log("form data", formData);
@@ -141,7 +133,7 @@ const StudentsProfile = () => {
       <form
         sx={{ width: "100%" }}
         className="grid place-items-center grid-cols-2"
-        onSubmit={handleStudentDetailsUpdate}
+        onSubmit={updateStudentStageHandler}
       >
         <div className="grid grid-cols-1 gap-4 mb-4">
           <label htmlFor="fullname" className="font-[500] text-[#344054]">
@@ -337,7 +329,7 @@ const StudentsProfile = () => {
 
         <div className="flex justify-end ml-[42vw] mt-4 w-[71vw]">
           <button
-            onClick={handleStudentStageUpdate}
+            onClick={updateStudentStageHandler}
             className="w-[160px] mb-12 bg-[#3C0E3C] text-gray-50 h-[44px] rounded-[8px]  cursor-pointer "
             // disabled={!canSubmit}
             type="submit"
