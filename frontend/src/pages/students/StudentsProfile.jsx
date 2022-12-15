@@ -13,7 +13,7 @@ const StudentsProfile = () => {
     (state) => state.loginUser?.loggedInUser?.loggedInUser
   );
 
-  const [data, setData] = useState("");
+  const [data, setData] = useState();
 
   // const { data } = useGetStudentDetailsQuery(id);
   console.log("Charely Student data", data);
@@ -47,7 +47,8 @@ const StudentsProfile = () => {
   // };
 
   const studentInfo = {
-    email: data?.findUser?.email,
+    fullname: data?.fullname,
+    email: data?.email,
     stage: {
       classType: data?.stage?.classType,
       mainStage: data?.stage?.mainStage,
@@ -60,22 +61,22 @@ const StudentsProfile = () => {
       location: data?.findUser?.address[0]?.location,
       userId: id,
     },
-    gender: data?.findUser?.gender,
-    profilePic: data?.findUser?.profilePic,
+    gender: data?.gender,
+    profilePic: data?.profilePic,
     guardian: {
-      father: data?.findUser?.guardian[0]?.father,
-      mother: data?.findUser?.guardian[0]?.mother,
+      father: data?.father,
+      mother: data?.mother,
       other: "",
       studentId: id,
     },
 
-    role: data?.findUser?.role,
+    role: data?.role,
   };
-  console.log("Teacher", data?.stage?.teacher);
+  console.log("Every", studentInfo);
 
   const [stageData, setStageData] = useState(studentInfo.stage);
   const [addressData, setAddressData] = useState(studentInfo.address);
-  const [formData, setFormData] = useState(studentInfo);
+  const [formData, setFormData] = useState(data);
   const [profilePicture, setProfilePicture] = useState();
 
   // Mutations
@@ -85,7 +86,7 @@ const StudentsProfile = () => {
     setStageData({ ...formData, [e.target.name]: e.target.value });
 
   const onChange = (e) =>
-    setStageData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const updateStudentStageHandler = (e) => {
     e.preventDefault();
@@ -102,7 +103,7 @@ const StudentsProfile = () => {
     updateStudentStage(stage);
   };
 
-  // console.log("form data", formData);
+  console.log("eeii", formData);
   const handleProfilePicture = (e) => {
     setProfilePicture(e.target.files[0]);
   };
