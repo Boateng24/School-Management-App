@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import createHttpError from 'http-errors';
-import { createUser, userupdate} from '../@types';
+import { createUser,userupdate} from '../@types';
 import { prisma } from '../config/prismaInit';
 import { createAccessToken } from '../helpers/accessToken';
 import {config} from 'dotenv';
@@ -44,7 +44,8 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
             fullname:true,
             email:true,
             role: true
-          }
+          },
+          take: 2
         })
         res.json({getUsers, success: true})
 
@@ -56,7 +57,7 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const{fullname, email, age, gender} = req.body as userupdate
+        const{fullname, email, age, gender} = req.body as userupdate;
         const userExits = await prisma.user.findFirst({
             where:{
                 id: req.params.id
@@ -64,6 +65,7 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
         })
         if(!userExits) throw new createHttpError.NotFound("User not found");
 
+        // will use update many to handle bulk update
         const userUpdate = await prisma.user.update({
            where:{
             id: req.params.id
@@ -72,7 +74,8 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
             fullname,
             email,
             age,
-            gender
+            gender,
+
            }
         })
 

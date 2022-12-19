@@ -18,7 +18,7 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
         const {father, mother, other} = req.body as userGuardian
         const {classType, mainStage} = req.body as userStage
         const {GPS, location, phoneNumber} = req.body as userAddress
-        const {examScore, testScore} = req.body as studentscores
+        const {examScore, testScore, electiveSub, coreSub} = req.body as studentscores
         const userExists =   await prisma.user.findFirst({
             where:{
                 email
@@ -62,7 +62,9 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
                score:{
                 create:{
                   examScore,
-                  testScore
+                  testScore,
+                  coreSub,
+                  electiveSub
                 }
                }
             }
