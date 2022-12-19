@@ -1,7 +1,7 @@
 import { prisma } from '../src/config/prismaInit';
-import { faker, InternetModule } from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 import { hashedPassword } from '../src/helpers/bcryptConfig';
-import { Role, classCategory } from '@prisma/client';
+import { Role, classCategory, coreSubjects, electiveSubjects } from '@prisma/client';
 
 const userMain = async () => {
   try {
@@ -79,6 +79,8 @@ const schoolMain = async () => {
 
 const studentScoresMain = async () => {
   try {
+       const createCoreSub = Math.floor(Math.random() * Object.keys(coreSubjects).length);
+       const createElectiveSub = Math.floor(Math.random() * Object.keys(electiveSubjects).length);
     await prisma.scores.deleteMany({});
     // find students from users and filter out their Id
     const findStudents = await prisma.user.findMany({
@@ -88,7 +90,7 @@ const studentScoresMain = async () => {
         },
       },
     });
-    console.log(findStudents.length)
+    console.log(findStudents.length);
 
     findStudents.filter((student) => {
       return student.id;
@@ -101,6 +103,8 @@ const studentScoresMain = async () => {
           examScore: faker.datatype.float({ max: 100, precision: 0.1 }),
           testScore: faker.datatype.float({ max: 100, precision: 0.1 }),
           studentId: student.id,
+          coreSub: coreSubjects[Object.keys(coreSubjects)[createCoreSub]],
+          electiveSub: electiveSubjects[Object.keys(electiveSubjects)[createCoreSub]],   
         },
       });
     });
@@ -109,10 +113,11 @@ const studentScoresMain = async () => {
   }
 };
 
+
 const Main = async () => {
   try {
-    await userMain()
-      await studentScoresMain();
+    await userMain();
+    await studentScoresMain();
     await schoolMain();
   } catch (error) {
     return error;

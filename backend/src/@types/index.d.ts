@@ -1,4 +1,4 @@
-import {Role, User, classCategory} from '@prisma/client'
+import {Role, User, classCategory, specificStages, coreSubjects, electiveSubjects} from '@prisma/client'
 
 declare global {
   namespace Express {
@@ -43,7 +43,7 @@ interface userAddress {
 
 interface userStage {
   classType: classCategory;
-  mainStage?: string,
+  mainStage?: specificStages,
   teacher?: string
 }
 
@@ -55,6 +55,9 @@ interface loginUser{
 interface studentscores{
   testScore?: number[];
   examScore?: number;
+  studentId?: string;
+  coreSub?: coreSubjects;
+  electiveSub?: electiveSubjects
 }
 
 interface tokenRenewType{

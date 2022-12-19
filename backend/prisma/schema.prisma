@@ -25,7 +25,7 @@ model User{
   guardian Guardian?
   stage Stage?
   address UserAddress?
-  score Scores?
+  score Scores[]
   profilePic String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -56,7 +56,7 @@ model UserAddress{
 
 model Stage{
   classType classCategory @default(Primary)
-  mainStage String?
+  mainStage specificStages @default(stage1)
   student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId String 
   teacher String?
@@ -92,12 +92,17 @@ model SchoolAddress{
 }
 
 model Scores {
+  id Int @id @default(autoincrement())
   testScore Float[]
   examScore Float?
+  mainStage specificStages @default(stage1)
+  studentId String
   student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  studentId String 
-  @@id([studentId])
+  coreSub coreSubjects?
+  electiveSub electiveSubjects?
+  @@index([studentId])
 }
+
 
 enum Role {
   superAdmin
@@ -113,5 +118,33 @@ enum classCategory {
   Nursery
   Primary
   JuniorHigh
+}
+
+enum specificStages {
+  stage1
+  stage2
+  stage3
+  stage4
+  stage5 
+  stage6
+  JHS1
+  JHS2
+  JHS3
+}
+
+enum coreSubjects {
+  mathematics
+  EnglishLanguage
+  IntegratedScience
+  SocialStudies
+}
+
+enum electiveSubjects {
+  RME
+  ICT
+  French
+  CreativeArts
+  CitizenShipEducation
+  OWOP
 }
 
