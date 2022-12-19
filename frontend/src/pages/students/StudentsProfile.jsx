@@ -9,26 +9,29 @@ import {
 } from "../../api/students/StudentsApi";
 
 const StudentsProfile = () => {
-  const { id } = useSelector(
+  // const { id } = useSelector(
+  //   (state) => state.loginUser?.loggedInUser?.loggedInUser
+  // );
+  const  {id}  = useSelector(
     (state) => state.loginUser?.loggedInUser?.loggedInUser
   );
 
   const [data, setData] = useState();
 
   // const { data } = useGetStudentDetailsQuery(id);
-  console.log("Charely Student data", data);
+  
 
   useEffect(() => {
     const studentsDetails = async () => {
       const response = await fetch(
-        "http://localhost:5000/api/v1/user/clbdc1w1d0000udkkh025yhgi"
+        `http://localhost:5000/api/v1/user/${id}`
       );
       const data = await response.json();
 
       setData(data?.findUser);
     };
     studentsDetails();
-  }, []);
+  }, [id]);
 
   // const studentInfo = {
   //   id,
@@ -79,6 +82,9 @@ const StudentsProfile = () => {
   const [formData, setFormData] = useState(data);
   const [profilePicture, setProfilePicture] = useState();
 
+  console.log('Form data', data);
+  console.log('Student info data', studentInfo);
+
   // Mutations
   const [updateStudentStage] = useUpdateStudentStageMutation();
 
@@ -93,11 +99,11 @@ const StudentsProfile = () => {
     const stage = {
       ...formData,
       stage: {
-        studentId: id,
         classType: "Primary",
         mainStage: "21",
         teacher: "Dan",
       },
+      studentId: id,
     };
 
     updateStudentStage(stage);
