@@ -77,7 +77,7 @@ const StudentDetails = () => {
 
   const currentStudentDetails = details.filter(({ id }) => id === studentId);
 
-  console.log(currentStudentDetails, "Yeah");
+  
 
   return (
     <div className="flex">
@@ -85,7 +85,7 @@ const StudentDetails = () => {
         <div className="flex h-64 w-64 rounded-full mb-5 border-4 border-white text-9xl text-white bg-slate-800 text-center items-center justify-center">
           {currentStudentDetails[0]?.profilePic ? (
             <img
-              className="h-64 w-64 text-xl"
+              className="h-64 w-64 text-xl rounded-full border-[10px] border-white"
               src={currentStudentDetails[0]?.profilePic}
               alt={currentStudentDetails[0]?.fullname}
             />

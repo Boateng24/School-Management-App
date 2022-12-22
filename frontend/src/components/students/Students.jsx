@@ -56,7 +56,7 @@ const Students = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [addNewStudent, setAddNewStudent] = useAddStudentMutation();
 
-  console.log("Details", setAddNewStudent?.error?.data?.message);
+  
 
   const style = {
     position: "absolute",
@@ -81,8 +81,7 @@ const Students = () => {
     fetchStudents();
   }, []);
 
-  console.log("Error message", setAddNewStudent?.error?.data);
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -257,7 +256,7 @@ const Students = () => {
             >
               Add Student
             </Button>
-            <div className="bg-green-400">
+            <div className="">
               <Modal
                 open={open}
                 onClose={handleClose}

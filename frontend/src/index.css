@@ -14,7 +14,7 @@ input {
   color: #344054;
 }
 
-input:focus {
+input:focus, textarea:focus {
   border: 1px solid #426e7b;
   background: #ffffff;
   box-shadow: 0px 0px 0px 4px #e5edfe;
