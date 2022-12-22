@@ -26,6 +26,7 @@ model User{
   stage Stage?
   address UserAddress?
   score Scores[]
+  announcement Announcement[]
   profilePic String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -74,6 +75,7 @@ model School{
   phoneNumber String?
   dateOfestablishment String?
   address SchoolAddress[]
+  announcement Announcement[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -102,6 +104,17 @@ model Scores {
   coreSub coreSubjects?
   electiveSub electiveSubjects?
   @@index([studentId])
+}
+
+model Announcement {
+  id Int @id @default(autoincrement())
+  message String
+  admin User @relation(fields: [adminId], references: [id])
+  adminId String
+  school School @relation(fields: [schoolId], references: [id])
+  schoolId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 
