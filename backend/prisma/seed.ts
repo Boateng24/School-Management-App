@@ -90,7 +90,6 @@ const studentScoresMain = async () => {
         },
       },
     });
-    console.log(findStudents.length);
 
     findStudents.filter((student) => {
       return student.id;
@@ -104,7 +103,7 @@ const studentScoresMain = async () => {
           testScore: faker.datatype.float({ max: 100, precision: 0.1 }),
           studentId: student.id,
           coreSub: coreSubjects[Object.keys(coreSubjects)[createCoreSub]],
-          electiveSub: electiveSubjects[Object.keys(electiveSubjects)[createCoreSub]],   
+          electiveSub: electiveSubjects[Object.keys(electiveSubjects)[createElectiveSub]],   
         },
       });
     });
@@ -113,12 +112,49 @@ const studentScoresMain = async () => {
   }
 };
 
+const announcementMain = async () => {
+  try {
+    await prisma.announcement.deleteMany({})
+
+    const findSchool = await prisma.school.findMany({})
+
+     const findAdmins = await prisma.user.findMany({
+       where: {
+         role: {
+           equals: 'admin',
+         },
+       },
+     });
+     console.log(findAdmins.length);
+
+     findAdmins.filter((admin) => {
+      return admin.id
+     })
+
+     findAdmins.forEach(async (admin) => {
+      let index=0
+      await prisma.announcement.create({
+        data:{
+          message: faker.lorem.sentence(),
+          adminId: admin.id,
+          schoolId: findSchool[index].id
+        }
+      })
+      index++
+     })
+
+  } catch (error) {
+    return error
+  }
+}
+
 
 const Main = async () => {
   try {
     await userMain();
     await studentScoresMain();
     await schoolMain();
+    await announcementMain()
   } catch (error) {
     return error;
   }
