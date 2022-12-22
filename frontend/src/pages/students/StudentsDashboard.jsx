@@ -6,6 +6,8 @@ import Illustration from "../../assets/Illustration.jpg";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import Doughnuts from "../../components/chart/Doughut";
 import Chart1 from "../../components/chart/Chart1";
+import { useFindAllStudentsQuery } from "../../api/students/StudentsApi";
+import { useFindAnnouncementQuery } from "../../api/school/SchoolApi";
 
 const StudentsDashboard = () => {
   const [quotes, setQuotes] = useState([]);
@@ -25,7 +27,6 @@ const StudentsDashboard = () => {
         }
       );
       const data = await response.json();
-      console.log("quotes", data);
       setQuotes(data);
     };
     fetchQuotes();
@@ -33,7 +34,7 @@ const StudentsDashboard = () => {
 
   const currentDate = new Date();
   const currentHour = currentDate.getHours();
-  console.log(currentHour, "Current hour");
+
 
   useEffect(() => {
     if (currentHour >= 0 && currentHour <= 11) {
@@ -44,6 +45,13 @@ const StudentsDashboard = () => {
       setGreetStudent("evening");
     }
   }, [greetStudent, currentHour]);
+
+
+  // Find announcements
+  const {data, isError, error} = useFindAnnouncementQuery();
+  console.log('Find announcement', data);
+  console.log('Find announcement type', typeof data); 
+  console.log('Error', error); 
 
   return (
     <div className="flex ml-[17vw] w-[80vw] h-[91vh]">

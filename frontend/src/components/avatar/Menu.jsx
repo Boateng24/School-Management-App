@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout, logoutSchool } from "../../features/auth/logoutSchoolSlice";
 import { FormControl, Modal, Select } from "@mui/material";
+import { useSendAnnouncementMutation } from "../../api/school/SchoolApi";
 
 export default function AccountMenu() {
   const { loggedInSchool } = useSelector(
@@ -24,7 +25,7 @@ export default function AccountMenu() {
 
   console.log("Heyyyyy", loggedInSchool);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [openModal , setOpenModal] = useState(false)
+  const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
@@ -44,9 +45,23 @@ export default function AccountMenu() {
     // window.location.reload();
   };
 
-  const handleOpen = e => setOpenModal(true)
-  const handleCloseModal = e => setOpenModal(false)
+  
+  const handleOpen = (e) => setOpenModal(true);
+  const handleCloseModal = (e) => setOpenModal(false);
+  const [message , setMessage] = useState('')
 
+
+
+  
+  const [sendAnnouncement] = useSendAnnouncementMutation()
+  const handleSubmit = e => {
+    e.preventDefault()
+    sendAnnouncement({
+      message,
+      // adminId,
+      // schoolId,
+    });
+  }
 
   const style = {
     position: "absolute",
@@ -59,7 +74,7 @@ export default function AccountMenu() {
     p: 4,
   };
 
-  // Modal 
+  // Modal
   const modal = (
     <div className="">
       <Modal
@@ -71,19 +86,20 @@ export default function AccountMenu() {
       >
         <Box sx={style} className="rounded-md">
           <p id="modal-modal-title" className="font-bold text-xl mb-4 -mt-2">
-          Announcement
+            Announcement
           </p>
           <div id="modal-modal-description" sx={{ mt: 2 }}>
-            <form action="" onSubmit={'handleSubmit'}>
-              
-              
-              
+            <form action="" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 gap-4  mt-8">
-                
-                <textarea placeholder="All students will see this announcement" cols={12} rows={5} className='p-4 border-2 border-gray-200 resize-none rounded-xl outline-none' ></textarea>
+                <textarea value={message} onChange={e => setMessage(e.target.value)}
+                  placeholder="All students will see this announcement"
+                  cols={12}
+                  rows={5}
+                  className="p-4 border-2 border-gray-200 resize-none rounded-xl outline-none"
+                ></textarea>
               </div>
               <button className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white">
-               Send Announcement
+                Send Announcement
               </button>
             </form>
           </div>
@@ -91,7 +107,6 @@ export default function AccountMenu() {
       </Modal>
     </div>
   );
-
 
   return (
     <React.Fragment>

@@ -19,7 +19,7 @@ const Dashboard = () => {
   // const { data } = useFindAllStudentsQuery();
   // console.log("Find all students", data);
   const data = useCountAllStudentsQuery();
-  console.log("Students data count", studentCount);
+  
 
   useEffect(() => {
     const fetchStudents = async () => {
