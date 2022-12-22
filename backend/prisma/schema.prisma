@@ -93,8 +93,9 @@ model SchoolAddress{
 
 model Scores {
   id Int @id @default(autoincrement())
-  testScore Float[]
-  examScore Float?
+  testScore Float[] 
+  examScore Float? @default(0)
+  totalPercentage Float? @default(0)
   mainStage specificStages @default(stage1)
   studentId String
   student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
