@@ -15,6 +15,7 @@ import scoreRouter from './routes/score.route';
 import guardianRouter from './routes/guardian.route';
 import stageRouter from './routes/stage.route';
 import addressRouter from './routes/address.route';
+import announceRouter from './routes/announcement.route';
 
 
 
@@ -48,6 +49,7 @@ app.use('/api/v1', scoreRouter)
 app.use('/api/v1', guardianRouter)
 app.use('/api/v1', stageRouter)
 app.use('/api/v1', addressRouter)
+app.use('/api/v1', announceRouter)
 
 
 app.listen(PORT || 5000, () => {

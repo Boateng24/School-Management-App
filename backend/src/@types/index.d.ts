@@ -97,3 +97,9 @@ interface refreshTokenType {
   user: string;
   refreshToken: string
 }
+
+interface Announcement {
+  message: string;
+  adminId: string;
+  schoolId: string
+}
