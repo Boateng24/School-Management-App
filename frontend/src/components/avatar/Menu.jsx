@@ -23,7 +23,10 @@ export default function AccountMenu() {
     (state) => state.loginSchool?.loggedInSchool
   );
 
-  console.log("Heyyyyy", loggedInSchool);
+  const {id} = useSelector((state) => state.loginUser?.loggedInUser?.loggedInUser);
+
+  console.log('User id', id);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch();
@@ -58,8 +61,8 @@ export default function AccountMenu() {
     e.preventDefault()
     sendAnnouncement({
       message,
-      // adminId,
-      // schoolId,
+      adminId: id,
+      schoolId: loggedInSchool?.id,
     });
   }
 

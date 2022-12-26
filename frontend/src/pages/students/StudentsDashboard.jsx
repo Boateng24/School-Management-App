@@ -49,9 +49,7 @@ const StudentsDashboard = () => {
 
   // Find announcements
   const {data, isError, error} = useFindAnnouncementQuery();
-  console.log('Find announcement', data);
-  console.log('Find announcement type', typeof data); 
-  console.log('Error', error); 
+ 
 
   return (
     <div className="flex ml-[17vw] w-[80vw] h-[91vh]">
@@ -111,35 +109,17 @@ const StudentsDashboard = () => {
         <div className="h-[50%] rounded-lg p-4">
           <Doughnuts />
         </div>
-        <div className="h-[50%] rounded-lg p-4 mt-4 mb-16">
+        <div className="h-[50%] rounded-lg p-4 mt-4 mb-16 overflow-scroll scrollbar-hide">
           <h1 className="text-2xl font-bold mb-3 text-gray-500">
             Upcoming activities
           </h1>
           <div>
-            <p className="text-gray-500 text-large py-3">
-              * Talent Show Day - 23rd December , 2022
-            </p>
-            <hr />
-            <p className="text-gray-500 text-large py-4">
-              * Career Day Celebration - 28th January , 2023
-            </p>
-            <hr />
-            <p className="text-gray-500 text-large py-4">
-              * Rep your tribe day - 3rd January , 2023
-            </p>
-            <hr />
-            <p className="text-gray-500 text-large py-4">
-              * Talent Show Day - 12th January , 2023
-            </p>
-            <hr />
-            <p className="text-gray-500 text-large py-4">
-              * Talent Show Day - 7th February , 2023
-            </p>
-            <hr />
-            <p className="text-gray-500 text-large py-3">
-              * Quiz Fest - 13th February , 2023
-            </p>
-            <hr />
+            {data?.getAnnouncement.map(({ id, message }) => (
+              <div key={id}>
+                <p className="text-gray-500 text-large py-3">* {message}</p>
+                <hr />
+              </div>
+            ))}
           </div>
         </div>
       </div>
