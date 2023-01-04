@@ -1,6 +1,7 @@
 // import usersLogin from "../../../assets/usersLogin.png";
 import { Link, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import userLogin from "../../../assets/usersLogin.png"
 
 import { useEffect, useState } from "react";
 import { usersLogin } from "../../../features/auth/loginUserSlice";
@@ -101,7 +102,7 @@ const UsersLogin = () => {
         </h1> */}
 
         <img
-          src={usersLogin}
+          src={userLogin}
           width="350"
           style={{ margin: "auto" }}
           alt="background"

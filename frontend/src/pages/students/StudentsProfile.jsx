@@ -16,11 +16,59 @@ const StudentsProfile = () => {
     (state) => state.loginUser?.loggedInUser?.loggedInUser
   );
 
-  const [data, setData] = useState();
-
-  const [formData, setFormData] = useState(data);
   const [profilePicture, setProfilePicture] = useState();
 
+  const { data: student } = useGetStudentDetailsQuery(
+    "clbzap6i3000uud2opq0oohgs"
+  );
+
+  const personalDetails = {
+    fullname: student?.findUser?.fullname,
+    email: student?.findUser?.email,
+    gender: student?.findUser?.gender,
+  };
+  const stageDetails = student?.findUser?.stage;
+  const addressDetails = student?.findUser?.address
+  const guardianDetails = student?.findUser?.guardian
+ 
+
+  console.log('guardian details', guardianDetails);
+
+  // Student personal details
+  const [personalData, setPersonalData] = useState(personalDetails);
+
+  // Student stage details
+  const [stageInfo, setStageInfo] = useState(stageDetails);
+
+  // Student address details
+  const [address, setAddress] = useState(addressDetails);
+
+  console.log('address', address);
+
+  // Student guardian details
+  const [guardian , setGuardian] = useState(guardianDetails)
+
+  const { fullname, email, gender } = personalData;
+  const { classType, mainStage, teacher } = stageInfo;
+  const { phoneNumber, GPS, location } = address;
+  const {mother, father, other} = guardian
+
+
+  // Handlers
+  const personalInformationChange = (e) => {
+    setPersonalData({ ...personalData, [e.target.name]: e.target.value });
+  };
+
+  const stageInformationChange = (e) => {
+    setStageInfo({ ...stageInfo, [e.target.name]: e.target.value });
+  };
+
+  const addressInformationChange = (e) =>
+    setAddress({ ...address, [e.target.name]: e.target.value });
+
+  const guardianInformationChange = e => setGuardian({...guardian, [e.target.name]: e.target.value})
+  
+    console.log("Student info", student);
   return (
     <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[182px] mx-[17vw] h-[74vh] ">
       {/* Profile Picture */}
@@ -58,8 +106,8 @@ const StudentsProfile = () => {
                   Fullname
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={personalInformationChange}
+                  value={fullname}
                   type="text"
                   name="fullname"
                   required
@@ -74,8 +122,8 @@ const StudentsProfile = () => {
                   Email
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={personalInformationChange}
+                  value={email}
                   type="email"
                   name="email"
                   required
@@ -106,8 +154,8 @@ const StudentsProfile = () => {
                   Gender
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={personalInformationChange}
+                  value={gender}
                   type="text"
                   name="gender"
                   required
@@ -138,8 +186,8 @@ const StudentsProfile = () => {
                   Class Type
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={stageInformationChange}
+                  value={classType}
                   type="text"
                   name="classType"
                   required
@@ -157,8 +205,8 @@ const StudentsProfile = () => {
                   Main Stage
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={stageInformationChange}
+                  value={mainStage}
                   type="text"
                   name="schoolName"
                   required
@@ -176,8 +224,8 @@ const StudentsProfile = () => {
                   Class Teacher
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={stageInformationChange}
+                  value={teacher}
                   type="text"
                   name="classTeacher"
                   required
@@ -207,8 +255,8 @@ const StudentsProfile = () => {
                   GPS
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={addressInformationChange}
+                  value={GPS}
                   type="text"
                   name="GPS"
                   required
@@ -223,8 +271,8 @@ const StudentsProfile = () => {
                   Location
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={addressInformationChange}
+                  value={location}
                   type="text"
                   name="location"
                   required
@@ -242,8 +290,8 @@ const StudentsProfile = () => {
                   Phone number
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={addressInformationChange}
+                  value={phoneNumber}
                   type="number"
                   name="phoneNumber"
                   required
@@ -272,8 +320,8 @@ const StudentsProfile = () => {
                   Father
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={guardianInformationChange}
+                  value={father}
                   type="text"
                   name="father"
                   required
@@ -288,8 +336,8 @@ const StudentsProfile = () => {
                   Mother
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={guardianInformationChange}
+                  value={mother}
                   type="text"
                   name="mother"
                   required
@@ -304,11 +352,10 @@ const StudentsProfile = () => {
                   Other
                 </label>
                 <input
-                  // onChange={onChange}
-                  // value={schoolName}
+                  onChange={guardianInformationChange}
+                  value={other}
                   type="text"
                   name="other"
-                  required
                   placeholder="Eg. 25"
                   className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
                 />

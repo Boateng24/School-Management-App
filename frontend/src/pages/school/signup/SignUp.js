@@ -83,7 +83,7 @@ const SignUp = () => {
           open={showError}
           autoHideDuration={6000}
           onClose={handleClose}
-          message={error?.map((errorMessage) => (
+          message={error && error?.map((errorMessage) => (
             <p style={{ color: "white" }}>{errorMessage?.msg}</p>
           ))}
           action={action}

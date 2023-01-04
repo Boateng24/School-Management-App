@@ -3,8 +3,8 @@ import React from "react";
 export const ChatWidget = (imageUrl, username, workspace, message) => {
   return (
     <div className="mb-8">
-      <div class="flex text-[#667085]">
-        <div class="flex justify-between">
+      <div className="flex text-[#667085]">
+        <div className="flex justify-between">
           <div>
             <img
               width={"40px"}

@@ -19,13 +19,13 @@ import { FormControl, Modal, Select } from "@mui/material";
 import { useSendAnnouncementMutation } from "../../api/school/SchoolApi";
 
 export default function AccountMenu() {
-  const { loggedInSchool } = useSelector(
+  const { loggedInSchool, accessToken } = useSelector(
     (state) => state.loginSchool?.loggedInSchool
   );
 
-  const {id} = useSelector((state) => state.loginUser?.loggedInUser?.loggedInUser);
+  
 
-  console.log('User id', id);
+  console.log('User id', accessToken);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
@@ -53,15 +53,14 @@ export default function AccountMenu() {
   const handleCloseModal = (e) => setOpenModal(false);
   const [message , setMessage] = useState('')
 
-
-
-  
   const [sendAnnouncement] = useSendAnnouncementMutation()
+  
   const handleSubmit = e => {
     e.preventDefault()
     sendAnnouncement({
       message,
-      adminId: id,
+      // Check in with tuffour on this
+      adminId: "clc5300rc0002udts1ncvd8hq",
       schoolId: loggedInSchool?.id,
     });
   }
