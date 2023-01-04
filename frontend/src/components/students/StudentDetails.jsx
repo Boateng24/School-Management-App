@@ -82,7 +82,7 @@ const StudentDetails = () => {
   return (
     <div className="flex">
       <div className="flex flex-col items-center m-5 w-[20vw] text-left">
-        <div className="flex h-64 w-64 rounded-full mb-5 border-4 border-white text-9xl text-white bg-slate-800 text-center items-center justify-center">
+        <div className="flex h-64 w-64 rounded-full mb-5 border-4 border-white text-9xl text-white bg-slate-800 text-center items-center justify-center" name='profilePicture'>
           {currentStudentDetails[0]?.profilePic ? (
             <img
               className="h-64 w-64 text-xl rounded-full border-[10px] border-white"
