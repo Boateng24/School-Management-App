@@ -34,7 +34,7 @@ Run the development server
 npm run start
 ```
 
-Open [http://localhost:6000](http://localhost:6000) with your browser to a message that the Server is listening at port 6000 and a database connection message DB connected successfully.
+Open [http://localhost:5000](http://localhost:5000) with your browser to a message that the Server is listening at port 6000 and a database connection message DB connected successfully.
 
 
 ### DEFAULT COMMAND FOR THIS WEB APP
