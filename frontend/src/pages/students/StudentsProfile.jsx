@@ -32,7 +32,7 @@ const StudentsProfile = () => {
   const guardianDetails = student?.findUser?.guardian
  
 
-  console.log('guardian details', guardianDetails);
+  
 
   // Student personal details
   const [personalData, setPersonalData] = useState(personalDetails);
@@ -43,7 +43,7 @@ const StudentsProfile = () => {
   // Student address details
   const [address, setAddress] = useState(addressDetails);
 
-  console.log('address', address);
+ 
 
   // Student guardian details
   const [guardian , setGuardian] = useState(guardianDetails)
@@ -68,13 +68,14 @@ const StudentsProfile = () => {
 
   const guardianInformationChange = e => setGuardian({...guardian, [e.target.name]: e.target.value})
   
-    console.log("Student info", student);
+    
   return (
     <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[182px] mx-[17vw] h-[74vh] ">
       {/* Profile Picture */}
-      <div className="mt-48 mb-8 flex items-center flex-col justify-center">
+      <div className="mt-48 mb-8 flex items-center flex-col justify-center" name='profilePicture'>
         <Avatar
-          src={profilePicture && URL.createObjectURL(profilePicture)}
+          src={"https://source.unsplash.com/user/c_v_r"}
+          // src={profilePicture && URL.createObjectURL(profilePicture)}
           sx={{ width: 180, height: 180, marginTop: 8, marginBottom: 6 }}
         />
         <label
