@@ -42,6 +42,14 @@ export const studentsApi = createApi({
       }),
       invalidatesTags: ["students"],
     }),
+    updateStudentProfilePicture: builder.mutation({
+      query: (payload) => ({
+        url: `/user/clc50zmgc0000udtsba9swsoz`,
+        method: "PATCH",
+        body: payload,
+      }),
+      invalidatesTags: ["students"],
+    }),
     updateStudentStage: builder.mutation({
       query: (payload) => ({
         url: `/updateStage/${payload.studentId}`,
@@ -81,7 +89,7 @@ export const studentsApi = createApi({
 // auto-generated based on the defined endpoints
 export const {
   useGetStudentDetailsQuery,
-  useAddGuardianMutation,
+  useAddGuardianMutation, useUpdateStudentProfilePictureMutation,
   useUpdateStudentGuardianMutation,
   useUpdateUserAddressMutation,
   useFindAllStudentsQuery,
