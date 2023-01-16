@@ -20,7 +20,10 @@ const StudentsProfile = () => {
   console.log('Id', id);
 
   const [profilePicture, setProfilePicture] = useState();
+  const [toggle , setToggle] = useState(true)
 
+
+  const handleToggle = e => setToggle(!toggle)
   const { data: student } = useGetStudentDetailsQuery(id);
 
   const personalDetails = {
@@ -51,17 +54,17 @@ const StudentsProfile = () => {
   const { phoneNumber, GPS, location } = address;
   const { mother, father, other } = guardian;
 
-  // const handleProfilePicture = (e) => {
-  //   const file = e.target.files[0];
-  //   setProfilePicture(file);
-  //   updateStudentProfilePicture({ profilePic: profilePicture });
-  // };
-
   const handleProfilePicture = (e) => {
     const file = e.target.files[0];
     setProfilePicture(file);
-    updateStudentProfilePicture({ variables: { profilePic: profilePicture } });
-  }
+    updateStudentProfilePicture({ profilePic: profilePicture });
+  };
+
+  // const handleProfilePicture = (e) => {
+  //   const file = e.target.files[0];
+  //   setProfilePicture(file);
+  //   updateStudentProfilePicture({ variables: { profilePic: profilePicture } });
+  // }
 
   // Handlers
   
@@ -110,9 +113,9 @@ const StudentsProfile = () => {
           onChange={handleProfilePicture}
         />
       </div>
-      <button type="submit" onClick={handled}>
+      {/* <button type="submit" onClick={handled}>
         Send
-      </button>
+      </button> */}
       <div className="grid grid-cols-2 m-4 p-4">
         {/* Student Personal Info */}
         <div className=" m-4 p-4 rounded border-2 border-gray-200">
@@ -186,9 +189,21 @@ const StudentsProfile = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
-              Edit
-            </button>
+            {toggle ? (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Edit
+              </button>
+            ) : (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Save
+              </button>
+            )}
           </div>
         </div>
         {/* Student Stage */}
@@ -257,9 +272,21 @@ const StudentsProfile = () => {
             <div className="opacity-0">4</div>
           </div>
           <div className="flex justify-end">
-            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
-              Edit
-            </button>
+            {toggle ? (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Edit
+              </button>
+            ) : (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Save
+              </button>
+            )}
           </div>
         </div>
         {/* Student Address */}
@@ -323,9 +350,21 @@ const StudentsProfile = () => {
             <div className="opacity-0">4</div>
           </div>
           <div className="flex justify-end">
-            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
-              Edit
-            </button>
+            {toggle ? (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Edit
+              </button>
+            ) : (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Save
+              </button>
+            )}
           </div>
         </div>
         {/* Guardian Address */}
@@ -402,9 +441,21 @@ const StudentsProfile = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
-              Edit
-            </button>
+            {toggle ? (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Edit
+              </button>
+            ) : (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Save
+              </button>
+            )}
           </div>
         </div>
       </div>
