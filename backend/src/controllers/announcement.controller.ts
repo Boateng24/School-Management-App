@@ -28,7 +28,10 @@ export const findAnnouncement = async (_req:Request, res:Response, next:NextFunc
                 id: true,
                 message: true
             },
-            take: 10
+            orderBy: {
+                id: "desc"
+            },
+            take: 20
         })
         res.status(200).json({getAnnouncement, success: true})
     } catch (error) {

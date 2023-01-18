@@ -69,7 +69,8 @@ if(cluster.isPrimary){
         console.log(`worker ${worker.process.pid} died`)
         cluster.fork()
     })
-}else{
+}
+else{
 app.listen(PORT || 5000, () => {
   console.log(`Server ${process.pid} successfully listening on port ${PORT}`);
 });
