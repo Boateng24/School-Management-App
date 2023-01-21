@@ -247,16 +247,16 @@ export const findAllSchools = async (
   next: NextFunction
 ) => {
   try {
-    const permittedRole = await prisma.user.findFirst({
-      where: {
-        id: req['payload'].id,
-      },
-    });
+    // const permittedRole = await prisma.user.findFirst({
+    //   where: {
+    //     id: req.payload.id,
+    //   },
+    // });
 
-    if (!['admin'].includes(permittedRole.role))
-      res
-        .status(401)
-        .json({ message: 'unauthorized for this operation', success: false });
+    // if (!['admin'].includes(permittedRole.role))
+    //   res
+    //     .status(401)
+    //     .json({ message: 'unauthorized for this operation', success: false });
 
     const allSchools = await prisma.school.findMany({
       select: {

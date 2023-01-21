@@ -3,15 +3,15 @@
 set -e
 
 echo "migrate for deployment"
-npm run migrate:dev
+sudo npm run migrate:dev
 echo "migration success"
 
 echo "generate database"
-npm run generate
+sudo npm run generate
 echo "generate success"
 
 echo "Seeding database"
-npm run  dbseed
+sudo npm run  dbseed
 echo "seeding success"
 
 

@@ -58,8 +58,7 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
             fullname:true,
             email:true,
             role: true
-          },
-          take: 2
+          }
         })
         res.json({getUsers, success: true})
 
@@ -73,12 +72,12 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
     try {
          const file = req.file;
         const{fullname, email, age, gender} = req.body as userupdate;
-        const userExits = await prisma.user.findFirst({
-            where:{
-                id: req.params.id
-            }
-        })
-        if(!userExits) throw new createHttpError.NotFound("User not found");
+        // const userExits = await prisma.user.findFirst({
+        //     where:{
+        //         id: req.payload.id
+        //     }
+        // })
+        // if(!userExits) throw new createHttpError.NotFound("User not found");
 
         // will use update many to handle bulk update
         const userUpdate = await prisma.user.update({
