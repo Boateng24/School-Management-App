@@ -34,7 +34,7 @@ function App() {
           {/* <Navbar /> */}
           <Routes>
             <Route element={<SignIn />} path="/" />
-            <Route element={<SignUp />} path="/signup" />
+            <Route element={<SignUp />} path="/signUp" />
 
             <Route element={<ForgotPassword />} path="/forgotpassword" />
             <Route

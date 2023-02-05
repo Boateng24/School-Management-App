@@ -1,10 +1,24 @@
 import {Request, Response, NextFunction} from 'express';
 import createHttpError from 'http-errors';
-import { createUser, userupdate, userGuardian, userStage, userAddress } from '../@types';
+import { createUser,userupdate} from '../@types';
 import { prisma } from '../config/prismaInit';
 import { createAccessToken } from '../helpers/accessToken';
 import {config} from 'dotenv';
 import * as nodemailer from 'nodemailer';
+import multer from 'multer';
+
+
+export const fileStorage = multer.diskStorage({
+  destination: function (_req, _file, cb) {
+    cb(null, 'src/uploads');
+  },
+  filename: function (_req, file, cb) {
+    const fileType = file.mimetype.split('/')[1];
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileType);
+  },
+});
+
 
 
 config()
@@ -23,6 +37,7 @@ export const getUser = async (req:Request, res:Response, next:NextFunction) => {
                 gender: true,
                 profilePic: true,
                 guardian: true,
+                score: true,
                 role: true
             }
         })
@@ -55,48 +70,28 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const{fullname, email, age, gender} = req.body as userupdate
-        const {father, mother, other} = req.body as userGuardian
-        const {classType, mainStage} = req.body as userStage
-        const {GPS, location, phoneNumber} = req.body as userAddress
-        const userExits = await prisma.user.findFirst({
-            where:{
-                id: req.params.id
-            }
-        })
-        if(!userExits) throw new createHttpError.NotFound("User not found");
+         const file = req.file;
+        const{fullname, email, age, gender} = req.body as userupdate;
+        // const userExits = await prisma.user.findFirst({
+        //     where:{
+        //         id: req.payload.id
+        //     }
+        // })
+        // if(!userExits) throw new createHttpError.NotFound("User not found");
 
+        // will use update many to handle bulk update
         const userUpdate = await prisma.user.update({
-           where:{
-            id: req.params.id
-           },
-           data:{
+          where: {
+            id: req.params.id,
+          },
+          data: {
             fullname,
             email,
             age,
             gender,
-            guardian:{
-                create:{
-                    father,
-                    mother, 
-                    other
-                }
-            },
-            address: {
-                create:{
-                    GPS,
-                    location,
-                    phoneNumber
-                }
-            },
-            stage: {
-                create: {
-                    classType,
-                    mainStage
-                }
-            }
-           }
-        })
+            profilePic: JSON.stringify(file.filename),
+          },
+        });
 
         res.status(200).json({userUpdate, success:true})
 

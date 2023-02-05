@@ -7,7 +7,7 @@ export const studentsApi = createApi({
   tagTypes: ["students"],
   endpoints: (builder) => ({
     getStudentDetails: builder.query({
-      query: ({ id }) => `users/${id}`,
+      query: (id) => ({ url: `user/${id}/` }),
       providesTags: ["students"],
     }),
     findAllStudents: builder.query({
@@ -42,10 +42,34 @@ export const studentsApi = createApi({
       }),
       invalidatesTags: ["students"],
     }),
-    editStudent: builder.mutation({
+    updateStudentStage: builder.mutation({
       query: (payload) => ({
-        url: `/user/${payload.id}`,
+        url: `/updateStage/${payload.studentId}`,
         method: "PATCH",
+        body: payload,
+      }),
+      invalidatesTags: ["students"],
+    }),
+    updateStudentGuardian: builder.mutation({
+      query: (payload) => ({
+        url: `/guardianUpdate/${payload.studentId}`,
+        method: "PATCH",
+        body: payload,
+      }),
+      invalidatesTags: ["students"],
+    }),
+    updateUserAddress: builder.mutation({
+      query: (payload) => ({
+        url: `/userAddress/${payload.studentId}`,
+        method: "PATCH",
+        body: payload,
+      }),
+      invalidatesTags: ["students"],
+    }),
+    addGuardian: builder.mutation({
+      query: (payload) => ({
+        url: "/studentGuardian",
+        method: "POST",
         body: payload,
       }),
       invalidatesTags: ["students"],
@@ -57,12 +81,15 @@ export const studentsApi = createApi({
 // auto-generated based on the defined endpoints
 export const {
   useGetStudentDetailsQuery,
+  useAddGuardianMutation,
+  useUpdateStudentGuardianMutation,
+  useUpdateUserAddressMutation,
   useFindAllStudentsQuery,
   useCountAllStudentsQuery,
   useGetAllPrefectsQuery,
   useGetAllPrimaryQuery,
   useGetAllJHSQuery,
   useAddStudentMutation,
-  useEditStudentMutation,
+  useUpdateStudentStageMutation,
   useRemoveStudentMutation,
 } = studentsApi;

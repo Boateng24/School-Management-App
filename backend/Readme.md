@@ -13,8 +13,7 @@ Go to the project directory and install dependencies
 Make sure you are i the APISCHOOLMGT directory
 
 ``` zsh
-cd apischoolmgt
-cd src
+cd backend
 npm install
 ```
 
@@ -31,10 +30,10 @@ Refer to [.env.sample](.env.sample) for example environment variables.
 Run the development server
 
 ```zsh
-npm run start
+npm run dev
 ```
 
-Open [http://localhost:6000](http://localhost:6000) with your browser to a message that the Server is listening at port 6000 and a database connection message DB connected successfully.
+Open [http://localhost:5000](http://localhost:5000) with your browser to a message that the Server is listening at port 5000 and a database connection message DB connected successfully.
 
 
 ### DEFAULT COMMAND FOR THIS WEB APP
@@ -46,10 +45,10 @@ npx prisma migrate dev
 npm run build
 
 <!-- starting the server -->
-npm run start
+npm run dev
 
 <!-- DB seed -->
-npm run db_seed
+npm run dbseed
 
 <!-- view db in prisma gui -->
 npm run studio
@@ -67,5 +66,5 @@ This project was developed by **TUFFOUR**
 ## END POINTS
 
 To create a new user or sign up a user;
-- sign up link [http://localhost:6000/api/v1/signup]
-- login link [http://localhost:6000/api/v1/login]
+- sign up link [http://localhost:5000/api/v1/signup]
+- login link [http://localhost:5000/api/v1/login]

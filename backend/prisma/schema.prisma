@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets   = ["native", "debian-openssl-1.1.x","debian-openssl-3.0.x","linux-musl","linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -22,17 +23,17 @@ model User{
   role Role @default(student)
   gender String?
   isPrefect Boolean? @default(false)
-  guardian Guardian[]
-  stage Stage[]
-  address UserAddress[]
-  score Scores?
+  guardian Guardian?
+  stage Stage?
+  address UserAddress?
+  score Scores[]
+  announcement Announcement[]
   profilePic String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Guardian{
-  id String @id @default(cuid())
   father String?
   mother String?
   other String?
@@ -40,28 +41,30 @@ model Guardian{
   studentId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@id([studentId])
+
 }
 
 model UserAddress{
-  id String @id @default(cuid())
   phoneNumber String?
   GPS String?
   location String?
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
+  userId String 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@id([userId])
 }
 
 model Stage{
-  id String @id @default(cuid())
   classType classCategory @default(Primary)
-  mainStage String?
+  mainStage specificStages @default(stage1)
   student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  studentId String
+  studentId String 
   teacher String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@id([studentId])
 }
 
 
@@ -73,13 +76,13 @@ model School{
   phoneNumber String?
   dateOfestablishment String?
   address SchoolAddress[]
+  announcement Announcement[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
 }
 
 model SchoolAddress{
-  id String @id @default(cuid())
   school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   schoolId String
   location String[]
@@ -88,15 +91,33 @@ model SchoolAddress{
   GPS String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@id([schoolId])
 }
 
 model Scores {
-  id String @id @default(cuid())
-  testScore Float
-  examScore Float
-  student User @relation(fields: [studentId], references: [id])
-  studentId String @unique
+  id Int @id @default(autoincrement())
+  testScore Float[] 
+  examScore Float? @default(0)
+  totalPercentage Float? @default(0)
+  mainStage specificStages @default(stage1)
+  studentId String
+  student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  coreSub coreSubjects?
+  electiveSub electiveSubjects?
+  @@index([studentId])
 }
+
+model Announcement {
+  id Int @id @default(autoincrement())
+  message String
+  admin User @relation(fields: [adminId], references: [id])
+  adminId String
+  school School @relation(fields: [schoolId], references: [id])
+  schoolId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 
 enum Role {
   superAdmin
@@ -112,5 +133,33 @@ enum classCategory {
   Nursery
   Primary
   JuniorHigh
+}
+
+enum specificStages {
+  stage1
+  stage2
+  stage3
+  stage4
+  stage5 
+  stage6
+  JHS1
+  JHS2
+  JHS3
+}
+
+enum coreSubjects {
+  mathematics
+  EnglishLanguage
+  IntegratedScience
+  SocialStudies
+}
+
+enum electiveSubjects {
+  RME
+  ICT
+  French
+  CreativeArts
+  CitizenShipEducation
+  OWOP
 }
 

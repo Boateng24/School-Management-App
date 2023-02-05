@@ -3,6 +3,8 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewSchool } from "../../../features/auth/createSchoolSlice";
 import { useEffect, useState } from "react";
+import { Button, IconButton, Snackbar } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 const SignUp = () => {
   const { isCreating, currentSchool, error } = useSelector(
@@ -56,8 +58,37 @@ const SignUp = () => {
     return <Navigate to={"/"} />;
   }
 
+  // Display error message
+  const action = (
+    <>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+
   return (
     <div className="flex bg-slate-50">
+      <div>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={showError}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message={error && error?.map((errorMessage) => (
+            <p style={{ color: "white" }}>{errorMessage?.msg}</p>
+          ))}
+          action={action}
+        />
+      </div>
       <div className="hidden lg:flex min-w-[50vw] h-[100vh] bg-[#29365f] align-center justify-center flex-col">
         <h1 className="text-5xl mt-16 px-16 text-white font-bold">
           School Management System

@@ -10,18 +10,25 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
+import CampaignIcon from "@mui/icons-material/Campaign";
 import Logout from "@mui/icons-material/Logout";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout, logoutSchool } from "../../features/auth/logoutSchoolSlice";
+import { FormControl, Modal, Select } from "@mui/material";
+import { useSendAnnouncementMutation } from "../../api/school/SchoolApi";
 
 export default function AccountMenu() {
-  const { loggedInSchool } = useSelector(
+  const { loggedInSchool, accessToken } = useSelector(
     (state) => state.loginSchool?.loggedInSchool
   );
 
-  console.log("Heyyyyy", loggedInSchool);
+  
+
+  console.log('User id', accessToken);
+
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
@@ -41,8 +48,71 @@ export default function AccountMenu() {
     // window.location.reload();
   };
 
+  
+  const handleOpen = (e) => setOpenModal(true);
+  const handleCloseModal = (e) => setOpenModal(false);
+  const [message , setMessage] = useState('')
+
+  const [sendAnnouncement] = useSendAnnouncementMutation()
+  
+  const handleSubmit = e => {
+    e.preventDefault()
+    sendAnnouncement({
+      message,
+      // Check in with tuffour on this
+      adminId: "clc5300rc0002udts1ncvd8hq",
+      schoolId: loggedInSchool?.id,
+    });
+  }
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+  };
+
+  // Modal
+  const modal = (
+    <div className="">
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="backdrop-blur-md"
+      >
+        <Box sx={style} className="rounded-md">
+          <p id="modal-modal-title" className="font-bold text-xl mb-4 -mt-2">
+            Announcement
+          </p>
+          <div id="modal-modal-description" sx={{ mt: 2 }}>
+            <form action="" onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 gap-4  mt-8">
+                <textarea value={message} onChange={e => setMessage(e.target.value)}
+                  placeholder="All students will see this announcement"
+                  cols={12}
+                  rows={5}
+                  className="p-4 border-2 border-gray-200 resize-none rounded-xl outline-none"
+                ></textarea>
+              </div>
+              <button className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white">
+                Send Announcement
+              </button>
+            </form>
+          </div>
+        </Box>
+      </Modal>
+    </div>
+  );
+
   return (
     <React.Fragment>
+      {modal}
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Tooltip title="Account settings">
           <IconButton
@@ -101,6 +171,12 @@ export default function AccountMenu() {
         </MenuItem>
 
         <Divider />
+        <MenuItem onClick={handleOpen}>
+          <ListItemIcon>
+            <CampaignIcon fontSize="small" />
+          </ListItemIcon>
+          Announcement
+        </MenuItem>
         <MenuItem onClick={() => navigate(`schoolSettings`)}>
           <ListItemIcon>
             <Settings fontSize="small" />

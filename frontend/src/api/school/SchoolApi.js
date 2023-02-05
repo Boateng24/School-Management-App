@@ -14,6 +14,18 @@ export const schoolApi = createApi({
       query: () => `school`,
       providesTags: ["school"],
     }),
+    findAnnouncement: builder.query({
+      query: () => `/findAnnouncement`,
+      providesTags: ["school"],
+    }),
+    sendAnnouncement: builder.mutation({
+      query: (payload) => ({
+        url: `/createAnnouncement`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["school"],
+    }),
     removeSchool: builder.mutation({
       query: ({ id }) => ({
         url: `/school/delete/${id}`,
@@ -36,6 +48,8 @@ export const schoolApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+  useFindAnnouncementQuery,
+  useSendAnnouncementMutation,
   useGetAllSchoolsQuery,
   useGetSchoolQuery,
   useRemoveSchoolMutation,

@@ -7,7 +7,9 @@ import {
   MenuItem,
   Modal,
   Select,
+  Snackbar,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
@@ -39,6 +41,7 @@ const Student = ({
   );
 
   const [open, setOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -48,12 +51,46 @@ const Student = ({
   const handleStudentDelete = () => {
     removeStudent({ id });
     handleClose();
-    window.location.reload();
-    setShowSuccess(true);
+    setSuccessMessage(`${fullname} has been deleted from ${name}`);
+
+    // setShowSuccess(true);
+    showError(true);
   };
   const [details, setDetails] = useState([]);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  useEffect(() => {
+    if (successMessage) {
+      setShowError(true);
+      setTimeout(() => {
+        window.location.reload();
+      }, 6000);
+    } else {
+      setShowError(false);
+    }
+    setTimeout(() => {
+      setShowError(false);
+      // window.location.reload();
+    }, 4000);
+  }, [successMessage]);
+
+  // Display error message
+  const action = (
+    <>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
 
   const style = {
     position: "absolute",
@@ -65,6 +102,19 @@ const Student = ({
     boxShadow: 24,
     p: 4,
   };
+
+  const message = (
+    <div>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={showError}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={successMessage}
+        action={action}
+      />
+    </div>
+  );
 
   useEffect(() => {
     const studentsDetails = async () => {
@@ -92,6 +142,8 @@ const Student = ({
       onMouseOut={handleMouseOut}
       className="flex justify-start mb-1  px-3 cursor-pointer hover:bg-slate-50 "
     >
+      {/* Snackbar */}
+      {showError && message}
       <Modal
         open={open}
         onClose={handleClose}

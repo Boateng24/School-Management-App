@@ -1,19 +1,25 @@
 import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../config/prismaInit';
-import {studentscores} from '../@types'
+import {studentscores, userStage} from '../@types'
 
 
 export const createStudentScores = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const {examscore, testscore} = req.body as studentscores
-        const createScores = await prisma.scores.create({
-          data:{
-            examScore: examscore,
-            testScore: testscore,
-            studentId: req.params.id
-          }
+        const {examScore, testScore, studentId, coreSub, electiveSub} = req.body as studentscores
+        const {mainStage} = req.body as userStage
+        const createScores = await prisma.scores.createMany({
+          data:[
+            {
+                examScore,
+                testScore,
+                mainStage,
+                studentId,
+                coreSub,
+                electiveSub
+            }
+          ]
         })
-        res.status(200).json({scoreId: createScores.id, success: true})
+        res.status(200).json({scoreId: createScores, success: true})
     } catch (error) {
         next(error)
     }
@@ -22,16 +28,24 @@ export const createStudentScores = async (req:Request, res:Response, next:NextFu
 
 export const getStudentScores = async (req:Request, res:Response, next:NextFunction) => {
     try{
-        const getScores = await prisma.scores.findFirst({
+        const getScore = await prisma.scores.findMany({
             where:{
                 studentId: req.params.id
             },
             select: {
+                id: true,
                 examScore: true,
-                testScore: true
+                testScore: true,
+                mainStage: true,
+                studentId: true,
+                coreSub: true,
+                electiveSub: true
+            },
+            orderBy:{
+                mainStage: "asc"
             }
         })
-        res.status(200).json({getScores, success: true})
+        res.status(200).json({getScore, success: true})
     }catch(error){
         next(error)
     }
@@ -40,14 +54,18 @@ export const getStudentScores = async (req:Request, res:Response, next:NextFunct
 
 export const updateScores = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const { examscore, testscore } = req.body as studentscores;
+        const { examScore, testScore, electiveSub, coreSub } = req.body as studentscores;
+        const {mainStage} = req.body as userStage
         const scoresUpdate = await prisma.scores.update({
-            where: {
-                studentId: req.params.id
+            where:{
+                id: parseInt(req.params.id)
             },
             data:{
-                examScore: examscore,
-                testScore: testscore
+                  examScore,
+                  testScore, 
+                  mainStage,
+                  coreSub,
+                  electiveSub  
             }
         })
         res.status(200).json({scoresUpdate, success:true})
@@ -60,7 +78,7 @@ export const deleteScores = async (req:Request, res:Response, next:NextFunction)
     try {
         const scoreDelete = await prisma.scores.delete({
             where:{
-                studentId: req.params.id
+               id: parseInt(req.params.id)
             }
         })
         res.status(200).json({id: scoreDelete.studentId, success: true})
@@ -68,3 +86,28 @@ export const deleteScores = async (req:Request, res:Response, next:NextFunction)
         next(error)
     }
 }
+
+
+export const allstudentScores = async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const allScores = await prisma.scores.findMany({
+            select:{
+                id: true,
+                studentId: true,
+                testScore: true,
+                examScore: true,
+                coreSub: true,
+                electiveSub: true
+            },
+            take: 20,
+            orderBy: {
+                id: "asc"
+            }
+        })
+        res.status(200).json({allScores, success: true})
+    } catch (error) {
+        next(error)
+    }
+}
+
+

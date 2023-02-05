@@ -1,55 +1,85 @@
 import { Avatar, Button } from "@mui/material";
-// import { Stack } from "@mui/system";
+
 import React, { useState } from "react";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useEditStudentMutation } from "../../api/students/StudentsApi";
-import BadgeAvatars from "../../components/avatar/Avatar";
-import Stack from "@mui/material/Stack";
-import { styled } from "@mui/material/styles";
-import Badge from "@mui/material/Badge";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import {
+  useGetStudentDetailsQuery,
+  useUpdateStudentStageMutation,
+} from "../../api/students/StudentsApi";
 
 const StudentsProfile = () => {
-  const { firstname, email, role, id } = useSelector(
+  // const { id } = useSelector(
+  //   (state) => state.loginUser?.loggedInUser?.loggedInUser
+  // );
+  const { id } = useSelector(
     (state) => state.loginUser?.loggedInUser?.loggedInUser
   );
-  const studentInfo = {
-    id,
-    firstname,
-    email,
-    location: "",
-    address: "",
-    role,
-    teacher: "",
-    guardian: "",
-    guardianNumber: "",
+
+  const [profilePicture, setProfilePicture] = useState();
+
+  const { data: student } = useGetStudentDetailsQuery(
+    "clbzap6i3000uud2opq0oohgs"
+  );
+
+  const personalDetails = {
+    fullname: student?.findUser?.fullname,
+    email: student?.findUser?.email,
+    gender: student?.findUser?.gender,
+  };
+  const stageDetails = student?.findUser?.stage;
+  const addressDetails = student?.findUser?.address
+  const guardianDetails = student?.findUser?.guardian
+ 
+
+  
+
+  // Student personal details
+  const [personalData, setPersonalData] = useState(personalDetails);
+
+  // Student stage details
+  const [stageInfo, setStageInfo] = useState(stageDetails);
+
+  // Student address details
+  const [address, setAddress] = useState(addressDetails);
+
+ 
+
+  // Student guardian details
+  const [guardian , setGuardian] = useState(guardianDetails)
+
+  const { fullname, email, gender } = personalData;
+  const { classType, mainStage, teacher } = stageInfo;
+  const { phoneNumber, GPS, location } = address;
+  const {mother, father, other} = guardian
+
+
+  // Handlers
+  const personalInformationChange = (e) => {
+    setPersonalData({ ...personalData, [e.target.name]: e.target.value });
   };
 
-  const [formData, setFormData] = useState(studentInfo);
-  const [profilePicture, setProfilePicture] = useState(null);
-
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const [editStudent] = useEditStudentMutation();
-
-  const handleStudentDetailsUpdate = () => {
-    //  editStudent({ id });
-    window.location.reload();
+  const stageInformationChange = (e) => {
+    setStageInfo({ ...stageInfo, [e.target.name]: e.target.value });
   };
 
-  const handleProfilePicture = (e) => {
-    setProfilePicture(e.target.files[0]);
-  };
+  const addressInformationChange = (e) =>
+    setAddress({ ...address, [e.target.name]: e.target.value });
+
+  const guardianInformationChange = e => setGuardian({...guardian, [e.target.name]: e.target.value})
+  
+    
   return (
-    <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[102px] mx-[17vw] h-[74vh] ">
-      <div className="mt-48 mb-8 flex items-center flex-col justify-center">
+    <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[182px] mx-[17vw] h-[74vh] ">
+      {/* Profile Picture */}
+      <div className="mt-48 mb-8 flex items-center flex-col justify-center" name='profilePicture'>
         <Avatar
-          src={profilePicture && URL.createObjectURL(profilePicture)}
+          src={"https://source.unsplash.com/user/c_v_r"}
+          // src={profilePicture && URL.createObjectURL(profilePicture)}
           sx={{ width: 180, height: 180, marginTop: 8, marginBottom: 6 }}
         />
         <label
-          for="profileUpload"
+          htmlFor="profilePic"
           type="file"
           // className="border-2 cursor-pointer border-gray-100 rounded-lg py-3 px-8 mt-24 bg-gray-100 text-gray-800"
           className="w-[160px] mb-12 text-center bg-[#3C0E3C]  text-gray-50 h-[44px] rounded-[8px] cursor-pointer py-2 px-5 "
@@ -57,146 +87,308 @@ const StudentsProfile = () => {
           Upload image
         </label>
         <input
-          id="profileUpload"
+          id="profilePic"
           style={{ display: "none" }}
           size={60}
           type="file"
-          onChange={handleProfilePicture}
+          // onChange={handleProfilePicture}
         />
       </div>
-      <form
-        sx={{ width: "100%" }}
-        className="grid place-items-center grid-cols-2"
-        onSubmit={handleStudentDetailsUpdate}
-      >
-        <div className="grid grid-cols-1 gap-4 mb-4">
-          <label htmlFor="fullname" className="font-[500] text-[#344054]">
-            Fullname
-          </label>
-          <input
-            value={formData.firstname}
-            onChange={onChange}
-            type="text"
-            name="firstname"
-            required
-            placeholder="Enter your fullname"
-            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-          />
+      <div className="grid grid-cols-2 m-4 p-4">
+        {/* Student Personal Info */}
+        <div className=" m-4 p-4 rounded border-2 border-gray-200">
+          <h3 className="p-2 font-semibold text-gray-800 mb-4 text-xl">
+            Personal Information
+          </h3>
+          <div className="grid grid-cols-2">
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label htmlFor="fullname" className="font-[500] text-[#344054]">
+                  Fullname
+                </label>
+                <input
+                  onChange={personalInformationChange}
+                  value={fullname}
+                  type="text"
+                  name="fullname"
+                  required
+                  placeholder="Eg. John Doe"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label htmlFor="Email" className="font-[500] text-[#344054]">
+                  Email
+                </label>
+                <input
+                  onChange={personalInformationChange}
+                  value={email}
+                  type="email"
+                  name="email"
+                  required
+                  placeholder="Eg. john.doe@gmail.com"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label htmlFor="age" className="font-[500] text-[#344054]">
+                  Age
+                </label>
+                <input
+                  // onChange={onChange}
+                  // value={schoolName}
+                  type="number"
+                  name="age"
+                  required
+                  placeholder="Eg. 25"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label htmlFor="gender" className="font-[500] text-[#344054]">
+                  Gender
+                </label>
+                <input
+                  onChange={personalInformationChange}
+                  value={gender}
+                  type="text"
+                  name="gender"
+                  required
+                  placeholder="Please type either male or female"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
+              Edit
+            </button>
+          </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 ">
-          <label htmlFor="email" className="font-[500] text-[#344054]">
-            Email
-          </label>
-          <input
-            onChange={onChange}
-            value={formData?.email || "Not available"}
-            type="email"
-            name="email"
-            required
-            readOnly
-            disabled
-            placeholder="Enter your email"
-            className="w-[33vw] cursor-not-allowed h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-          />
+        {/* Student Stage */}
+        <div className=" m-4 p-4 rounded border-2 border-gray-200">
+          <h3 className="p-2 font-semibold text-gray-800 mb-4 text-xl">
+            Stage Information
+          </h3>
+          <div className="grid grid-cols-2">
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label
+                  htmlFor="ClassType"
+                  className="font-[500] text-[#344054]"
+                >
+                  Class Type
+                </label>
+                <input
+                  onChange={stageInformationChange}
+                  value={classType}
+                  type="text"
+                  name="classType"
+                  required
+                  placeholder="Eg. Primary"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label
+                  htmlFor="Main Stage"
+                  className="font-[500] text-[#344054]"
+                >
+                  Main Stage
+                </label>
+                <input
+                  onChange={stageInformationChange}
+                  value={mainStage}
+                  type="text"
+                  name="schoolName"
+                  required
+                  placeholder="Eg. Stage 3"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label
+                  htmlFor="classTeacher"
+                  className="font-[500] text-[#344054]"
+                >
+                  Class Teacher
+                </label>
+                <input
+                  onChange={stageInformationChange}
+                  value={teacher}
+                  type="text"
+                  name="classTeacher"
+                  required
+                  placeholder="Eg. John Doe"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div className="opacity-0">4</div>
+          </div>
+          <div className="flex justify-end">
+            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
+              Edit
+            </button>
+          </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
-          <label htmlFor="class" className="font-[500] text-[#344054]">
-            Class
-          </label>
-          <input
-            // value={schoolAddress}
-            onChange={onChange}
-            type="text"
-            name="class"
-            required
-            placeholder="Enter your class / stage"
-            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-          />
-        </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
-          <label htmlFor="gender" className="font-[500] text-[#344054]">
-            Gender
-          </label>
-          <input
-            // value={schoolAddress}
-            onChange={onChange}
-            type="text"
-            name="gender"
-            required
-            placeholder="Enter your gender"
-            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-          />
-        </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
-          <label htmlFor="role" className="font-[500] text-[#344054]">
-            Role
-          </label>
-          <input
-            value={formData?.role}
-            // onChange={onChange}
-            type="text"
-            name="role"
-            readOnly
-            required
-            placeholder="Enter your role"
-            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-          />
-        </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
-          <label htmlFor="location" className="font-[500] text-[#344054]">
-            Location
-          </label>
-          <input
-            // value={schoolLocation}
-            onChange={onChange}
-            type="text"
-            name="location"
-            required
-            placeholder="Enter your location"
-            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-          />
-        </div>
+        {/* Student Address */}
+        <div className=" m-4 p-4 rounded border-2 border-gray-200">
+          <h3 className="p-2 font-semibold text-gray-800 mb-4 text-xl">
+            Student Address
+          </h3>
 
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
-          <label htmlFor="address" className="font-[500] text-[#344054]">
-            Address
-          </label>
-          <input
-            // value={schoolAddress}
-            onChange={onChange}
-            type="text"
-            name="address"
-            required
-            placeholder="Enter your address"
-            className="w-[33vw] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-          />
+          <div className="grid grid-cols-2">
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label htmlFor="GPS" className="font-[500] text-[#344054]">
+                  GPS
+                </label>
+                <input
+                  onChange={addressInformationChange}
+                  value={GPS}
+                  type="text"
+                  name="GPS"
+                  required
+                  placeholder="Eg. Primary"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label htmlFor="Location" className="font-[500] text-[#344054]">
+                  Location
+                </label>
+                <input
+                  onChange={addressInformationChange}
+                  value={location}
+                  type="text"
+                  name="location"
+                  required
+                  placeholder="Eg. Takoradi - Racecourse"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label
+                  htmlFor="phoneNumber"
+                  className="font-[500] text-[#344054]"
+                >
+                  Phone number
+                </label>
+                <input
+                  onChange={addressInformationChange}
+                  value={phoneNumber}
+                  type="number"
+                  name="phoneNumber"
+                  required
+                  placeholder="Eg. +233 XXX XXXX"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div className="opacity-0">4</div>
+          </div>
+          <div className="flex justify-end">
+            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
+              Edit
+            </button>
+          </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 mb-4 mt-8">
-          <label htmlFor="registrationId" className="font-[500] text-[#344054]">
-            Student ID
-          </label>
-          <input
-            onChange={onChange}
-            value={formData?.id || "N/A"}
-            type="text"
-            name="registrationId"
-            readOnly
-            className="w-[33vw] cursor-not-allowed h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
-          />
+        {/* Guardian Address */}
+        <div className=" m-4 p-4 rounded border-2 border-gray-200">
+          <h3 className="p-2 font-semibold text-gray-800 mb-4 text-xl">
+            Guardian Information
+          </h3>
+          <div className="grid grid-cols-2">
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label htmlFor="father" className="font-[500] text-[#344054]">
+                  Father
+                </label>
+                <input
+                  onChange={guardianInformationChange}
+                  value={father}
+                  type="text"
+                  name="father"
+                  required
+                  placeholder="Eg. Peter Doe"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label htmlFor="mother" className="font-[500] text-[#344054]">
+                  Mother
+                </label>
+                <input
+                  onChange={guardianInformationChange}
+                  value={mother}
+                  type="text"
+                  name="mother"
+                  required
+                  placeholder="Eg. Jane Doe"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label htmlFor="other" className="font-[500] text-[#344054]">
+                  Other
+                </label>
+                <input
+                  onChange={guardianInformationChange}
+                  value={other}
+                  type="text"
+                  name="other"
+                  placeholder="Eg. 25"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 gap-4 mb-4 mx-2">
+                <label
+                  htmlFor="studentId"
+                  className="font-[500] text-[#344054]"
+                >
+                  Student Id
+                </label>
+                <input
+                  // onChange={onChange}
+                  // value={schoolName}
+                  type="password"
+                  name="studentId"
+                  required
+                  placeholder="Student Id"
+                  className="w-[230px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
+              Edit
+            </button>
+          </div>
         </div>
-
-        <div className="flex justify-end ml-[42vw] mt-8 w-[71vw]">
-          <button
-            onClick={handleStudentDetailsUpdate}
-            className="w-[160px] mb-12 bg-[#3C0E3C] text-gray-50 h-[44px] rounded-[8px]  cursor-pointer "
-            // disabled={!canSubmit}
-            type="submit"
-          >
-            {/* {isFetching ? "Saving" : "Save Changes"} */}
-            Save Changes
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };
