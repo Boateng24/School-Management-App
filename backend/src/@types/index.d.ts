@@ -1,4 +1,4 @@
-import {Role, User} from '@prisma/client'
+import {Role, User, classCategory} from '@prisma/client'
 
 declare global {
   namespace Express {
@@ -10,7 +10,7 @@ declare global {
 
 
 interface createUser{
-    firstname: string;
+    fullname: string;
     email: string;
     password: string;
     confirmPassword:string
@@ -18,9 +18,42 @@ interface createUser{
     role?: Role
 }
 
+interface userupdate{
+  fullname?: string;
+  email?: string;
+  age?: number;
+  gender?: string
+  guardian: userGuardian
+  stage: userStage
+  address: userAddress
+}
+
+
+interface userGuardian{
+ father?: string;
+ mother?: string;
+ other?: string;
+}
+
+interface userAddress {
+  phoneNumber: string;
+  GPS: string;
+  location: string;
+}
+
+interface userStage {
+  classType: classCategory;
+  mainStage?: string
+}
+
 interface loginUser{
     email: string;
     password: string;
+}
+
+interface studentscores{
+  testscore?: number;
+  examscore?: number;
 }
 
 interface tokenRenewType{
@@ -36,4 +69,27 @@ interface createSchool {
   email:string;
   password: string;
   confirmPassword: string
+}
+
+
+interface updateSchool{
+  schoolName?: string, 
+  email?: string, 
+  dateOfestablishment?:string, 
+  address?:schoolAddress[], 
+  NumOfNonTeachingStaff?:number, 
+  NumOfStudents?:number, 
+  NumOfTeachers?:number
+}
+
+interface schoolAddress{
+  location: string[]
+  POBox: string
+  website?: string
+  GPS: string
+}
+
+interface refreshTokenType {
+  user: string;
+  refreshToken: string
 }

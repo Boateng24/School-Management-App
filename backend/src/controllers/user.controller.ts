@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import createHttpError from 'http-errors';
-import { createUser } from '../@types';
+import { createUser, userupdate, userGuardian, userStage, userAddress } from '../@types';
 import { prisma } from '../config/prismaInit';
 import { createAccessToken } from '../helpers/accessToken';
 import {config} from 'dotenv';
@@ -14,6 +14,16 @@ export const getUser = async (req:Request, res:Response, next:NextFunction) => {
         const findUser = await prisma.user.findFirst({
             where:{
                 id: req.params.id
+            },
+            select:{
+                fullname: true,
+                email: true,
+                stage: true,
+                address: true,
+                gender: true,
+                profilePic: true,
+                guardian: true,
+                role: true
             }
         })
         res.status(200).json({findUser, success: true})
@@ -30,7 +40,7 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
         const getUsers = await prisma.user.findMany({
           select:{
             id: true,
-            firstname:true,
+            fullname:true,
             email:true,
             role: true
           }
@@ -45,7 +55,10 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const{firstname, email, age} = req.body as createUser
+        const{fullname, email, age, gender} = req.body as userupdate
+        const {father, mother, other} = req.body as userGuardian
+        const {classType, mainStage} = req.body as userStage
+        const {GPS, location, phoneNumber} = req.body as userAddress
         const userExits = await prisma.user.findFirst({
             where:{
                 id: req.params.id
@@ -58,9 +71,30 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
             id: req.params.id
            },
            data:{
-            firstname,
+            fullname,
             email,
-            age
+            age,
+            gender,
+            guardian:{
+                create:{
+                    father,
+                    mother, 
+                    other
+                }
+            },
+            address: {
+                create:{
+                    GPS,
+                    location,
+                    phoneNumber
+                }
+            },
+            stage: {
+                create: {
+                    classType,
+                    mainStage
+                }
+            }
            }
         })
 
@@ -75,12 +109,20 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
 export const deleteUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
 
+        const findUser = await prisma.user.findFirst({
+            where:{
+                id: req.params.id
+            }
+        })
+        if(!findUser) return res.json({msg: 'user not found'})
+
         const userDelete = await prisma.user.delete({
             where:{
                 id: req.params.id
             }
         })
-       res.json({success: true})
+        
+       res.json({msg:`${userDelete.fullname} deleted from your school`})
     } catch (error) {
         next(error)
     }
@@ -91,25 +133,24 @@ export const deleteUser = async (req:Request, res:Response, next:NextFunction) =
 
 export const forgotPassword = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const {email, password} = req.body as createUser
-        const userId = req["payload"].id
-        console.log(userId)
-        const currentUser = await prisma.user.findFirst({
+        const {email} = req.body as createUser
+        // const userId = req["payload"].id
+        // console.log(userId)
+        const currentUser = await prisma.user.findUnique({
             where:{
-                id: userId
+                email
             }
         })
         console.log(currentUser.id)
-        if(!currentUser) throw new createHttpError.NotFound("user not found")
 
         const token = await createAccessToken(currentUser.id)
 
         const transporter = nodemailer.createTransport({
-            host:'smtp.gmail.com',
-            port: 587,      
+            host:process.env.NODEMAILER_HOST,
+            port: <unknown>process.env.NODEMAILER_PORT as number,      
             auth:{
-             user: "tuffourboateng2@gmail.com", 
-             pass: "fiqwmlszdtfywrjw"
+             user: process.env.SENDER_EMAIL, 
+             pass: process.env.GOOGLE_APP_PASSWORD
             }
          })
 
@@ -122,7 +163,7 @@ export const forgotPassword = async (req:Request, res:Response, next:NextFunctio
           });
  
          const mailDetails ={
-             from: "tuffourboateng2@gmail.com",
+             from: process.env.SENDER_EMAIL,
              to: email,
              subject: "Password reset link",
              html:   `<a href="/forgotPassword/" + ${currentUser.id} + '/' + ${token}>click this link to confirm password reset</a>`
@@ -137,12 +178,12 @@ export const forgotPassword = async (req:Request, res:Response, next:NextFunctio
              }
          })
 
-         await prisma.user.update({
+     await prisma.user.update({
             where:{
                 id: currentUser.id
             },
             data:{
-                password
+                password: req.body.password as string
             }
          })
          res.json({success:true})

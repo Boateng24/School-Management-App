@@ -7,13 +7,16 @@
     "build": "rimraf build && tsc",
     "start": "nodemon ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "db_seed": "ts-node prisma/seed.ts",
-    "studio": "npx prisma studio"
+    "dbseed": "ts-node prisma/seed.ts",
+    "studio": "npx prisma studio",
+    "generate": "npx prisma generate",
+    "migrate": "npx prisma migrate dev"
   },
   "keywords": [],
   "author": "Tuffour Boateng",
   "license": "ISC",
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@tsconfig/node16": "^1.0.3",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.3",

@@ -9,54 +9,57 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+ 
 
 // DB Tables
 
 model User{
   id String @id @default(cuid())
-  firstname String
+  fullname String
   email String @unique
   password String
   age Int?
   role Role @default(student)
-  address UserAddress[]
-  profilePic String?
+  gender String?
+  isPrefect Boolean? @default(false)
   guardian Guardian[]
-  class Class[]
+  stage Stage[]
+  address UserAddress[]
+  score Scores?
+  profilePic String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Guardian{
   id String @id @default(cuid())
-  father String
-  mother String
-  other String
-  user User @relation(fields: [userId], references: [id])
-  userId String
+  father String?
+  mother String?
+  other String?
+  student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model UserAddress{
   id String @id @default(cuid())
-  phoneNumber String
-  GPS String
-  NearestLandMark String
-  user User @relation(fields: [userId], references: [id])
+  phoneNumber String?
+  GPS String?
+  location String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Class{
+model Stage{
   id String @id @default(cuid())
-  classType String
-  numOfStudents Int
-  teacher Role
-  user User @relation(fields: [userId], references: [id])
-  userId String
+  classType classCategory @default(Primary)
+  mainStage String?
+  student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  teacher String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -67,11 +70,9 @@ model School{
   schoolName String
   email String @unique
   password String
+  phoneNumber String?
   dateOfestablishment String?
   address SchoolAddress[]
-  NumOfStudents Int?
-  NumOfTeachers Int?
-  NumOfNonTeachingStaff Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -79,21 +80,37 @@ model School{
 
 model SchoolAddress{
   id String @id @default(cuid())
-  school School @relation(fields: [schoolId], references: [id])
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   schoolId String
   location String[]
   POBox String
-  email String
   website String?
   GPS String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Scores {
+  id String @id @default(cuid())
+  testScore Float
+  examScore Float
+  student User @relation(fields: [studentId], references: [id])
+  studentId String @unique
+}
+
 enum Role {
+  superAdmin
+  admin
   student
   teacher
   headmaster
   proprietor
   nonteaching
 }
+
+enum classCategory {
+  Nursery
+  Primary
+  JuniorHigh
+}
+
