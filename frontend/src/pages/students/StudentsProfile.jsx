@@ -5,8 +5,11 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
   useGetStudentDetailsQuery,
+  useUpdateStudentProfilePictureMutation,
   useUpdateStudentStageMutation,
 } from "../../api/students/StudentsApi";
+
+
 
 const StudentsProfile = () => {
   // const { id } = useSelector(
@@ -16,11 +19,14 @@ const StudentsProfile = () => {
     (state) => state.loginUser?.loggedInUser?.loggedInUser
   );
 
-  const [profilePicture, setProfilePicture] = useState();
+  console.log('Id', id);
 
-  const { data: student } = useGetStudentDetailsQuery(
-    "clbzap6i3000uud2opq0oohgs"
-  );
+  const [profilePicture, setProfilePicture] = useState();
+  const [toggle , setToggle] = useState(true)
+
+
+  const handleToggle = e => setToggle(!toggle)
+  const { data: student } = useGetStudentDetailsQuery(id);
 
   const personalDetails = {
     fullname: student?.findUser?.fullname,
@@ -28,11 +34,8 @@ const StudentsProfile = () => {
     gender: student?.findUser?.gender,
   };
   const stageDetails = student?.findUser?.stage;
-  const addressDetails = student?.findUser?.address
-  const guardianDetails = student?.findUser?.guardian
- 
-
-  
+  const addressDetails = student?.findUser?.address;
+  const guardianDetails = student?.findUser?.guardian;
 
   // Student personal details
   const [personalData, setPersonalData] = useState(personalDetails);
@@ -43,18 +46,30 @@ const StudentsProfile = () => {
   // Student address details
   const [address, setAddress] = useState(addressDetails);
 
- 
-
   // Student guardian details
-  const [guardian , setGuardian] = useState(guardianDetails)
+  const [guardian, setGuardian] = useState(guardianDetails);
+  const [updateStudentProfilePicture] =
+    useUpdateStudentProfilePictureMutation();
 
   const { fullname, email, gender } = personalData;
   const { classType, mainStage, teacher } = stageInfo;
   const { phoneNumber, GPS, location } = address;
-  const {mother, father, other} = guardian
+  const { mother, father, other } = guardian;
 
+  const handleProfilePicture = (e) => {
+    const file = e.target.files[0];
+    setProfilePicture(file);
+    updateStudentProfilePicture({ profilePic: profilePicture });
+  };
+
+  // const handleProfilePicture = (e) => {
+  //   const file = e.target.files[0];
+  //   setProfilePicture(file);
+  //   updateStudentProfilePicture({ variables: { profilePic: profilePicture } });
+  // }
 
   // Handlers
+  
   const personalInformationChange = (e) => {
     setPersonalData({ ...personalData, [e.target.name]: e.target.value });
   };
@@ -66,16 +81,22 @@ const StudentsProfile = () => {
   const addressInformationChange = (e) =>
     setAddress({ ...address, [e.target.name]: e.target.value });
 
-  const guardianInformationChange = e => setGuardian({...guardian, [e.target.name]: e.target.value})
-  
-    
+  const guardianInformationChange = (e) =>
+    setGuardian({ ...guardian, [e.target.name]: e.target.value });
+  const handled = (e) =>
+    updateStudentProfilePicture({ profilePic: profilePicture });
+
   return (
     <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[182px] mx-[17vw] h-[74vh] ">
       {/* Profile Picture */}
-      <div className="mt-48 mb-8 flex items-center flex-col justify-center" name='profilePicture'>
+      <div
+        className="mt-48 mb-8 flex items-center flex-col justify-center"
+        name="profilePicture"
+      >
         <Avatar
-          src={"https://source.unsplash.com/user/c_v_r"}
-          // src={profilePicture && URL.createObjectURL(profilePicture)}
+          name="profilePicture"
+          // src={"https://source.unsplash.com/user/c_v_r"}
+          src={profilePicture && URL.createObjectURL(profilePicture)}
           sx={{ width: 180, height: 180, marginTop: 8, marginBottom: 6 }}
         />
         <label
@@ -91,9 +112,12 @@ const StudentsProfile = () => {
           style={{ display: "none" }}
           size={60}
           type="file"
-          // onChange={handleProfilePicture}
+          onChange={handleProfilePicture}
         />
       </div>
+      {/* <button type="submit" onClick={handled}>
+        Send
+      </button> */}
       <div className="grid grid-cols-2 m-4 p-4">
         {/* Student Personal Info */}
         <div className=" m-4 p-4 rounded border-2 border-gray-200">
@@ -167,9 +191,21 @@ const StudentsProfile = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
-              Edit
-            </button>
+            {toggle ? (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Edit
+              </button>
+            ) : (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Save
+              </button>
+            )}
           </div>
         </div>
         {/* Student Stage */}
@@ -238,9 +274,21 @@ const StudentsProfile = () => {
             <div className="opacity-0">4</div>
           </div>
           <div className="flex justify-end">
-            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
-              Edit
-            </button>
+            {toggle ? (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Edit
+              </button>
+            ) : (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Save
+              </button>
+            )}
           </div>
         </div>
         {/* Student Address */}
@@ -304,9 +352,21 @@ const StudentsProfile = () => {
             <div className="opacity-0">4</div>
           </div>
           <div className="flex justify-end">
-            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
-              Edit
-            </button>
+            {toggle ? (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Edit
+              </button>
+            ) : (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Save
+              </button>
+            )}
           </div>
         </div>
         {/* Guardian Address */}
@@ -383,9 +443,21 @@ const StudentsProfile = () => {
             </div>
           </div>
           <div className="flex justify-end">
-            <button className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold">
-              Edit
-            </button>
+            {toggle ? (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Edit
+              </button>
+            ) : (
+              <button
+                onClick={handleToggle}
+                className="text-[#3C0E3C] bg-[#feeefe] px-6 py-2 rounded font-bold"
+              >
+                Save
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -23,8 +23,9 @@ export default function AccountMenu() {
     (state) => state.loginSchool?.loggedInSchool
   );
 
+  const { loggedInUser } = useSelector((state) => state?.loginUser?.loggedInUser);
   
-
+console.log('Logged in ID' , loggedInUser);
   console.log('User id', accessToken);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -60,7 +61,7 @@ export default function AccountMenu() {
     sendAnnouncement({
       message,
       // Check in with tuffour on this
-      adminId: "clc5300rc0002udts1ncvd8hq",
+      adminId: loggedInUser?.id,
       schoolId: loggedInSchool?.id,
     });
   }
