@@ -28,7 +28,7 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
 
         // check if password matches
         if (!(password.match(confirmPassword))) return res.json({message:'Passwords do not match'});
-
+        // hello
 
         const newUser = await prisma.user.create({
             data:{
