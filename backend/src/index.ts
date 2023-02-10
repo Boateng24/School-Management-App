@@ -60,7 +60,7 @@ app.use('/api/v1', announceRouter)
 app.get('/', (req:Request, res:Response) => {
     res.send(`ok ${process.pid}`)
 })
-
+console.log('hello')
 if(cluster.isPrimary){
     for(let i=0; i<numberCpu; i++){
         cluster.fork()
