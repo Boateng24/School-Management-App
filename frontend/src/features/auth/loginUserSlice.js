@@ -58,9 +58,10 @@ const loginUser = createSlice({
         state.error = "";
       })
       .addCase(usersLogin.fulfilled, (state, action) => {
-        const { loggedInUser } = action.payload;
+        const { currentUser } = action.payload;
         state.isLoggingIn = false;
         state.loggedInUser = action.payload;
+        // state.loggedInUser = currentUser;
         state.error = "";
       })
       .addCase(usersLogin.rejected, (state, action) => {

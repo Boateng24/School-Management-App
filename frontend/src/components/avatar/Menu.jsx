@@ -24,9 +24,10 @@ export default function AccountMenu() {
   );
 
   const { loggedInUser } = useSelector((state) => state?.loginUser?.loggedInUser || '');
+  const {currentUser} = useSelector(state => state?.loginUser)
   
-console.log('Tuffour' , loggedInUser);
-  console.log('User id', accessToken);
+console.log('Current user id' , currentUser?.token);
+  // console.log('User id', accessToken);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
@@ -61,7 +62,7 @@ console.log('Tuffour' , loggedInUser);
     sendAnnouncement({
       message,
       // Check in with tuffour on this
-      adminId: loggedInUser?.id || 'Not going',
+      adminId: currentUser?.token,
       schoolId: loggedInSchool?.id,
     });
   }
