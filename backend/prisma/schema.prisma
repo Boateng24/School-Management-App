@@ -27,7 +27,7 @@ model User{
   stage Stage?
   address UserAddress?
   score Scores[]
-  announcement Announcement[]
+  // announcement Announcement[]
   profilePic String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -79,7 +79,6 @@ model School{
   announcement Announcement[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
 }
 
 model SchoolAddress{
@@ -110,8 +109,8 @@ model Scores {
 model Announcement {
   id Int @id @default(autoincrement())
   message String
-  admin User @relation(fields: [adminId], references: [id])
-  adminId String
+  // admin User @relation(fields: [adminId], references: [id])
+  // adminId String
   school School @relation(fields: [schoolId], references: [id])
   schoolId String
   createdAt DateTime @default(now())
