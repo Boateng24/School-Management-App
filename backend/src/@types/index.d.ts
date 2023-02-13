@@ -100,6 +100,5 @@ interface refreshTokenType {
 
 interface Announcement {
   message: string;
-  adminId: string;
   schoolId: string
 }
