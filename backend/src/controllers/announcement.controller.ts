@@ -6,11 +6,10 @@ import { prisma } from '../config/prismaInit';
 
 export const createAnnouncement = async(req:Request, res:Response, next:NextFunction) => {
     try {
-        const {message, adminId, schoolId} = req.body as Announcement
+        const {message, schoolId} = req.body as Announcement
         const postAnnouncement = await prisma.announcement.create({
             data:{
                 message,
-                adminId,
                 schoolId,
             }
         })
