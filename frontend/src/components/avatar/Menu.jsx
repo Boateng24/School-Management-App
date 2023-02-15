@@ -19,14 +19,15 @@ import { FormControl, Modal, Select } from "@mui/material";
 import { useSendAnnouncementMutation } from "../../api/school/SchoolApi";
 
 export default function AccountMenu() {
-  const { loggedInSchool, accessToken } = useSelector(
+  const { loggedInSchool } = useSelector(
     (state) => state.loginSchool?.loggedInSchool
   );
 
   const { loggedInUser } = useSelector((state) => state?.loginUser?.loggedInUser || '');
   const {currentUser} = useSelector(state => state?.loginUser)
+  const {accessToken} = useSelector(state => state.loginSchool.loggedInSchool.loggedInSchool)
   
-console.log('Current user id' , currentUser?.token);
+console.log('Current user id' , accessToken);
   // console.log('User id', accessToken);
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -41,8 +42,8 @@ console.log('Current user id' , currentUser?.token);
     setAnchorEl(null);
   };
 
-  const handleLogout = (e) => {
-    dispatch(logoutSchool());
+  const handleLogout = () => {
+    dispatch(logoutSchool(accessToken));
     dispatch(logout());
     localStorage.clear();
     localStorage.clear("applicationState");
