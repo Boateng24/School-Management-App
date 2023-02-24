@@ -18,7 +18,7 @@ import { logout, logoutSchool } from "../../features/auth/logoutSchoolSlice";
 import { FormControl, Modal, Select } from "@mui/material";
 import { useSendAnnouncementMutation } from "../../api/school/SchoolApi";
 
-export default function AccountMenu() {
+function AccountMenu() {
   const { loggedInSchool } = useSelector(
     (state) => state.loginSchool?.loggedInSchool
   );
@@ -27,9 +27,6 @@ export default function AccountMenu() {
   const {currentUser} = useSelector(state => state?.loginUser)
   const {accessToken} = useSelector(state => state.loginSchool.loggedInSchool.loggedInSchool)
   
-console.log('Current user id' , accessToken);
-  // console.log('User id', accessToken);
-
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch();
@@ -42,14 +39,10 @@ console.log('Current user id' , accessToken);
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    dispatch(logoutSchool(accessToken));
-    dispatch(logout());
-    localStorage.clear();
-    localStorage.clear("applicationState");
-    // Cookies.set('', )
-    navigate("/");
-    // window.location.reload();
+  const handleLogout = (e) => {
+    // localStorage.removeItem("applicationState");
+     dispatch(logout());
+    // window.location.replace("/");
   };
 
   
@@ -188,7 +181,10 @@ console.log('Current user id' , accessToken);
           Settings and Preferences
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleLogout}>
+        <MenuItem onClick={()=>{
+          localStorage.removeItem("applicationState");
+          window.location.replace("/");
+        }}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
@@ -198,3 +194,6 @@ console.log('Current user id' , accessToken);
     </React.Fragment>
   );
 }
+
+
+export default AccountMenu;
