@@ -47,6 +47,7 @@ console.log('Current user id' , accessToken);
     dispatch(logout());
     localStorage.clear();
     localStorage.clear("applicationState");
+    // Cookies.set('', )
     navigate("/");
     // window.location.reload();
   };

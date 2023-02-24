@@ -20,7 +20,7 @@ export const logoutSchool = createAsyncThunk(
 
       if (response.status === 204) {
         console.log("response", response);
-        // localStorage.clear("applicationState");
+        localStorage.clear("applicationState");
         // Cookies.remove("accessToken")
         return data;
       } else {
@@ -77,8 +77,8 @@ const logoutSchoolSlice = createSlice({
         // localStorage.clear();
       })
       .addCase(logoutSchool.rejected, (state, action) => {
-        const { non_field_errors } = action.payload;
-        state.errorMessage = non_field_errors || action.payload;
+        // const { non_field_errors } = action.payload;
+        state.errorMessage = action.payload;
         state.isLoading = false;
       });
   },
