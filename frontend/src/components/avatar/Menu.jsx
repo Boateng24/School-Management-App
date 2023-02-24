@@ -18,16 +18,15 @@ import { logout, logoutSchool } from "../../features/auth/logoutSchoolSlice";
 import { FormControl, Modal, Select } from "@mui/material";
 import { useSendAnnouncementMutation } from "../../api/school/SchoolApi";
 
-export default function AccountMenu() {
-  const { loggedInSchool, accessToken } = useSelector(
+function AccountMenu() {
+  const { loggedInSchool } = useSelector(
     (state) => state.loginSchool?.loggedInSchool
   );
 
-  const { loggedInUser } = useSelector((state) => state?.loginUser?.loggedInUser);
+  const { loggedInUser } = useSelector((state) => state?.loginUser?.loggedInUser || '');
+  const {currentUser} = useSelector(state => state?.loginUser)
+  const {accessToken} = useSelector(state => state.loginSchool.loggedInSchool.loggedInSchool)
   
-console.log('Logged in ID' , loggedInUser);
-  console.log('User id', accessToken);
-
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch();
@@ -41,12 +40,9 @@ console.log('Logged in ID' , loggedInUser);
   };
 
   const handleLogout = (e) => {
-    dispatch(logoutSchool());
-    dispatch(logout());
-    localStorage.clear();
-    localStorage.clear("applicationState");
-    navigate("/");
-    // window.location.reload();
+    // localStorage.removeItem("applicationState");
+     dispatch(logout());
+    // window.location.replace("/");
   };
 
   
@@ -61,7 +57,7 @@ console.log('Logged in ID' , loggedInUser);
     sendAnnouncement({
       message,
       // Check in with tuffour on this
-      adminId: loggedInUser?.id,
+      adminId: currentUser?.token,
       schoolId: loggedInSchool?.id,
     });
   }
@@ -185,7 +181,10 @@ console.log('Logged in ID' , loggedInUser);
           Settings and Preferences
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleLogout}>
+        <MenuItem onClick={()=>{
+          localStorage.removeItem("applicationState");
+          window.location.replace("/");
+        }}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
@@ -195,3 +194,6 @@ console.log('Logged in ID' , loggedInUser);
     </React.Fragment>
   );
 }
+
+
+export default AccountMenu;

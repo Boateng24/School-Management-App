@@ -23,14 +23,14 @@ import announceRouter from './routes/announcement.route';
 
 // Inititializing express app
 const app:Application = express();
-
+config();
 
 // OS number of cpu present
 const numberCpu = os.cpus().length;
 
+
 // Configuring our environmental variables
-config()
-const PORT = process.env.PORT_NUMBER
+const PORT = process.env.PORT_NUM
 
 // Db connection configuration
 connection()
