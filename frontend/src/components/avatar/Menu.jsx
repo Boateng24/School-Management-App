@@ -70,6 +70,7 @@ function AccountMenu() {
     handleCloseModal();
     setShowAlert(true);
     setSuccessMessage("Your announcement has been sent successfully");
+    setMessage("")
   };
 
   const style = {
