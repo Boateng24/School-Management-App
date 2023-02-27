@@ -193,13 +193,62 @@ const StudentsProfile = () => {
             <Typography>Student Stage Info</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </Typography>
+            <form action="">
+              <div className="grid grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <label
+                    htmlFor="classtype"
+                    className="font-[500] text-[#344054]"
+                  >
+                    Class type
+                  </label>
+                  <input
+                    // onChange={onChange}
+                    // value={classType}
+                    type="text"
+                    required
+                    name="classType"
+                    placeholder="Eg. primary"
+                    className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <label
+                    htmlFor="mainStage"
+                    className="font-[500] text-[#344054]"
+                  >
+                    Main Stage
+                  </label>
+                  <input
+                    // onChange={onChange}
+                    // value={mainStage}
+                    type="text"
+                    required
+                    name="mainStage"
+                    placeholder="Eg. stage 3"
+                    className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <label
+                    htmlFor="teacher"
+                    className="font-[500] text-[#344054]"
+                  >
+                    Class Teacher
+                  </label>
+                  <input
+                    // onChange={onChange}
+                    // value={teacher}
+                    type="text"
+                    required
+                    name="teacher"
+                    placeholder="Specify class teacher"
+                    className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                  />
+                </div>
+              </div>
+            </form>
+            <p className="font-light italic text-right mx-8">Saving...</p>
           </AccordionDetails>
         </Accordion>
         <Accordion
@@ -210,13 +259,73 @@ const StudentsProfile = () => {
             <Typography>Student Guardian Info</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </Typography>
+            <form action="">
+              <div className="grid grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <label htmlFor="mother" className="font-[500] text-[#344054]">
+                    Mother
+                  </label>
+                  <input
+                    // onChange={onChange}
+                    // value={mother}
+                    type="text"
+                    required
+                    name="mother"
+                    placeholder="Eg. Jane Doe"
+                    className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <label htmlFor="father" className="font-[500] text-[#344054]">
+                    Father
+                  </label>
+                  <input
+                    // onChange={onChange}
+                    // value={father}
+                    type="text"
+                    required
+                    name="father"
+                    placeholder="Enter your father's name"
+                    className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <label
+                    htmlFor="guardian"
+                    className="font-[500] text-[#344054]"
+                  >
+                    Guardian
+                  </label>
+                  <input
+                    // onChange={onChange}
+                    // value={guardian}
+                    type="text"
+                    required
+                    name="guardian"
+                    placeholder="Enter your guardian's name if any"
+                    className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <label
+                    htmlFor="telephone"
+                    className="font-[500] text-[#344054]"
+                  >
+                    Parent/Guardian number
+                  </label>
+                  <input
+                    // onChange={onChange}
+                    // value={age}
+                    type="tel"
+                    required
+                    name="telephone"
+                    placeholder="Enter mobile number"
+                    className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                  />
+                </div>
+              </div>
+            </form>
+            <p className="font-light italic text-right mx-8">Saving...</p>
           </AccordionDetails>
         </Accordion>
         <Accordion
@@ -227,13 +336,57 @@ const StudentsProfile = () => {
             <Typography>Student Address Info</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Suspendisse malesuada lacus ex, sit amet blandit leo lobortis
-              eget.
-            </Typography>
+            <form action="">
+              <div className="grid grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <label htmlFor="location" className="font-[500] text-[#344054]">
+                    Location
+                  </label>
+                  <input
+                    // onChange={onChange}
+                    // value={location}
+                    type="text"
+                    required
+                    name="location"
+                    placeholder="Eg. racecourse - takoradi"
+                    className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <label htmlFor="gps" className="font-[500] text-[#344054]">
+                    GPS
+                  </label>
+                  <input
+                    // onChange={onChange}
+                    // value={GPS}
+                    type="text"
+                    required
+                    name="GPS"
+                    placeholder="Enter your GPS"
+                    className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <label
+                    htmlFor="phoneNumber"
+                    className="font-[500] text-[#344054]"
+                  >
+                    Phone Number
+                  </label>
+                  <input
+                    // onChange={onChange}
+                    // value={phoneNumber}
+                    type="text"
+                    required
+                    name="phoneNumber"
+                    placeholder="Enter your phone Number"
+                    className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+                  />
+                </div>
+                
+              </div>
+            </form>
+            <p className="font-light italic text-right mx-8">Saving...</p>
           </AccordionDetails>
         </Accordion>
       </div>
