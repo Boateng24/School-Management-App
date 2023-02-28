@@ -56,10 +56,12 @@ const StudentsProfile = () => {
   const { phoneNumber, GPS, location } = address;
   const { mother, father, other } = guardian;
 
+  console.log(profilePicture?.name , 'pic');
+
   const handleProfilePicture = (e) => {
     const file = e.target.files[0];
     setProfilePicture(file);
-    updateStudentProfilePicture({ profilePic: profilePicture });
+    updateStudentProfilePicture({ profilePic: profilePicture?.name || 'Sgut' , id });
   };
 
   // const handleProfilePicture = (e) => {
@@ -83,8 +85,8 @@ const StudentsProfile = () => {
 
   const guardianInformationChange = (e) =>
     setGuardian({ ...guardian, [e.target.name]: e.target.value });
-  const handled = (e) =>
-    updateStudentProfilePicture({ profilePic: profilePicture });
+  // const handled = (e) =>
+  //   updateStudentProfilePicture({ profilePic: profilePicture?.name , id});
 
   return (
     <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mt-[182px] mx-[17vw] h-[74vh] ">
