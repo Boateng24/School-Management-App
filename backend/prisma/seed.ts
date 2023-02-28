@@ -14,7 +14,7 @@ const userMain = async () => {
       );
       await prisma.user.create({
         data: {
-          fullname: faker.name.fullName(),
+           fullname: faker.name.fullName(),
           email: faker.helpers.unique(faker.internet.email),
           password: await hashedPassword(faker.internet.password()),
           role: Role[Object.keys(Role)[createRole]],
@@ -136,8 +136,7 @@ const announcementMain = async () => {
       await prisma.announcement.create({
         data:{
           message: faker.lorem.sentence(),
-          adminId: admin.id,
-          schoolId: findSchool[index].id
+          schoolId: findSchool[index].id as string
         }
       })
       index++
