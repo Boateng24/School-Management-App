@@ -10,7 +10,7 @@ export const createAnnouncement = async(req:Request, res:Response, next:NextFunc
         const postAnnouncement = await prisma.announcement.create({
             data:{
                 message,
-                schoolId,
+                schoolId
             }
         })
         res.status(200).json({announceId: postAnnouncement.id, success: true})
