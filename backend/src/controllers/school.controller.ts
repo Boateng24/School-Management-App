@@ -77,6 +77,8 @@ export const loginSchool = async (
       maxAge,
     });
 
+    localStorage.setItem('jwtToken', accessToken as string)
+
     const loggedInSchool = {
       id: schoolExists.id,
       name: schoolExists.schoolName,

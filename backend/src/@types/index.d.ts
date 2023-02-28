@@ -98,7 +98,7 @@ interface refreshTokenType {
   refreshToken: string
 }
 
-interface Announcement {
+export interface Announcement {
   message: string;
-  schoolId: string
+  schoolId?: string;
 }

@@ -83,7 +83,7 @@ services:
         dockerfile: Dockerfile.dev
     container_name: schoolmanagement
     image: schoolmanagement:latest
-    command: npm run start
+    command: npm run dev
     ports:
       - "5000:5000"
     depends_on:
