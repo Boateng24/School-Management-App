@@ -63,6 +63,7 @@ const StudentsProfile = () => {
   );
 
   const [profilePicture, setProfilePicture] = useState();
+  console.log("Profile", profilePicture?.name);
  
   const { data: student } = useGetStudentDetailsQuery(id);
 
@@ -75,7 +76,7 @@ const StudentsProfile = () => {
   const handleProfilePicture = (e) => {
     const file = e.target.files[0];
     setProfilePicture(file);
-    updateStudentProfilePicture({ profilePic: profilePicture });
+    updateStudentProfilePicture({ profilePic: profilePicture?.name ,id });
   };
 
   return (
@@ -91,7 +92,7 @@ const StudentsProfile = () => {
           sx={{ width: 180, height: 180, margin: 4 }}
         />
         <label
-          htmlFor="profilePic"
+          htmlFor="profilePicture"
           type="file"
           // className="border-2 cursor-pointer border-gray-100 rounded-lg py-3 px-8 mt-24 bg-gray-100 text-gray-800"
           className="w-[160px] mb-4 text-center bg-[#3C0E3C]  text-gray-50 h-[44px] rounded-[8px] cursor-pointer py-2 px-5 "
@@ -99,7 +100,7 @@ const StudentsProfile = () => {
           Upload image
         </label>
         <input
-          id="profilePic"
+          id="profilePicture"
           style={{ display: "none" }}
           size={60}
           type="file"
