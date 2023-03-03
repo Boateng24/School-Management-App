@@ -57,7 +57,6 @@ app.use('/api/v1', stageRouter)
 app.use('/api/v1', addressRouter)
 app.use('/api/v1', announceRouter)
 
-
 app.get('/', (req:Request, res:Response) => {
     res.send(`ok ${process.pid}`)
 })

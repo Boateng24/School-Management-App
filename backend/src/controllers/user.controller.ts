@@ -87,7 +87,7 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
             email,
             age,
             gender,
-            profilePic: JSON.stringify(file),
+            profilePic: file.path,
           },
         });
 
