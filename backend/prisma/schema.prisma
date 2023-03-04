@@ -27,7 +27,7 @@ model User{
   stage Stage?
   address UserAddress?
   score Scores[]
-  profilePic String?
+  profilePic Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -102,3 +102,14 @@ export interface Announcement {
   message: string;
   schoolId?: string;
 }
+
+export type uploadedFile = {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+};
