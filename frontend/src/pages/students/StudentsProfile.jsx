@@ -75,9 +75,11 @@ const StudentsProfile = () => {
 
   const handleProfilePicture = (e) => {
     const file = e.target.files[0];
+    console.log('File name' , file?.name);
     console.log('File' , file);
     setProfilePicture(file);
-    updateStudentProfilePicture({ profilePic: file?.name ,id });
+    updateStudentProfilePicture({profilePic: file , id})
+   
   };
 
   return (
@@ -101,7 +103,7 @@ const StudentsProfile = () => {
           Upload image
         </label>
         <input
-          id="profilePicture"
+          id="profilePicture" name="profilePicture"
           style={{ display: "none" }}
           size={60}
           type="file"
