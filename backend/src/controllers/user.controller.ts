@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import createHttpError from 'http-errors';
-import { createUser,userupdate} from '../@types';
+import { createUser,userupdate, uploadedFile} from '../@types';
 import { prisma } from '../config/prismaInit';
 import { createAccessToken } from '../helpers/accessToken';
 import {config} from 'dotenv';
@@ -68,7 +68,8 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
-         const file = req.file;
+         const file = req.file as uploadedFile;
+         console.log(file);
         const{fullname, email, age, gender} = req.body as userupdate;
         // const userExits = await prisma.user.findFirst({
         //     where:{
@@ -87,7 +88,7 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
             email,
             age,
             gender,
-            profilePic: JSON.stringify(file),
+            profilePic: file as any,
           },
         });
 
