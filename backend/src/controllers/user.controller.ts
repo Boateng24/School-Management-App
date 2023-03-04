@@ -19,8 +19,6 @@ export const fileStorage = multer.diskStorage({
   },
 });
 
-
-
 config()
 
 export const getUser = async (req:Request, res:Response, next:NextFunction) => {
@@ -89,8 +87,8 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
             email,
             age,
             gender,
-            profilePic: JSON.stringify(file),
-            // profilePic: file,
+
+            profilePic: file.path,
           },
         });
 
