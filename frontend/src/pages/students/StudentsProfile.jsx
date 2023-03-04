@@ -52,11 +52,11 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 // This is staging
 
 const StudentsProfile = () => {
-    const [expanded, setExpanded] = React.useState("panel1");
+  const [expanded, setExpanded] = React.useState("panel1");
 
-    const handleChange = (panel) => (event, newExpanded) => {
-      setExpanded(newExpanded ? panel : false);
-    };
+  const handleChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
+  };
 
   const { id } = useSelector(
     (state) => state.loginUser?.loggedInUser?.loggedInUser
@@ -64,23 +64,19 @@ const StudentsProfile = () => {
 
   const [profilePicture, setProfilePicture] = useState();
   console.log("Profile", profilePicture?.name);
- 
+
   const { data: student } = useGetStudentDetailsQuery(id);
-
-
 
   const [updateStudentProfilePicture] =
     useUpdateStudentProfilePictureMutation();
 
-
   const handleProfilePicture = (e) => {
     const file = e.target.files[0];
-    console.log('File name' , file?.name);
-    console.log('File' , file);
-    console.log('STATE' , profilePicture);
+    console.log("File name", file?.name);
+    console.log("File", file);
+    console.log("STATE", profilePicture);
     setProfilePicture(file);
     updateStudentProfilePicture({ profilePic: file, id });
-   
   };
 
   return (
@@ -104,7 +100,8 @@ const StudentsProfile = () => {
           Upload image
         </label>
         <input
-          id="profilePicture" name="profilePicture"
+          id="profilePicture"
+          name="profilePicture"
           style={{ display: "none" }}
           size={60}
           type="file"
@@ -344,7 +341,10 @@ const StudentsProfile = () => {
             <form action="">
               <div className="grid grid-cols-2">
                 <div className="grid grid-cols-1 gap-4 mb-4">
-                  <label htmlFor="location" className="font-[500] text-[#344054]">
+                  <label
+                    htmlFor="location"
+                    className="font-[500] text-[#344054]"
+                  >
                     Location
                   </label>
                   <input
@@ -388,7 +388,6 @@ const StudentsProfile = () => {
                     className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
                   />
                 </div>
-                
               </div>
             </form>
             <p className="font-light italic text-right mx-8">Saving...</p>
@@ -400,7 +399,3 @@ const StudentsProfile = () => {
 };
 
 export default StudentsProfile;
-
-
-
-
