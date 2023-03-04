@@ -57,11 +57,10 @@ app.use('/api/v1', stageRouter)
 app.use('/api/v1', addressRouter)
 app.use('/api/v1', announceRouter)
 
-console.log("Hello develop branch restructured")
 app.get('/', (req:Request, res:Response) => {
     res.send(`ok ${process.pid}`)
 })
-console.log('hello')
+
 if(cluster.isPrimary){
     for(let i=0; i<numberCpu; i++){
         cluster.fork()
