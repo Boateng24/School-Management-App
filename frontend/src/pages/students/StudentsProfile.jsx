@@ -77,8 +77,9 @@ const StudentsProfile = () => {
     const file = e.target.files[0];
     console.log('File name' , file?.name);
     console.log('File' , file);
+    console.log('STATE' , profilePicture);
     setProfilePicture(file);
-    updateStudentProfilePicture({profilePic: file , id})
+    updateStudentProfilePicture({ profilePic: file, id });
    
   };
 
