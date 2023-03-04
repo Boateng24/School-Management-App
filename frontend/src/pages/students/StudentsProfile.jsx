@@ -21,7 +21,7 @@ const StudentsProfile = () => {
 
   console.log('Id', id);
 
-  const [profilePicture, setProfilePicture] = useState();
+  const [profilePicture, setProfilePicture] = useState('efsdf');
   const [toggle , setToggle] = useState(true)
 
 
@@ -61,7 +61,7 @@ const StudentsProfile = () => {
   const handleProfilePicture = (e) => {
     const file = e.target.files[0];
     setProfilePicture(file);
-    updateStudentProfilePicture({ profilePic: profilePicture?.name || 'Sgut' , id });
+    updateStudentProfilePicture({ profilePic: file , id });
   };
 
   // const handleProfilePicture = (e) => {
