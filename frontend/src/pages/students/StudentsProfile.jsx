@@ -56,19 +56,24 @@ const StudentsProfile = () => {
   const { phoneNumber, GPS, location } = address;
   const { mother, father, other } = guardian;
 
-  console.log(profilePicture?.name , 'pic');
-
-  const handleProfilePicture = (e) => {
-    const file = e.target.files[0];
-    setProfilePicture(file);
-    updateStudentProfilePicture({ profilePic: file , id });
-  };
 
   // const handleProfilePicture = (e) => {
   //   const file = e.target.files[0];
   //   setProfilePicture(file);
-  //   updateStudentProfilePicture({ variables: { profilePic: profilePicture } });
-  // }
+  //   updateStudentProfilePicture({ profilePic: profilePicture , id });
+  // };
+
+  const handleProfilePicture = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type) {
+      setProfilePicture(file);
+      const imageUrl = URL.createObjectURL(file);
+      setProfilePicture(imageUrl);
+      updateStudentProfilePicture({ profilePic: imageUrl, id });
+    }
+  };
+
+
 
   // Handlers
   
@@ -98,7 +103,7 @@ const StudentsProfile = () => {
         <Avatar
           name="profilePicture"
           // src={"https://source.unsplash.com/user/c_v_r"}
-          src={profilePicture && URL.createObjectURL(profilePicture)}
+          src={profilePicture}
           sx={{ width: 180, height: 180, marginTop: 8, marginBottom: 6 }}
         />
         <label
