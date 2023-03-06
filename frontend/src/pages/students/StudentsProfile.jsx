@@ -1,128 +1,119 @@
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Button, Typography } from "@mui/material";
-
-import React, { useState } from "react";
-import { useEffect } from "react";
+import { Avatar } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   useGetStudentDetailsQuery,
   useUpdateStudentProfilePictureMutation,
   useUpdateStudentStageMutation,
 } from "../../api/students/StudentsApi";
-
-
 import { styled } from "@mui/material/styles";
 import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
 
+const Accordion = styled((props) => (
+  <MuiAccordion disableGutters elevation={0} square {...props} />
+))(({ theme }) => ({
+  border: `1px solid ${theme.palette.divider}`,
+  "&:not(:last-child)": {
+    borderBottom: 0,
+  },
+  "&:before": {
+    display: "none",
+  },
+}));
 
+const AccordionSummary = styled((props) => (
+  <MuiAccordionSummary
+    expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "0.9rem" }} />}
+    {...props}
+  />
+))(({ theme }) => ({
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? "rgba(255, 255, 255, .05)"
+      : "rgba(0, 0, 0, .03)",
+  flexDirection: "row-reverse",
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+    transform: "rotate(90deg)",
+  },
+  "& .MuiAccordionSummary-content": {
+    marginLeft: theme.spacing(1),
+  },
+}));
+
+const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
+  padding: theme.spacing(2),
+  borderTop: "1px solid rgba(0, 0, 0, .125)",
+}));
+
+// Get user details
 
 
 const StudentsProfile = () => {
-  // const { id } = useSelector(
-  //   (state) => state.loginUser?.loggedInUser?.loggedInUser
-  // );
-  const { id } = useSelector(
-    (state) => state.loginUser?.loggedInUser?.loggedInUser
-  );
+  const [expanded, setExpanded] = useState("panel1");
+  const [studentDetails, setStudentDetails] = useState([])
 
- const [expanded, setExpanded] = React.useState("panel1");
-
- const handleChange = (panel) => (event, newExpanded) => {
-   setExpanded(newExpanded ? panel : false);
- };
-
-  
-  const [toggle , setToggle] = useState(true)
-  const [response , setResponse] = useState([])
-  
-    useEffect(() => {
-      const getDetails = async () => {
-        const res = await fetch(`http://localhost:5000/api/v1/user/${id}`);
-        const data = await res.json();
-        setResponse(data?.findUser);
-      };
-      getDetails();
-     
-    }, [id]);
+   const { id } = useSelector(
+     (state) => state.loginUser?.loggedInUser?.loggedInUser
+   );
 
 
 
-    const path = response?.profilePic?.filename
-    console.log("Path", response?.profilePic);
-    console.log("Path", path);
-    
-    
-    const handleToggle = e => setToggle(!toggle)
-    const [profilePicture, setProfilePicture] = useState(
-      path
-      // URL.createObjectURL(path)
-    );
-    console.log('Profile pic default', profilePicture);
-  const { data: student } = useGetStudentDetailsQuery(id);
-
-
-  const personalDetails = {
-    fullname: student?.findUser?.fullname,
-    email: student?.findUser?.email,
-    gender: student?.findUser?.gender,
-    userPicture: student?.findUser?.profilePic
+  const handleChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
   };
-  const stageDetails = student?.findUser?.stage;
-  const addressDetails = student?.findUser?.address;
-  const guardianDetails = student?.findUser?.guardian;
-  
 
-  // Student personal details
-  const [personalData, setPersonalData] = useState(personalDetails);
+ 
 
-  // Student stage details
-  const [stageInfo, setStageInfo] = useState(stageDetails);
 
-  // Student address details
-  const [address, setAddress] = useState(addressDetails);
 
-  // Student guardian details
-  const [guardian, setGuardian] = useState(guardianDetails);
+  const { data: student } = useGetStudentDetailsQuery(id);
+  const perStudent = student?.findUser
+  const [studentData, setStudentData] = useState({
+    fullName: perStudent?.fullname,
+    role: perStudent?.role,
+    profilePic: perStudent?.profilePic,
+    email: perStudent?.email,
+    address: {
+      GPS: perStudent?.address?.GPS,
+      location: perStudent?.address?.location,
+      phoneNumber: perStudent?.address?.location,
+      userId: perStudent?.address?.userId,
+    },
+    stage: {
+      mainStage: perStudent?.stage?.mainStage,
+      classType: perStudent?.stage?.classType,
+      studentId: perStudent?.stage?.studentId,
+      teacher: perStudent?.stage?.teacher
+    },
+    guardian: {
+      mother: perStudent?.guardian?.mother,
+      father: perStudent?.guardian?.father,
+      other: perStudent?.guardian?.other,
+    },
+  });
+
+
+  const onChange = (event) => {
+    setStudentData({
+      [event.target.name] : event.target.value
+    })
+  }
+
+  const [profilePicture, setProfilePicture] = useState();
+ 
+
   const [updateStudentProfilePicture] =
     useUpdateStudentProfilePictureMutation();
 
-  const { fullname, email, gender } = personalData;
-  const { classType, mainStage, teacher } = stageInfo;
-  const { phoneNumber, GPS, location } = address;
-  const { mother, father, other } = guardian;
-
-
-
   const handleProfilePicture = (e) => {
     const file = e.target.files[0];
-    if (file && file.type) {
-      setProfilePicture(file);
-      const imageUrl = URL.createObjectURL(file);
-      setProfilePicture(imageUrl);
-      updateStudentProfilePicture({ profilePic: profilePicture, id });
-    }
+    setProfilePicture(file);
+    updateStudentProfilePicture({ profilePic: profilePicture, id });
   };
- 
-
-  // Handlers
-  
-  const personalInformationChange = (e) => {
-    setPersonalData({ ...personalData, [e.target.name]: e.target.value });
-  };
-
-  const stageInformationChange = (e) => {
-    setStageInfo({ ...stageInfo, [e.target.name]: e.target.value });
-  };
-
-  const addressInformationChange = (e) =>
-    setAddress({ ...address, [e.target.name]: e.target.value });
-
-  const guardianInformationChange = (e) =>
-    setGuardian({ ...guardian, [e.target.name]: e.target.value });
-  // const handled = (e) =>
-  //   updateStudentProfilePicture({ profilePic: profilePicture?.name , id});
 
   return (
     <div className=" flex justify-center items-center flex-col w-[80vw] scrollbar-hide mx-[17vw] ">
@@ -133,7 +124,13 @@ const StudentsProfile = () => {
       >
         <Avatar
           name="profilePicture"
-          src={profilePicture && URL.createObjectURL(profilePicture)}
+          src={
+            profilePicture
+              ? URL.createObjectURL(profilePicture)
+              :
+            "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg"
+            //  URL.createObjectURL(studentDetails?.profilePic)
+          }
           sx={{ width: 180, height: 180, margin: 4 }}
         />
         <label
@@ -176,8 +173,8 @@ const StudentsProfile = () => {
                     Fullname
                   </label>
                   <input
-                    // onChange={onChange}
-                    // value={fullname}
+                    onChange={onChange}
+                    value={studentData?.fullName}
                     type="text"
                     required
                     name="fullname"
@@ -190,8 +187,8 @@ const StudentsProfile = () => {
                     Email
                   </label>
                   <input
-                    // onChange={onChange}
-                    // value={email}
+                    onChange={onChange}
+                    value={studentData?.email}
                     type="email"
                     required
                     name="email"
@@ -204,7 +201,7 @@ const StudentsProfile = () => {
                     Gender
                   </label>
                   <input
-                    // onChange={onChange}
+                    onChange={onChange}
                     // value={gender}
                     type="text"
                     required
@@ -214,16 +211,16 @@ const StudentsProfile = () => {
                   />
                 </div>
                 <div className="grid grid-cols-1 gap-4 mb-4">
-                  <label htmlFor="age" className="font-[500] text-[#344054]">
-                    Age
+                  <label htmlFor="role" className="font-[500] text-[#344054]">
+                    Role
                   </label>
                   <input
-                    // onChange={onChange}
-                    // value={age}
-                    type="number"
+                    onChange={onChange}
+                    value={studentData?.role}
+                    type="text"
                     required
-                    name="age"
-                    placeholder="Enter your age"
+                    name="role"
+                    placeholder="Enter your role"
                     className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
                   />
                 </div>
@@ -251,7 +248,7 @@ const StudentsProfile = () => {
                   </label>
                   <input
                     // onChange={onChange}
-                    // value={classType}
+                    value={studentData?.stage?.classType}
                     type="text"
                     required
                     name="classType"
@@ -268,7 +265,7 @@ const StudentsProfile = () => {
                   </label>
                   <input
                     // onChange={onChange}
-                    // value={mainStage}
+                    value={studentData?.stage?.mainStage}
                     type="text"
                     required
                     name="mainStage"
@@ -285,7 +282,7 @@ const StudentsProfile = () => {
                   </label>
                   <input
                     // onChange={onChange}
-                    // value={teacher}
+                    value={studentData?.stage?.teacher}
                     type="text"
                     required
                     name="teacher"
@@ -313,8 +310,8 @@ const StudentsProfile = () => {
                     Mother
                   </label>
                   <input
-                    // onChange={onChange}
-                    // value={mother}
+                    onChange={onChange}
+                    value={studentData?.guardian?.mother}
                     type="text"
                     required
                     name="mother"
@@ -327,8 +324,8 @@ const StudentsProfile = () => {
                     Father
                   </label>
                   <input
-                    // onChange={onChange}
-                    // value={father}
+                    onChange={onChange}
+                    value={studentData?.guardian?.father}
                     type="text"
                     required
                     name="father"
@@ -344,8 +341,8 @@ const StudentsProfile = () => {
                     Guardian
                   </label>
                   <input
-                    // onChange={onChange}
-                    // value={guardian}
+                    onChange={onChange}
+                    value={studentData?.guardian?.other}
                     type="text"
                     required
                     name="guardian"
@@ -361,7 +358,7 @@ const StudentsProfile = () => {
                     Parent/Guardian number
                   </label>
                   <input
-                    // onChange={onChange}
+                    onChange={onChange}
                     // value={age}
                     type="tel"
                     required
@@ -393,8 +390,8 @@ const StudentsProfile = () => {
                     Location
                   </label>
                   <input
-                    // onChange={onChange}
-                    // value={location}
+                    onChange={onChange}
+                    value={studentData?.address?.location}
                     type="text"
                     required
                     name="location"
@@ -407,8 +404,8 @@ const StudentsProfile = () => {
                     GPS
                   </label>
                   <input
-                    // onChange={onChange}
-                    // value={GPS}
+                    onChange={onChange}
+                    value={studentData?.address?.GPS}
                     type="text"
                     required
                     name="GPS"
@@ -424,8 +421,8 @@ const StudentsProfile = () => {
                     Phone Number
                   </label>
                   <input
-                    // onChange={onChange}
-                    // value={phoneNumber}
+                    onChange={onChange}
+                    value={studentData?.address?.phoneNumber}
                     type="text"
                     required
                     name="phoneNumber"
