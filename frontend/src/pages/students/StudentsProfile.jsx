@@ -146,7 +146,7 @@ const StudentsProfile = () => {
       </button> */}
       <div className="w-2/3">
         {/* Personal Info */}
-        <Accordion
+        <Accordion>
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
         >
