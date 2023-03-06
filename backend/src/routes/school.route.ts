@@ -11,7 +11,7 @@ schoolRouter.post('/createSchool', validatorSchema, passwordValidator, newSchool
 schoolRouter.post('/schoolLogin', loginSchool)
 schoolRouter.delete('/schoolLogout', logoutSchool)
 schoolRouter.patch('/school/update', updateSchoolDetails)
-schoolRouter.delete('school/delete', deleteSchool)
+schoolRouter.delete('/school/delete', deleteSchool)
 schoolRouter.post('/schoolforgotPassword', schoolforgotPassword)
 
 
