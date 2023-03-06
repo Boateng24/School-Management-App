@@ -19,7 +19,11 @@ const StudentsProfile = () => {
     (state) => state.loginUser?.loggedInUser?.loggedInUser
   );
 
+ const [expanded, setExpanded] = React.useState("panel1");
 
+ const handleChange = (panel) => (event, newExpanded) => {
+   setExpanded(newExpanded ? panel : false);
+ };
 
   
   const [toggle , setToggle] = useState(true)
@@ -146,7 +150,7 @@ const StudentsProfile = () => {
       </button> */}
       <div className="w-2/3">
         {/* Personal Info */}
-        <Accordion>
+        <Accordion
           expanded={expanded === "panel1"}
           onChange={handleChange("panel1")}
         >
