@@ -14,9 +14,9 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import SwipeableViews from "react-swipeable-views";
 import PropTypes from "prop-types";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { useFindAnnouncementQuery } from "../../api/school/SchoolApi";
+import { useFindAnnouncementQuery, useRemoveSchoolMutation } from "../../api/school/SchoolApi";
 import Announcement from "../announcement/Announcement";
 
 function TabPanel(props) {
@@ -65,11 +65,21 @@ const SchoolSettings = () => {
     setValue(newValue);
   };
 
+  console.log('Logged in school', loggedInSchool);
   const handleChangeIndex = (index) => {
     setValue(index);
   };
 
   const {data: announcements} = useFindAnnouncementQuery()
+  const [removeSchool] = useRemoveSchoolMutation()
+  const navigate = useNavigate()
+  
+
+  const handleSchoolDelete = () => {
+    removeSchool({id: loggedInSchool?.id})
+    navigate('')
+  
+  }
 
 
   return (
@@ -109,7 +119,7 @@ const SchoolSettings = () => {
               />
             </div>
             <Divider />
-            <Button color="error" variant="outlined" sx={{ mt: 4 }}>
+            <Button color="error" variant="outlined" sx={{ mt: 4 }} onClick={handleSchoolDelete}>
               Delete Account
             </Button>
           </FormGroup>
