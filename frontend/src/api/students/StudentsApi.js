@@ -44,7 +44,7 @@ export const studentsApi = createApi({
     }),
     updateStudentProfilePicture: builder.mutation({
       query: (payload) => ({
-        url: `/user/clc50zmgc0000udtsba9swsoz`,
+        url: `/user/${payload?.id}`,
         method: "PATCH",
         body: payload,
       }),
