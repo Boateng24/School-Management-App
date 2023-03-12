@@ -9,6 +9,7 @@ import { createRefreshToken } from '../helpers/refreshToken';
 import {config} from 'dotenv'
 import * as nodemailer from 'nodemailer';
 
+
 config()
 
 const maxAge = 7 * 24 * 60 * 60 * 1000
@@ -73,14 +74,30 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
         
         const token = await createAccessToken(newUser.id);
 
+        // var transport = nodemailer.createTransport({
+        //   host: 'sandbox.smtp.mailtrap.io',
+        //   port: 2525,
+        //   auth: {
+        //     user: 'd41d1137801eab',
+        //     pass: '74441659bf8fc3',
+        //   },
+        // });
+
         const transporter = nodemailer.createTransport({
           host: process.env.NODEMAILER_HOST,
           port: (<unknown>process.env.NODEMAILER_PORT) as number,
+          secure: true,
           auth: {
             user: process.env.SENDER_EMAIL,
             pass: process.env.GOOGLE_APP_PASSWORD,
-          },
+          },         
         });
+
+      console.log(process.env.NODEMAILER_PORT);
+      console.log(process.env.SENDER_EMAIL);
+      console.log(process.env.GOOGLE_APP_PASSWORD)
+      
+        
 
         transporter.verify(function (error, success) {
           if (error) {
