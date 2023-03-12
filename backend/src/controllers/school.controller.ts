@@ -77,8 +77,6 @@ export const loginSchool = async (
       maxAge,
     });
 
-    // localStorage.setItem('jwtToken', accessToken as string)
-
     const loggedInSchool = {
       id: schoolExists.id,
       name: schoolExists.schoolName,
@@ -209,7 +207,7 @@ export const deleteSchool = async (
     // check if school exists in db
     const schoolExists = await prisma.school.findFirst({
       where: {
-        id: req.body.id,
+        id: req.params.id,
       },
     });
     if (!schoolExists)
@@ -230,7 +228,7 @@ export const deleteSchool = async (
 
     await prisma.school.delete({
       where: {
-        id: req.body.schoolId,
+        id: req.params.id,
       },
     });
 

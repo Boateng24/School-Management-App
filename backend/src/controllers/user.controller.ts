@@ -71,14 +71,6 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
          const file = req.file as uploadedFile;
          console.log(file);
         const{fullname, email, age, gender} = req.body as userupdate;
-        // const userExits = await prisma.user.findFirst({
-        //     where:{
-        //         id: req.payload.id
-        //     }
-        // })
-        // if(!userExits) throw new createHttpError.NotFound("User not found");
-
-        // will use update many to handle bulk update
         const userUpdate = await prisma.user.update({
           where: {
             id: req.params.id,
@@ -88,7 +80,7 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
             email,
             age,
             gender,
-            profilePic: file as any,
+            profilePic: file.path as any,
           },
         });
 

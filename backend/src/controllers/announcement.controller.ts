@@ -62,10 +62,15 @@ export const editAnnouncement = async(req:Request, res:Response, next:NextFuncti
                 id: Idnumber
             },
             data:{
-                message:message
+                message:message,
+                isEdited:true
+
             }
         })
-        res.status(200).json({announcementEdit, success:true})
+        if(!announcementEdit){
+            res.status(400).json({message:"Not successful"})
+        }
+        res.status(200).json({announcementEdit, success:true, editMessage:'edited'})
     } catch (error) {
         next(error)
     }
