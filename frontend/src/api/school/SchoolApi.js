@@ -26,6 +26,14 @@ export const schoolApi = createApi({
       }),
       invalidatesTags: ["school"],
     }),
+    removeAnnouncement: builder.mutation({
+      query: ({ id }) => ({
+        url: `/deleteAnnouncement/${id}`,
+        method: "DELETE",
+        body: id,
+      }),
+      invalidatesTags: ["school"],
+    }),
     removeSchool: builder.mutation({
       query: ({ id }) => ({
         url: `/school/delete/${id}`,
@@ -50,6 +58,7 @@ export const schoolApi = createApi({
 export const {
   useFindAnnouncementQuery,
   useSendAnnouncementMutation,
+  useRemoveAnnouncementMutation,
   useGetAllSchoolsQuery,
   useGetSchoolQuery,
   useRemoveSchoolMutation,
