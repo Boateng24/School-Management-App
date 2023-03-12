@@ -71,7 +71,7 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
     try {
          const file = req.file
         const{fullname, email, age, gender} = req.body as userupdate;
-         const result = await cloudinary.uploader.upload(file.path, {
+         const result = await cloudinary.uploader.upload(<unknown>file as string, {
            resource_type: 'auto',
          });
 

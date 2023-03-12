@@ -18,6 +18,7 @@ import guardianRouter from './routes/guardian.route';
 import stageRouter from './routes/stage.route';
 import addressRouter from './routes/address.route';
 import announceRouter from './routes/announcement.route';
+import superAdminRouter from './routes/superAdmin.route';
 
 
 
@@ -56,6 +57,7 @@ app.use('/api/v1', guardianRouter)
 app.use('/api/v1', stageRouter)
 app.use('/api/v1', addressRouter)
 app.use('/api/v1', announceRouter)
+app.use('/api/v1', superAdminRouter)
 
 app.get('/', (req:Request, res:Response) => {
     res.send(`ok ${process.pid}`)

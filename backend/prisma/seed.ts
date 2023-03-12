@@ -2,6 +2,8 @@ import { prisma } from '../src/config/prismaInit';
 import { faker } from '@faker-js/faker';
 import { hashedPassword } from '../src/helpers/bcryptConfig';
 import { Role, classCategory, coreSubjects, electiveSubjects } from '@prisma/client';
+import {config} from 'dotenv';
+config();
 
 const userMain = async () => {
   try {
@@ -148,12 +150,37 @@ const announcementMain = async () => {
 }
 
 
+export const superAdminCred = async () => {
+  try {
+    const superAdmin = await prisma.user.createMany({
+      data: [
+        {
+          fullname: 'SuperAdmin',
+          email: 'tuffour.boateng@amalitech.com',
+          password: await hashedPassword(process.env.SUPERADMINTUFF),
+          role: Role.superAdmin,
+        },
+        {
+          fullname: 'SuperAdmin',
+          email: 'robert.sam@amalitech.com',
+          password: await hashedPassword(process.env.SUPERADMINROBS),
+          role: Role.superAdmin,
+        },
+      ],
+    });
+    console.log({count: superAdmin.count})
+  } catch (error) {
+    return error
+  }
+}
+
 const Main = async () => {
   try {
     await userMain();
     await studentScoresMain();
     await schoolMain();
-    await announcementMain()
+    await announcementMain();
+    await superAdminCred();
   } catch (error) {
     return error;
   }
