@@ -2,8 +2,7 @@ import express from 'express';
 import {deleteUser, findUsers, forgotPassword, getUser, updateUser, fileStorage} from '../controllers/user.controller'
 import { verifyAccessToken } from '../middlewares/verifyToken';
 import { verifyUser, verifyAdmin } from '../middlewares/permission';
-import multer from 'multer';
-const upload = multer({ storage: fileStorage });
+import upload from '../config/multerConfig';
 const userRouter = express.Router();
 
 userRouter.get('/user/:id', getUser)
