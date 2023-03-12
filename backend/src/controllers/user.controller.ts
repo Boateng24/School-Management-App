@@ -6,6 +6,7 @@ import { createAccessToken } from '../helpers/accessToken';
 import {config} from 'dotenv';
 import * as nodemailer from 'nodemailer';
 import multer from 'multer';
+import cloudinary from '../config/cloudinaryConfig';
 
 
 export const fileStorage = multer.diskStorage({
@@ -68,9 +69,12 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
-         const file = req.file as uploadedFile;
-         console.log(file);
+         const file = req.file
         const{fullname, email, age, gender} = req.body as userupdate;
+         const result = await cloudinary.uploader.upload(file.path, {
+           resource_type: 'auto',
+         });
+
         const userUpdate = await prisma.user.update({
           where: {
             id: req.params.id,
@@ -80,11 +84,13 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
             email,
             age,
             gender,
-            profilePic: file.path as any,
+            profilePic: result.secure_url,
           },
         });
 
-        res.status(200).json({userUpdate, success:true})
+        res
+          .status(200)
+          .json({userUpdate});
 
     } catch (error) {
         next(error)

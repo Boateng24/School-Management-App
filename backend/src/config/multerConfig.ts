@@ -21,18 +21,20 @@ interface MulterRequest extends Request {
 const cloudinaryStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: (req: MulterRequest, file: any) => {
+    const mimetypes = {
+      'image/jpeg': 'jpg',
+      'image/png': 'png',
+      'image/gif': 'gif',
+      // add any other mimetypes and corresponding formats you need
+    };
+
+    const format = mimetypes[file.mimetype];
+    const public_id = Date.now() + '-' + file.originalname;
+
     return {
       folder: 'schoolmgtImages',
-      public_id: Date.now() + '-' + file.originalname,
-      format: (req, file) => {
-        const mimetypes = {
-          'image/jpeg': 'jpg',
-          'image/png': 'png',
-          'image/gif': 'gif',
-          // add any other mimetypes and corresponding formats you need
-        };
-        return mimetypes[file.mimetype];
-      },
+      public_id,
+      format,
     };
   },
 });

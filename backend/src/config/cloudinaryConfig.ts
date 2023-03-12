@@ -9,5 +9,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+
 // exporting our file cloudinary.js as {cloudinary}
 export default cloudinary;
