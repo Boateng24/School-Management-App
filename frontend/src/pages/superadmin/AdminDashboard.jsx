@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import AdminNavbar from "../../components/superAdmin/Navbar/Navbar";
+import { useGetAllSchoolsQuery } from "../../api/superadmin/SuperAdminApi";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -44,6 +45,9 @@ const rows = [
 ];
 
 export default function AdminDashboard() {
+
+    const data = useGetAllSchoolsQuery()
+    console.log('All schools' , data);
   return (
     <div className="">
       <AdminNavbar />
