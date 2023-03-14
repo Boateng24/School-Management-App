@@ -48,7 +48,8 @@ const StudentsDashboard = () => {
 
 
   // Find announcements
-  const {data, isError, error} = useFindAnnouncementQuery();
+  const {data} = useFindAnnouncementQuery();
+  console.log('Announcement' , data);
  
 
   return (

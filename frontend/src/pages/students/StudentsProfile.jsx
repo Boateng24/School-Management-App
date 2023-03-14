@@ -60,6 +60,7 @@ const StudentsProfile = () => {
      (state) => state.loginUser?.loggedInUser?.loggedInUser
    );
 
+   console.log('Id' , id);
 
 
   const handleChange = (panel) => (event, newExpanded) => {
@@ -71,6 +72,7 @@ const StudentsProfile = () => {
 
 
   const { data: student } = useGetStudentDetailsQuery(id);
+  console.log('Student Data' , student);
   const perStudent = student?.findUser
   const [studentData, setStudentData] = useState({
     fullName: perStudent?.fullname,
@@ -96,6 +98,7 @@ const StudentsProfile = () => {
     },
   });
 
+  console.log('Profile Pic' , studentData);
 
   const onChange = (event) => {
     setStudentData({
@@ -103,14 +106,20 @@ const StudentsProfile = () => {
     })
   }
 
-  const [profilePicture, setProfilePicture] = useState();
+  const [profilePicture, setProfilePicture] = useState(studentData?.profilePic?.path);
  
 
   const [updateStudentProfilePicture] =
     useUpdateStudentProfilePictureMutation();
 
   const handleProfilePicture = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+
+    const formData = new FormData()
+    formData.append("profilePic" , file)
+    formData.append("id" , id)
+    // console.log('File' , file)
+    // updateStudentProfilePicture({profilePic: formData , id});
     setProfilePicture(file);
     updateStudentProfilePicture({ profilePic: profilePicture, id });
   };
@@ -125,10 +134,12 @@ const StudentsProfile = () => {
         <Avatar
           name="profilePicture"
           src={
-            profilePicture
-              ? URL.createObjectURL(profilePicture)
-              :
-            "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg"
+            // studentData?.profilePic
+           profilePicture && URL.createObjectURL(profilePicture)
+            // "https://res.cloudinary.com/dlzvhjzxe/image/upload/v1678636609/avyfigjtbaa1qrqbynl8.png"
+            // ? URL.createObjectURL(profilePicture)
+            // :
+            // "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg"
             //  URL.createObjectURL(studentDetails?.profilePic)
           }
           sx={{ width: 180, height: 180, margin: 4 }}

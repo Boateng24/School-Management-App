@@ -46,8 +46,11 @@ const rows = [
 
 export default function AdminDashboard() {
 
-    const data = useGetAllSchoolsQuery()
-    console.log('All schools' , data);
+    const {currentData} = useGetAllSchoolsQuery()
+    console.log('All schools' , currentData);
+
+
+    const rowss = currentData?.allSchools
   return (
     <div className="">
       <AdminNavbar />
@@ -74,30 +77,34 @@ export default function AdminDashboard() {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>School</StyledTableCell>
-                  <StyledTableCell align="right">Admins</StyledTableCell>
+                  <StyledTableCell align="right">Email</StyledTableCell>
                   <StyledTableCell align="right">
                     Date Joined&nbsp;(g)
                   </StyledTableCell>
                   <StyledTableCell align="right">Population</StyledTableCell>
-                  <StyledTableCell align="right">Number</StyledTableCell>
+                  <StyledTableCell align="right">Website</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
-                  <StyledTableRow key={row.name}>
-                    <StyledTableCell component="th" scope="row">
-                      {row.name}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.calories}
-                    </StyledTableCell>
-                    <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                    <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.protein}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))}
+                {currentData?.allSchools.map(
+                  ({ schoolName, email, id, address }) => (
+                    <StyledTableRow key={id}>
+                      <StyledTableCell component="th" scope="row">
+                        {schoolName}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">{email}</StyledTableCell>
+                      <StyledTableCell align="right">
+                        {address?.map(({ createdAt }) => createdAt)}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {address?.map(({ location }) => location)}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {address?.map(({ website }) => website)}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  )
+                )}
               </TableBody>
             </Table>
           </TableContainer>

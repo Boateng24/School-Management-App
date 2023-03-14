@@ -4,14 +4,17 @@ export const adminLogin = createAsyncThunk(
   "login/adminLogin",
   async (args, { rejectWithValue }) => {
     try {
-      const response = await fetch("http://localhost:5000/api/v1/adminLogin", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(args),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/v1/superAdminLogin",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(args),
+        }
+      );
 
       const data = response.json();
 
