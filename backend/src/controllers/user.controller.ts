@@ -70,11 +70,9 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
          const file = req.file
+        console.log('Gididis', file);
+        
         const{fullname, email, age, gender} = req.body as userupdate;
-         const result = await cloudinary.uploader.upload(<unknown>file.path as string, {
-           resource_type: 'auto',
-         });
-
         const userUpdate = await prisma.user.update({
           where: {
             id: req.params.id,
@@ -84,7 +82,7 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
             email,
             age,
             gender,
-            profilePic: result.secure_url,
+            profilePic: file.path,
           },
         });
 
