@@ -29,7 +29,7 @@ const cloudinaryStorage = new CloudinaryStorage({
     };
 
     const format = mimetypes[file.mimetype];
-    const public_id = Date.now() + '-' + file.originalname;
+    const public_id = Date.now() + '-' + file.originalname.split('.')[0];
 
     return {
       folder: 'schoolmgtImages',
