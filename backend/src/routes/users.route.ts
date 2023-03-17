@@ -1,5 +1,5 @@
 import express from 'express';
-import {deleteUser, findUsers, forgotPassword, getUser, updateUser, fileStorage} from '../controllers/user.controller'
+import {deleteUser, findUsers, forgotPassword, getUser, updateUser} from '../controllers/user.controller'
 import { verifyAccessToken } from '../middlewares/verifyToken';
 import { verifyUser, verifyAdmin } from '../middlewares/permission';
 import upload from '../config/multerConfig';
