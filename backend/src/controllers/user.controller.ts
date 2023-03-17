@@ -1,27 +1,11 @@
 import {Request, Response, NextFunction} from 'express';
-import createHttpError from 'http-errors';
-import { createUser,userupdate, uploadedFile} from '../@types';
+import { createUser,userupdate} from '../@types';
 import { prisma } from '../config/prismaInit';
 import { createAccessToken } from '../helpers/accessToken';
 import {config} from 'dotenv';
 import * as nodemailer from 'nodemailer';
-import multer from 'multer';
-import cloudinary from '../config/cloudinaryConfig';
-
-
-export const fileStorage = multer.diskStorage({
-  destination: function (_req, _file, cb) {
-    cb(null, 'src/uploads');
-  },
-  filename: function (_req, file, cb) {
-    const fileType = file.mimetype.split('/')[1];
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileType);
-  },
-});
 
 config()
-
 export const getUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const findUser = await prisma.user.findFirst({
