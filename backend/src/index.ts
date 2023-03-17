@@ -23,7 +23,7 @@ import superAdminRouter from './routes/superAdmin.route';
 
 
 // Inititializing express app
-const app:Application = express();
+export const app:Application = express();
 config();
 
 // OS number of cpu present
