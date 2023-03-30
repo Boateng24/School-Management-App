@@ -4,6 +4,7 @@ import { prisma } from '../config/prismaInit';
 import { createAccessToken } from '../helpers/accessToken';
 import {config} from 'dotenv';
 import * as nodemailer from 'nodemailer';
+import { updateUserService } from '../services/user.services';
 
 
 
@@ -57,20 +58,11 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
          const file = req.file as uploadedFile;
+         const profilePic = file.path
+         const id  = req.params.id
          console.log(file);
         const{fullname, email, age, gender} = req.body as userupdate;
-        const userUpdate = await prisma.user.update({
-          where: {
-            id: req.params.id,
-          },
-          data: {
-            fullname,
-            email,
-            age,
-            gender,
-            profilePic: file.path,
-          },
-        });
+        const userUpdate = await updateUserService({id, fullname, email, age, gender, profilePic})
 
         res.status(200).json({userUpdate, success:true})
 
