@@ -1,6 +1,4 @@
 import { prisma } from '../config/prismaInit';
-import * as nodemailer from 'nodemailer';
-
 
 export const registerErrorsService = async (email:string, password:string, confirmPassword:string) => {
     try {
@@ -18,42 +16,14 @@ export const registerErrorsService = async (email:string, password:string, confi
        if (password !== confirmPassword) {
          return { status: 401, message: 'Password mismatch' };
        }
+       return
     } catch (error) {
         return error.message
     }
 }
 
 
-export const sendUserEmailService = async (email, newUser, password, token) => {
-  const transporter = nodemailer.createTransport({
-    host: process.env.NODEMAILER_HOST,
-    port: Number(process.env.NODEMAILER_PORT),
-    secure: true,
-    auth: {
-      user: process.env.SENDER_EMAIL,
-      pass: process.env.GOOGLE_APP_PASSWORD,
-    },
-  });
 
-  await transporter.verify();
-
-  const mailDetails = {
-    from: process.env.SENDER_EMAIL,
-    to: email,
-    subject: 'Confirmation of sign up',
-    html: `<a href="http://localhost:3000/usersLogin/${newUser.id}/${token}">Your account has been created click this link to update your details</a>
-           <p>This is your password <b>${password}</b> </p>
-    `,
-  };
-
-  try {
-    await transporter.sendMail(mailDetails);
-    console.log('email sent successfully');
-  } catch (error) {
-    console.error('Error sending email:', error);
-    throw new Error('Failed to send email');
-  }
-}
 
 export const findUserService = async(id:string) => {
   try {
@@ -120,6 +90,19 @@ export const updateUserService = async({id, fullname, email, age, gender, profil
       },
     });
     return userupdateService
+  } catch (error) {
+    return error.message
+  }
+}
+
+export const deleteUserService = async(id) => {
+  try {
+    const userDeleteService = await prisma.user.delete({
+      where:{
+        id
+      }
+    })
+    return userDeleteService
   } catch (error) {
     return error.message
   }
