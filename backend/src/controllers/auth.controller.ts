@@ -3,12 +3,11 @@ import createHttpError from 'http-errors';
 import { createUser, loginUser, userAddress, userGuardian, userStage, studentscores } from '../@types';
 import { prisma } from '../config/prismaInit';
 import { createAccessToken } from '../helpers/accessToken';
-// import {registeruserService} from '../services/user.services'; will improve it later
 import { hashedPassword, compare } from '../helpers/bcryptConfig';
 import { createRefreshToken } from '../helpers/refreshToken';
-import {config} from 'dotenv'
-import * as nodemailer from 'nodemailer';
-
+import {config} from 'dotenv';
+import {newUserEmailService} from '../services/email.services'
+import { registerErrorsService } from '../services/user.services';
 
 config()
 
@@ -20,16 +19,12 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
         const {classType, mainStage} = req.body as userStage
         const {GPS, location, phoneNumber} = req.body as userAddress
         const {examScore, testScore, electiveSub, coreSub} = req.body as studentscores
-        const userExists =   await prisma.user.findFirst({
-            where:{
-                email
-            }
-        })
-        if(userExists) res.status(403).json({message:"User already exists"})
+       
+        const registrationErrors = await registerErrorsService(email, password, confirmPassword)
 
-        // check if password matches
-        if (!(password.match(confirmPassword))) return res.json({message:'Passwords do not match'});
-        // hello
+        if(registrationErrors){
+          return res.status(registrationErrors.status).json({message: registrationErrors.message})
+        }
 
         const newUser = await prisma.user.create({
             data:{
@@ -74,56 +69,7 @@ export const userSignup = async (req:Request, res:Response, next:NextFunction) =
         
         const token = await createAccessToken(newUser.id);
 
-        // var transport = nodemailer.createTransport({
-        //   host: 'sandbox.smtp.mailtrap.io',
-        //   port: 2525,
-        //   auth: {
-        //     user: 'd41d1137801eab',
-        //     pass: '74441659bf8fc3',
-        //   },
-        // });
-
-        const transporter = nodemailer.createTransport({
-          host: process.env.NODEMAILER_HOST,
-          port: (<unknown>process.env.NODEMAILER_PORT) as number,
-          secure: true,
-          auth: {
-            user: process.env.SENDER_EMAIL,
-            pass: process.env.GOOGLE_APP_PASSWORD,
-          },         
-        });
-
-      console.log(process.env.NODEMAILER_PORT);
-      console.log(process.env.SENDER_EMAIL);
-      console.log(process.env.GOOGLE_APP_PASSWORD)
-      
-        
-
-        transporter.verify(function (error, success) {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Server is ready to take our messages');
-          }
-        });
-
-        const mailDetails = {
-          from: process.env.SENDER_EMAIL,
-          to: email,
-          subject: 'Confirmation of sign up',
-          html: `<a href="http://localhost:3000/usersLogin/" + ${newUser.id} + '/' + ${token}>Your account has been created click this link to update your details</a>
-                <p>This is your password <b>${password}</b> </p>
-          `,
-        };
-
-        transporter.sendMail(mailDetails, (err) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('email sent successfully');
-          }
-        });
-
+        await newUserEmailService(email, newUser, password, token)
 
         const createdUser = newUser.id
        res.json({createdUser, success: true})

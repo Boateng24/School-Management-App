@@ -1,9 +1,11 @@
 import {Request, Response, NextFunction} from 'express';
-import { createUser,userupdate} from '../@types';
+import { createUser,userupdate, uploadedFile} from '../@types';
 import { prisma } from '../config/prismaInit';
 import { createAccessToken } from '../helpers/accessToken';
 import {config} from 'dotenv';
-import * as nodemailer from 'nodemailer';
+import { deleteUserService, updateUserService } from '../services/user.services';
+import { resetUserPassEmailService } from '../services/email.services';
+
 
 config()
 export const getUser = async (req:Request, res:Response, next:NextFunction) => {
@@ -53,21 +55,12 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
-         const file = req.file
+         const file = req.file as uploadedFile;
+         const profilePic = file.path
+         const id  = req.params.id
+         console.log(file);
         const{fullname, email, age, gender} = req.body as userupdate;
-
-        const userUpdate = await prisma.user.update({
-          where: {
-            id: req.params.id,
-          },
-          data: {
-            fullname,
-            email,
-            age,
-            gender,
-            profilePic: file.path,
-          },
-        });
+        const userUpdate = await updateUserService({id, fullname, email, age, gender, profilePic})
 
         res
           .status(200)
@@ -81,19 +74,15 @@ export const updateUser = async (req:Request, res:Response, next:NextFunction) =
 // Delete a user
 export const deleteUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
-
+        const id = req.params.id
         const findUser = await prisma.user.findFirst({
             where:{
-                id: req.params.id
+                id
             }
         })
         if(!findUser) return res.json({msg: 'user not found'})
 
-        const userDelete = await prisma.user.delete({
-            where:{
-                id: req.params.id
-            }
-        })
+        const userDelete = await deleteUserService(id)
         
        res.json({msg:`${userDelete.fullname} deleted from your school`})
     } catch (error) {
@@ -107,8 +96,6 @@ export const deleteUser = async (req:Request, res:Response, next:NextFunction) =
 export const forgotPassword = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const {email} = req.body as createUser
-        // const userId = req["payload"].id
-        // console.log(userId)
         const currentUser = await prisma.user.findUnique({
             where:{
                 email
@@ -118,38 +105,7 @@ export const forgotPassword = async (req:Request, res:Response, next:NextFunctio
 
         const token = await createAccessToken(currentUser.id)
 
-        const transporter = nodemailer.createTransport({
-            host:process.env.NODEMAILER_HOST,
-            port: <unknown>process.env.NODEMAILER_PORT as number,      
-            auth:{
-             user: process.env.SENDER_EMAIL, 
-             pass: process.env.GOOGLE_APP_PASSWORD
-            }
-         })
-
-         transporter.verify(function (error, success) {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log("Server is ready to take our messages");
-            }
-          });
- 
-         const mailDetails ={
-             from: process.env.SENDER_EMAIL,
-             to: email,
-             subject: "Password reset link",
-             html:   `<a href="/forgotPassword/" + ${currentUser.id} + '/' + ${token}>click this link to confirm password reset</a>`
-         }
-        
- 
-       transporter.sendMail(mailDetails, (err) => {
-             if(err){
-                 console.log(err)
-             } else{
-                 console.log("email sent successfully")
-             }
-         })
+        await resetUserPassEmailService(email, currentUser, token)
 
      await prisma.user.update({
             where:{

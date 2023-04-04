@@ -1,6 +1,6 @@
 import multer from 'multer';
 import path from 'path';
-import {CloudinaryStorage} from 'multer-storage-cloudinary'
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import cloudinary from './cloudinaryConfig';
 
 // const fileStorage = multer.diskStorage({
@@ -17,7 +17,6 @@ interface MulterRequest extends Request {
   file: any;
 }
 
-
 const cloudinaryStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: (req: MulterRequest, file: any) => {
@@ -29,7 +28,8 @@ const cloudinaryStorage = new CloudinaryStorage({
     };
 
     const format = mimetypes[file.mimetype];
-    const public_id = Date.now() + '-' + file.originalname;
+    const public_id = Date.now() + '-' + file.originalname.split('.')[0];
+
 
     return {
       folder: 'schoolmgtImages',
@@ -38,8 +38,6 @@ const cloudinaryStorage = new CloudinaryStorage({
     };
   },
 });
-
-
 
 const upload = multer({
   storage: cloudinaryStorage,
