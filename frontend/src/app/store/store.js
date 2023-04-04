@@ -8,6 +8,7 @@ import loginSchoolSlice, {
 import { studentsApi } from "../../api/students/StudentsApi";
 import { adminApi } from "../../api/superadmin/SuperAdminApi";
 import loginUserSlice from "../../features/auth/loginUserSlice";
+import AdminLoginSlice from "../../features/auth/AdminLoginSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     loginSchool: loginSchoolSlice,
     logoutSchool: logoutSchoolSlice,
     loginUser: loginUserSlice,
+    superAdmin: AdminLoginSlice,
     [studentsApi.reducerPath]: studentsApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
   },

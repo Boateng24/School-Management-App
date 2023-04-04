@@ -65,7 +65,7 @@ const Student = ({
       setShowError(true);
       setTimeout(() => {
         window.location.reload();
-      }, 6000);
+      }, 26000);
     } else {
       setShowError(false);
     }
@@ -205,7 +205,7 @@ const Student = ({
         <p className="w-96 text-right mt-2 mx-8">{gender}</p>
       </div>
       <div className="flex w-[10%] justify-end py-4">
-        {isHovered && (
+        {true && (
           <IconButton onClick={handleOpen}>
             <DeleteIcon />
           </IconButton>

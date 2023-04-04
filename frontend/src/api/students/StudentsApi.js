@@ -48,9 +48,11 @@ export const studentsApi = createApi({
         return {
         url: `/user/${payload?.id}`, 
         method: "PATCH",
-        body: payload,
+        body: payload, 
+        headers:{
+          "Content-Type": "multipart/form-data"
+        }
       }
-    
     },
       invalidatesTags: ["students"],
     }),

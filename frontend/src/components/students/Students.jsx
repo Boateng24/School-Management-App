@@ -4,20 +4,18 @@ import {
   Button,
   FormControl,
   IconButton,
-  InputLabel,
+ 
   MenuItem,
   Modal,
   Select,
   Snackbar,
-  Typography,
+ 
 } from "@mui/material";
 import React, { useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import SchoolIcon from "@mui/icons-material/School";
-import VerifiedIcon from "@mui/icons-material/Verified";
-// import AddIcon from "@mui/icons-material/Add";
 import Student from "./Student";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   useAddStudentMutation,
   useFindAllStudentsQuery,

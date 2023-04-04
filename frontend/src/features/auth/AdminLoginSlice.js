@@ -65,10 +65,10 @@ const AdminLoginSlice = createSlice({
         state.loggedInSchool = action.payload;
         state.error = "";
       })
-      .addCase(adminLogin.rejected, (state, action) => {
-        // const { message } = action.payload;
+      .addCase(adminLogin.rejected, (state, {payload}) => {
+        // const  {message}  = action.payload;
         state.isLoggingIn = false;
-        state.error = "Invalid credentials";
+        state.error = "User does not exist" ;
       });
   },
 });

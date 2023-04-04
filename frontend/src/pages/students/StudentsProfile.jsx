@@ -114,6 +114,7 @@ const StudentsProfile = () => {
 
   const handleProfilePicture = (e) => {
     const file = e.target.files?.[0];
+    console.log('Sending file' , file);
 
     const formData = new FormData()
     formData.append("profilePic" , file)

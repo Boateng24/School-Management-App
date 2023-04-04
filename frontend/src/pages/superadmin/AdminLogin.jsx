@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { adminLogin } from "../../features/auth/AdminLoginSlice";
 
 const AdminLogin = () => {
   const [email , setEmail] = useState('')
   const [password , setPassword] = useState('')
+  const data = useSelector(state => state.superAdmin)
 
+  console.log('Error is' , data);
   const handleEmail = e => setEmail(e.target.value)
   const handlePassword = e => setPassword(e.target.value)
 
