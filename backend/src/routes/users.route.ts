@@ -6,10 +6,10 @@ import upload from '../config/multerConfig';
 const userRouter = express.Router();
 
 userRouter.get('/user/:id', getUser)
-userRouter.delete('/user/:id', verifyAdmin, deleteUser)
+userRouter.delete('/user/:id', deleteUser)
 userRouter.get('/users', findUsers)
 userRouter.post('/forgotPassword', forgotPassword)
-userRouter.patch('/user/:id', verifyUser, upload.single('profilePicture'),updateUser)
+userRouter.patch('/user/:id', verifyUser, upload.single('file'),updateUser)
 
 
 export default userRouter
