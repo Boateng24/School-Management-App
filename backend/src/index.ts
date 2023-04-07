@@ -18,11 +18,12 @@ import guardianRouter from './routes/guardian.route';
 import stageRouter from './routes/stage.route';
 import addressRouter from './routes/address.route';
 import announceRouter from './routes/announcement.route';
+import superAdminRouter from './routes/superAdmin.route';
 
 
 
 // Inititializing express app
-const app:Application = express();
+export const app:Application = express();
 config();
 
 // OS number of cpu present
@@ -56,12 +57,12 @@ app.use('/api/v1', guardianRouter)
 app.use('/api/v1', stageRouter)
 app.use('/api/v1', addressRouter)
 app.use('/api/v1', announceRouter)
-
+app.use('/api/v1', superAdminRouter)
 
 app.get('/', (req:Request, res:Response) => {
     res.send(`ok ${process.pid}`)
 })
-console.log('hello')
+
 if(cluster.isPrimary){
     for(let i=0; i<numberCpu; i++){
         cluster.fork()

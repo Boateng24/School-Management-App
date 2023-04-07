@@ -43,11 +43,15 @@ export const studentsApi = createApi({
       invalidatesTags: ["students"],
     }),
     updateStudentProfilePicture: builder.mutation({
-      query: (payload) => ({
-        url: `/user/clc50zmgc0000udtsba9swsoz`,
+      query: (payload) => {
+        console.log('Payload' , payload);
+        return {
+        url: `/user/${payload?.id}`, 
         method: "PATCH",
         body: payload,
-      }),
+      }
+    
+    },
       invalidatesTags: ["students"],
     }),
     updateStudentStage: builder.mutation({

@@ -1,11 +1,11 @@
 import { prisma } from '../config/prismaInit';
 import { NextFunction, Request, Response } from 'express';
-import { createSchool, schoolAddress, updateSchool} from '../@types';
+import { createSchool, schoolAddress, updateSchool } from '../@types';
 import { compare, hashedPassword } from '../helpers/bcryptConfig';
 import { createAccessToken } from '../helpers/accessToken';
 import { createRefreshToken } from '../helpers/refreshToken';
 import { refreshTokens, removeRefreshToken } from './renewtoken.controller';
-import * as nodemailer from 'nodemailer';
+import { resetSchoolPassService } from '../services/email.services';
 
 const maxAge = 7 * 24 * 60 * 60 * 1000;
 export const newSchool = async (
@@ -76,8 +76,6 @@ export const loginSchool = async (
       secure: true,
       maxAge,
     });
-
-    localStorage.setItem('jwtToken', accessToken as string)
 
     const loggedInSchool = {
       id: schoolExists.id,
@@ -158,7 +156,7 @@ export const updateSchoolDetails = async (
     // const id = req['payload'].id;
 
     const { schoolName, email, dateOfestablishment } = req.body as updateSchool;
-    const {GPS, POBox, location, website} = req.body as schoolAddress
+    const { GPS, POBox, location, website } = req.body as schoolAddress;
 
     // will uncomment this code later when we are ready for route protection
     // check for who can perform this operation
@@ -184,10 +182,10 @@ export const updateSchoolDetails = async (
         email,
         address: {
           create: {
-           GPS,
-           POBox,
-           location,
-           website
+            GPS,
+            POBox,
+            location,
+            website,
           },
         },
         dateOfestablishment,
@@ -209,13 +207,13 @@ export const deleteSchool = async (
     // check if school exists in db
     const schoolExists = await prisma.school.findFirst({
       where: {
-        id: req.body.id,
+        id: req.params.id,
       },
     });
     if (!schoolExists)
       res.status(404).json({ message: 'school not found', sucess: false });
 
-      // will allow it when we are ready to protect the routes
+    // will allow it when we are ready to protect the routes
 
     // const permittedRole = await prisma.user.findFirst({
     //   where: {
@@ -230,7 +228,7 @@ export const deleteSchool = async (
 
     await prisma.school.delete({
       where: {
-        id: req.body.schoolId,
+        id: req.params.id,
       },
     });
 
@@ -275,8 +273,6 @@ export const findAllSchools = async (
   }
 };
 
-
-
 // School forgot password
 
 export const schoolforgotPassword = async (
@@ -286,8 +282,6 @@ export const schoolforgotPassword = async (
 ) => {
   try {
     const { email } = req.body as createSchool;
-    // const userId = req["payload"].id
-    // console.log(userId)
     const currentSchool = await prisma.school.findUnique({
       where: {
         email,
@@ -297,38 +291,7 @@ export const schoolforgotPassword = async (
 
     const token = await createAccessToken(currentSchool.id);
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.NODEMAILER_HOST,
-      port: (<unknown>process.env.NODEMAILER_PORT) as number,
-      auth: {
-        user: process.env.SENDER_EMAIL,
-        pass: process.env.GOOGLE_APP_PASSWORD,
-      },
-    });
-
-    transporter.verify(function (error, success) {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Server is ready to take our messages');
-      }
-    });
-
-    const mailDetails = {
-      from: process.env.SENDER_EMAIL,
-      to: email,
-      subject: 'Password reset link',
-      html: `<a href="/forgotPassword/" + ${currentSchool.id} + '/' + ${token}>click this link to confirm password reset</a>`,
-    };
-
-    transporter.sendMail(mailDetails, (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log('email sent successfully');
-      }
-    });
-
+    await resetSchoolPassService(email, currentSchool, token);
     await prisma.school.update({
       where: {
         id: currentSchool.id,

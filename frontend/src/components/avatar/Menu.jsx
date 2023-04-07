@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -15,23 +15,31 @@ import Logout from "@mui/icons-material/Logout";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout, logoutSchool } from "../../features/auth/logoutSchoolSlice";
-import { FormControl, Modal, Select } from "@mui/material";
+import { Button, FormControl, Modal, Select, Snackbar } from "@mui/material";
 import { useSendAnnouncementMutation } from "../../api/school/SchoolApi";
+import CloseIcon from "@mui/icons-material/Close";
 
 function AccountMenu() {
   const { loggedInSchool } = useSelector(
     (state) => state.loginSchool?.loggedInSchool
   );
 
-  const { loggedInUser } = useSelector((state) => state?.loginUser?.loggedInUser || '');
-  const {currentUser} = useSelector(state => state?.loginUser)
-  const {accessToken} = useSelector(state => state.loginSchool.loggedInSchool.loggedInSchool)
-  
+  const { loggedInUser } = useSelector(
+    (state) => state?.loginUser?.loggedInUser || ""
+  );
+  const { currentUser } = useSelector((state) => state?.loginUser);
+  const { accessToken } = useSelector(
+    (state) => state.loginSchool.loggedInSchool.loggedInSchool
+  );
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -39,28 +47,30 @@ function AccountMenu() {
     setAnchorEl(null);
   };
 
-  const handleLogout = (e) => {
-    // localStorage.removeItem("applicationState");
-     dispatch(logout());
-    // window.location.replace("/");
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      setShowAlert(false);
+    }, [4000]);
+  }, [successMessage]);
 
-  
   const handleOpen = (e) => setOpenModal(true);
   const handleCloseModal = (e) => setOpenModal(false);
-  const [message , setMessage] = useState('')
+  const [message, setMessage] = useState("");
 
-  const [sendAnnouncement] = useSendAnnouncementMutation()
-  
-  const handleSubmit = e => {
-    e.preventDefault()
+  const [sendAnnouncement] = useSendAnnouncementMutation();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     sendAnnouncement({
       message,
       // Check in with tuffour on this
       adminId: currentUser?.token,
       schoolId: loggedInSchool?.id,
     });
-  }
+    handleCloseModal();
+    setShowAlert(true);
+    setSuccessMessage("Your announcement has been sent successfully");
+  };
 
   const style = {
     position: "absolute",
@@ -73,9 +83,40 @@ function AccountMenu() {
     p: 4,
   };
 
+   const action = (
+     <>
+       <Button color="secondary" size="small" onClick={handleClose}>
+         UNDO
+       </Button>
+       <IconButton
+         size="small"
+         aria-label="close"
+         color="inherit"
+         onClick={handleClose}
+       >
+         <CloseIcon fontSize="small" />
+       </IconButton>
+     </>
+   );
+
+  // Alert snackbar
+  const announcementSent = (
+    <div>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={showAlert}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message={successMessage}
+        action={action}
+      />
+    </div>
+  );
+
   // Modal
   const modal = (
     <div className="">
+      {showAlert && announcementSent}
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -90,14 +131,20 @@ function AccountMenu() {
           <div id="modal-modal-description" sx={{ mt: 2 }}>
             <form action="" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 gap-4  mt-8">
-                <textarea value={message} onChange={e => setMessage(e.target.value)}
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                   placeholder="All students will see this announcement"
+                  required
                   cols={12}
                   rows={5}
                   className="p-4 border-2 border-gray-200 resize-none rounded-xl outline-none"
                 ></textarea>
               </div>
-              <button className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white">
+              <button
+                disabled={!message}
+                className="w-[330px] h-[44px] bg-[#29365F] rounded-md mt-6 text-white"
+              >
                 Send Announcement
               </button>
             </form>
@@ -181,10 +228,12 @@ function AccountMenu() {
           Settings and Preferences
         </MenuItem>
         <Divider />
-        <MenuItem onClick={()=>{
-          localStorage.removeItem("applicationState");
-          window.location.replace("/");
-        }}>
+        <MenuItem
+          onClick={() => {
+            localStorage.removeItem("applicationState");
+            window.location.replace("/");
+          }}
+        >
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
@@ -194,6 +243,5 @@ function AccountMenu() {
     </React.Fragment>
   );
 }
-
 
 export default AccountMenu;
