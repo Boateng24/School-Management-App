@@ -29,10 +29,6 @@ const cloudinaryStorage = new CloudinaryStorage({
 
     const format = mimetypes[file.mimetype];
     const public_id = Date.now() + '-' + file.originalname.split('.')[0];
-<<<<<<< HEAD
-=======
-
->>>>>>> 914b5a070c62507962737ad8ddcebb01b2a61d60
 
     return {
       folder: 'schoolmgtImages',
