@@ -25,6 +25,9 @@ import StudentSidebar from "./components/students/StudentSidebar";
 import StudentReport from "./pages/students/StudentReport";
 import StudentCalender from "./components/students/StudentCalender";
 import StudentsDashboard from "./pages/students/StudentsDashboard";
+import AdminLogin from "./pages/superadmin/AdminLogin";
+import AdminDashboard from "./pages/superadmin/AdminDashboard";
+
 
 function App() {
   return (
@@ -35,7 +38,8 @@ function App() {
           <Routes>
             <Route element={<SignIn />} path="/" />
             <Route element={<SignUp />} path="/signUp" />
-
+            <Route element={<AdminLogin />} path='/admin-login'/>
+            <Route element={<AdminDashboard />} path="admin-dashboard" />
             <Route element={<ForgotPassword />} path="/forgotpassword" />
             <Route
               element={<UsersForgotPassword />}

@@ -6,7 +6,7 @@ import loginSchoolSlice, {
   reHydrateStore,
 } from "../../features/auth/loginSchoolSlice";
 import { studentsApi } from "../../api/students/StudentsApi";
-import { schoolApi } from "../../api/school/SchoolApi";
+import { adminApi } from "../../api/superadmin/SuperAdminApi";
 import loginUserSlice from "../../features/auth/loginUserSlice";
 
 const store = configureStore({
@@ -16,7 +16,7 @@ const store = configureStore({
     logoutSchool: logoutSchoolSlice,
     loginUser: loginUserSlice,
     [studentsApi.reducerPath]: studentsApi.reducer,
-    [schoolApi.reducerPath]: schoolApi.reducer,
+    [adminApi.reducerPath]: adminApi.reducer,
   },
   preloadedState: reHydrateStore(),
   middleware: (getDefaultMiddleware) =>

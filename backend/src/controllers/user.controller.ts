@@ -55,12 +55,31 @@ export const findUsers = async (req:Request, res:Response, next:NextFunction) =>
 
 export const updateUser = async (req:Request, res:Response, next:NextFunction) => {
     try {
+<<<<<<< HEAD
+         const file = req.file
+        console.log('Gididis', file);
+        
+        const{fullname, email, age, gender} = req.body as userupdate;
+        const userUpdate = await prisma.user.update({
+          where: {
+            id: req.params.id,
+          },
+          data: {
+            fullname,
+            email,
+            age,
+            gender,
+            profilePic: file.path,
+          },
+        });
+=======
          const file = req.file as uploadedFile;
          const profilePic = file.path
          const id  = req.params.id
          console.log(file);
         const{fullname, email, age, gender} = req.body as userupdate;
         const userUpdate = await updateUserService({id, fullname, email, age, gender, profilePic})
+>>>>>>> 914b5a070c62507962737ad8ddcebb01b2a61d60
 
         res
           .status(200)

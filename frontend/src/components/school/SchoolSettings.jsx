@@ -16,7 +16,7 @@ import SwipeableViews from "react-swipeable-views";
 import PropTypes from "prop-types";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
-import { useFindAnnouncementQuery, useRemoveSchoolMutation } from "../../api/school/SchoolApi";
+import { useFindAnnouncementQuery, useGetAllSchoolsQuery, useRemoveSchoolMutation } from "../../api/school/SchoolApi";
 import Announcement from "../announcement/Announcement";
 
 function TabPanel(props) {
@@ -72,8 +72,11 @@ const SchoolSettings = () => {
 
   const {data: announcements} = useFindAnnouncementQuery()
   const [removeSchool] = useRemoveSchoolMutation()
+   const {data} = useGetAllSchoolsQuery();
+
   const navigate = useNavigate()
   
+  console.log('All schools' , data);
 
   const handleSchoolDelete = () => {
     removeSchool({id: loggedInSchool?.id})
