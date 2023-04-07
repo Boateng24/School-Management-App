@@ -11,9 +11,10 @@ import AdminNavbar from "../../components/superAdmin/Navbar/Navbar";
 import { useGetAllSchoolsQuery } from "../../api/superadmin/SuperAdminApi";
 import { Box, Fab, IconButton, Modal } from "@mui/material";
 import { createNewSchool } from "../../features/auth/createSchoolSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {Delete , Edit, Add, Visibility} from '@mui/icons-material'
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useRemoveSchoolMutation } from "../../api/school/SchoolApi";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -44,6 +45,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 export default function AdminDashboard() {
 
  const [allSchools , setAllSchools] = React.useState([])
+  const { loggedInAdmin } = useSelector((state) => state.superAdmin);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -108,6 +110,14 @@ export default function AdminDashboard() {
      // navigate("/cool");
    };
 
+   const {adminId} = useParams()
+
+   const [removeSchool] = useRemoveSchoolMutation()
+
+   const handleSchoolDelete = () => {
+    removeSchool( {id: loggedInAdmin?.loggedInUser?.id} );
+    // alert("School deleted successfully")
+   }
 
   return (
     <div className="">
@@ -258,7 +268,7 @@ export default function AdminDashboard() {
                         {address?.map(({ website }) => website)}
                       </StyledTableCell>
                       <StyledTableCell align="right">
-                        <IconButton>
+                        <IconButton onClick={handleSchoolDelete}>
                           <Delete />
                         </IconButton>
                         <IconButton

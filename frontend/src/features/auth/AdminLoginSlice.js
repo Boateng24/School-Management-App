@@ -62,7 +62,7 @@ const AdminLoginSlice = createSlice({
       })
       .addCase(adminLogin.fulfilled, (state, action) => {
         state.isLoggingIn = false;
-        state.loggedInSchool = action.payload;
+        state.loggedInAdmin = action.payload;
         state.error = "";
       })
       .addCase(adminLogin.rejected, (state, {payload}) => {

@@ -210,8 +210,10 @@ export const deleteSchool = async (
         id: req.params.id,
       },
     });
-    if (!schoolExists)
-      res.status(404).json({ message: 'school not found', sucess: false });
+    if (!schoolExists){
+       return res.status(404).json({ message: 'school not found', sucess: false })
+      }
+     
 
       // will allow it when we are ready to protect the routes
 

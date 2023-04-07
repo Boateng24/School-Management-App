@@ -18,16 +18,16 @@ const SchoolDetails = () => {
   }, []);
 
   const { schoolId } = useParams();
-  console.log('School Id' , schoolId);
   console.log("All", allSchools?.allSchools);
   const currentSchool = allSchools?.allSchools?.filter(
-    (school) => school.id == schoolId
+    (school) => school.id === schoolId
   );
 
- const filtered = [1,2,3,4,5].filter(number => number === 3)
- console.log('Filtered', filtered);
+  /* email , name , id , address { GPS, POBox,createdAt,location,schoolId,updatedAt,website}
 
-  console.log("Current School", currentSchool && currentSchool[0]?.schoolName);
+
+*/
+  console.log("Current School", currentSchool && currentSchool[0]);
 
   return (
     <>
@@ -36,6 +36,12 @@ const SchoolDetails = () => {
         <div>
           <h1> School Name: {currentSchool && currentSchool[0]?.schoolName}</h1>
           <h1> School Email: {currentSchool && currentSchool[0]?.email}</h1>
+          <h1> School Email: {currentSchool && currentSchool[0]?.address[0]?.GPS}</h1>
+          <h1> School Email: {currentSchool && currentSchool[0]?.address[0]?.location}</h1>
+          <h1> School Email: {currentSchool && currentSchool[0]?.address[0]?.website}</h1>
+          <h1> School Email: {currentSchool && currentSchool[0]?.address[0]?.createdAt}</h1>
+          <h1> School Email: {currentSchool && currentSchool[0]?.address[0]?.upatedAt}</h1>
+          <h1> School Email: {currentSchool && currentSchool[0]?.address[0]?.POBox}</h1>
         </div>
       }
     </>
