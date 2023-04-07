@@ -127,8 +127,6 @@ const announcementMain = async () => {
          },
        },
      });
-     console.log(findAdmins.length);
-
      findAdmins.filter((admin) => {
       return admin.id
      })
@@ -155,20 +153,21 @@ export const superAdminCred = async () => {
     const superAdmin = await prisma.user.createMany({
       data: [
         {
-          fullname: 'SuperAdmin',
-          email: 'tuffour.boateng@amalitech.com',
+          fullname: process.env.SUPERADMINNAME,
+          email: process.env.SUPERADMINEMAIL1,
           password: await hashedPassword(process.env.SUPERADMINTUFF),
           role: Role.superAdmin,
         },
         {
-          fullname: 'SuperAdmin',
-          email: 'robert.sam@amalitech.com',
+          fullname: process.env.SUPERADMINNAME,
+          email: process.env.SUPERADMINEMAIL2,
           password: await hashedPassword(process.env.SUPERADMINROBS),
           role: Role.superAdmin,
         },
       ],
     });
-    console.log({count: superAdmin.count})
+    console.log(superAdmin);
+  
   } catch (error) {
     return error
   }
