@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,8 +12,8 @@ import { useGetAllSchoolsQuery } from "../../api/superadmin/SuperAdminApi";
 import { Box, Fab, IconButton, Modal } from "@mui/material";
 import { createNewSchool } from "../../features/auth/createSchoolSlice";
 import { useDispatch, useSelector } from "react-redux";
-import {Delete , Edit, Add, Visibility} from '@mui/icons-material'
-import { useNavigate, useParams } from "react-router-dom";
+import {Delete, Add, Visibility} from '@mui/icons-material'
+import { useNavigate } from "react-router-dom";
 import { useRemoveSchoolMutation } from "../../api/school/SchoolApi";
 
 
@@ -47,6 +47,7 @@ export default function AdminDashboard() {
  const [allSchools , setAllSchools] = React.useState([])
   const { loggedInAdmin } = useSelector((state) => state.superAdmin);
 
+  console.log('All', allSchools);
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -110,12 +111,10 @@ export default function AdminDashboard() {
      // navigate("/cool");
    };
 
-   const {adminId} = useParams()
-
    const [removeSchool] = useRemoveSchoolMutation()
 
-   const handleSchoolDelete = () => {
-    removeSchool( {id: loggedInAdmin?.loggedInUser?.id} );
+   const handleSchoolDelete = (id) => {
+    removeSchool( {id} );
     // alert("School deleted successfully")
    }
 
@@ -251,11 +250,11 @@ export default function AdminDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {allSchools?.allSchools?.map(
+                {!allSchools ? "Me" : allSchools?.allSchools?.map(
                   ({ schoolName, email, id, address }) => (
                     <StyledTableRow key={id}>
                       <StyledTableCell component="th" scope="row">
-                        {schoolName}
+                        {schoolName || 'Eirrr'}
                       </StyledTableCell>
                       <StyledTableCell align="right">{email}</StyledTableCell>
                       <StyledTableCell align="right">
@@ -268,7 +267,7 @@ export default function AdminDashboard() {
                         {address?.map(({ website }) => website)}
                       </StyledTableCell>
                       <StyledTableCell align="right">
-                        <IconButton onClick={handleSchoolDelete}>
+                        <IconButton onClick={handleSchoolDelete(id)}>
                           <Delete />
                         </IconButton>
                         <IconButton

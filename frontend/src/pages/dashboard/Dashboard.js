@@ -16,8 +16,7 @@ import {
 
 const Dashboard = () => {
   const [studentCount, setStudentCount] = useState();
-  // const { data } = useFindAllStudentsQuery();
-  // console.log("Find all students", data);
+
   const data = useCountAllStudentsQuery();
   
 
@@ -33,8 +32,6 @@ const Dashboard = () => {
     fetchStudents();
   }, []);
 
-  // const deleted = useDeleteStudentMutation("/clar1vqa30004udo4qhub4hzr");
-  // console.log(deleted, "deleted");
   return (
     <>
       <div className=" w-[99vw] mt-[120px] ">

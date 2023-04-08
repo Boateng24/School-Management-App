@@ -9,9 +9,8 @@ const AdminLogin = () => {
   const { loggedInAdmin, error } = useSelector((state) => state.superAdmin);
   const [errorMessage, setErrorMessage] = useState(error || "");
 
-  console.log("Logged in role", loggedInAdmin?.loggedInUser?.role);
 
-  console.log("Error is", error);
+ 
   const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
  
