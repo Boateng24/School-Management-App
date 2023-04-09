@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -70,6 +70,8 @@ export default function AdminDashboard() {
     const [email , setEmail] = React.useState("")
     const [password , setPassword] = React.useState("")
     const [confirmPassword , setConfirmPassword] = React.useState("")
+    const [successMessage, setSuccessMessage] = useState("")
+    const [showAlert , setShowAlert ] = useState(false)
 
     const navigate = useNavigate()
 
@@ -116,8 +118,21 @@ export default function AdminDashboard() {
     const handleSchoolDelete = (id) => {
       removeSchool( {id} );
       window.location.reload()
-    alert("School deleted successfully")
+  showAlert(true)
    }
+
+ useEffect(()=>{
+  if(showAlert){
+    setSuccessMessage("School deleted successfully")
+  }
+
+  return ()=>{
+    setInterval(()=>{
+      setSuccessMessage("")
+    }, 40000)
+  }
+ },[])
+
 
   return (
     <div className="">
@@ -227,6 +242,14 @@ export default function AdminDashboard() {
       </Modal>
 
       {/* End Modal */}
+      <div className="flex items-center justify-center">
+        {successMessage && <div className="bg-green-100 p-4 font-bold text-center w-96 rounded-lg">
+          <p className=" text-green-700 ">
+            {" "}
+            {successMessage.length > 0 && successMessage}
+          </p>
+        </div>}
+      </div>
       <div className="flex justify-center items-center">
         <div className=" w-[97vw] ">
           <TableContainer
@@ -251,11 +274,9 @@ export default function AdminDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {!allSchools?.allSchools.length > 0 ? (
+                {!allSchools?.allSchools?.length > 0 ? (
                   <StyledTableRow>
-                    <StyledTableCell>
-                      No data yet
-                    </StyledTableCell>
+                    <StyledTableCell>No data yet</StyledTableCell>
                   </StyledTableRow>
                 ) : (
                   allSchools?.allSchools?.map(
