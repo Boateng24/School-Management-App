@@ -156,7 +156,7 @@ export const superAdminCred = async () => {
           fullname: process.env.SUPERADMINNAME,
           email: process.env.SUPERADMINEMAIL1,
           password: await hashedPassword(process.env.SUPERADMINTUFF),
-          role: Role.superAdmin,
+          role: Role.superAdmin 
         },
         {
           fullname: process.env.SUPERADMINNAME,

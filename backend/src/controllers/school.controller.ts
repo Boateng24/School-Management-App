@@ -140,7 +140,7 @@ export const getSchool = async (
         dateOfestablishment: true,
       },
     });
-
+  
     res.status(200).json({ findSchool, success: true });
   } catch (error) {
     next(error);
@@ -287,6 +287,9 @@ export const schoolforgotPassword = async (
         email,
       },
     });
+    if(!currentSchool){
+      return res.status(404).json({message:"School not found"});
+    }
     console.log(currentSchool.id);
 
     const token = await createAccessToken(currentSchool.id);
