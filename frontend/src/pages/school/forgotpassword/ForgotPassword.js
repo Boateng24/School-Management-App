@@ -1,13 +1,23 @@
 import pic from "../../../assets/pic.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { schoolForgotPassword } from "../../../features/auth/forgotPasswordSlice";
+import { useState } from "react";
 // import { schoolLogin } from "../../features/auth/schoolLoginSlice";
 
 const ForgotPassword = () => {
+
+  const [email, setEmail] = useState("")
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const handleForgotPassword = (e) => {
     e.preventDefault();
+    dispatch(schoolForgotPassword({email}))
+    setInterval(()=>{
+      navigate("/")
+    }, 4000)
+    
   };
   return (
     <div className="flex">
@@ -34,8 +44,8 @@ const ForgotPassword = () => {
               Email
             </label>
             <input
-              // onChange={onChange}
-              //   value={title}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               type="email"
               required
               name="email"

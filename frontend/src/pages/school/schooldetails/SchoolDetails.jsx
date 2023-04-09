@@ -117,19 +117,23 @@ const SchoolDetails = () => {
               <hr />
               <p className="text-gray-500 my-3 outline-none">
                 <span className="font-semibold text-gray-500">Address : </span>
-                {currentSchool && currentSchool[0]?.schoolName}
+                {currentSchool &&
+                  currentSchool[0]?.address?.map(
+                    ({ GPS, POBox, location }) => `${GPS}, ${POBox}, ${location[0]}`
+                  )}
               </p>
               <hr />
               <p className="text-gray-500 my-3 outline-none">
                 <span className="font-semibold text-gray-500">Website : </span>
-                {currentSchool ? currentSchool[0]?.schoolName : "Unknown"}
+                {currentSchool &&
+                  currentSchool[0]?.address?.map(({ website }) => website)}
               </p>
               <hr />
               <p className="text-gray-500 my-3 outline-none">
                 <span className="font-semibold text-gray-500">
                   Date Joined :{" "}
                 </span>
-                {currentSchool ? currentSchool[0]?.schoolName : "Unknown"}
+                {new Date().toDateString()}
               </p>
               <hr />
               <p className="text-gray-500 my-4 outline-none">
