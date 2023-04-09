@@ -65,13 +65,13 @@ const Student = ({
       setShowError(true);
       setTimeout(() => {
         window.location.reload();
-      }, 26000);
+      }, 4000);
     } else {
       setShowError(false);
     }
     setTimeout(() => {
       setShowError(false);
-      // window.location.reload();
+      window.location.reload();
     }, 4000);
   }, [successMessage]);
 

@@ -47,7 +47,7 @@ export default function AdminDashboard() {
  const [allSchools , setAllSchools] = React.useState([])
   const { loggedInAdmin } = useSelector((state) => state.superAdmin);
 
-  console.log('All', allSchools);
+  
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -109,13 +109,14 @@ export default function AdminDashboard() {
      handleClose()
      window.location.reload()
      // navigate("/cool");
-   };
-
-   const [removeSchool] = useRemoveSchoolMutation()
-
-   const handleSchoolDelete = (id) => {
-    removeSchool( {id} );
-    // alert("School deleted successfully")
+    };
+    
+    const [removeSchool] = useRemoveSchoolMutation()
+    
+    const handleSchoolDelete = (id) => {
+      removeSchool( {id} );
+      window.location.reload()
+    alert("School deleted successfully")
    }
 
   return (
@@ -250,33 +251,41 @@ export default function AdminDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {!allSchools ? "Me" : allSchools?.allSchools?.map(
-                  ({ schoolName, email, id, address }) => (
-                    <StyledTableRow key={id}>
-                      <StyledTableCell component="th" scope="row">
-                        {schoolName || 'Eirrr'}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">{email}</StyledTableCell>
-                      <StyledTableCell align="right">
-                        {address?.map(({ createdAt }) => createdAt)}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {address?.map(({ location }) => location)}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        {address?.map(({ website }) => website)}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        <IconButton onClick={handleSchoolDelete(id)}>
-                          <Delete />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => navigate(`/admin-dashboard/${id}`)}
-                        >
-                          <Visibility />
-                        </IconButton>
-                      </StyledTableCell>
-                    </StyledTableRow>
+                {!allSchools?.allSchools.length > 0 ? (
+                  <StyledTableRow>
+                    <StyledTableCell>
+                      No data yet
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ) : (
+                  allSchools?.allSchools?.map(
+                    ({ schoolName, email, id, address }) => (
+                      <StyledTableRow key={id}>
+                        <StyledTableCell component="th" scope="row">
+                          {schoolName || "Eirrr"}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">{email}</StyledTableCell>
+                        <StyledTableCell align="right">
+                          {address?.map(({ createdAt }) => createdAt)}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          {address?.map(({ location }) => location)}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          {address?.map(({ website }) => website)}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          <IconButton onClick={() => handleSchoolDelete(id)}>
+                            <Delete />
+                          </IconButton>
+                          <IconButton
+                            onClick={() => navigate(`/admin-dashboard/${id}`)}
+                          >
+                            <Visibility />
+                          </IconButton>
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    )
                   )
                 )}
               </TableBody>
