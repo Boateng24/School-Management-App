@@ -2,25 +2,77 @@ import pic from "../../../assets/pic.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { schoolForgotPassword } from "../../../features/auth/forgotPasswordSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button, IconButton, Snackbar } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 // import { schoolLogin } from "../../features/auth/schoolLoginSlice";
 
 const ForgotPassword = () => {
-
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState("");
+  const [open, setOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const { error } = useSelector((state) => state.schoolForgotPassword);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleForgotPassword = (e) => {
     e.preventDefault();
-    dispatch(schoolForgotPassword({email}))
-    setInterval(()=>{
-      navigate("/")
-    }, 4000)
-    
+    dispatch(schoolForgotPassword({ email }));
+    setShowError(true)
+     console.log("Error", error);
   };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+ 
+
+    useEffect(() => {
+      if (error) {
+        setShowError(true);
+        setEmail("");
+      } else {
+        setShowError(false);
+      }
+      setTimeout(() => {
+        setShowError(false);
+      }, 4000);
+    }, [error]);
+
+
+  const action = (
+    <>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+
   return (
     <div className="flex">
+      <div>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={showError}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message={error || `Reset link has been sent to ${email}`}
+          action={action}
+        />
+      </div>
       <div className="hidden lg:flex min-w-[50vw] h-[100vh] bg-[#29365f] align-center justify-center flex-col">
         <h1 className="text-5xl mt-16 px-16 text-white font-bold">
           School Management System

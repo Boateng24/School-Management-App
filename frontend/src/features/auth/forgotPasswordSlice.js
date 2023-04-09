@@ -53,9 +53,9 @@ const schoolForgotPasswordSlice = createSlice({
         state.error = "";
       })
       .addCase(schoolForgotPassword.rejected, (state, action) => {
-        // const { message } = action.payload;
+        const { message } = action.payload;
         state.isLoggingIn = false;
-        state.error = "Invalid credentials";
+        state.error = "School not found";
       });
   },
 });
