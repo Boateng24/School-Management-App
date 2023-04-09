@@ -6,13 +6,14 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-
+import InputBase from "@mui/material/InputBase";
+import SearchIcon from "@mui/icons-material/Search";
 import AdminNavbar from "../../components/superAdmin/Navbar/Navbar";
 import { useGetAllSchoolsQuery } from "../../api/superadmin/SuperAdminApi";
 import { Box, Fab, IconButton, Modal } from "@mui/material";
 import { createNewSchool } from "../../features/auth/createSchoolSlice";
 import { useDispatch, useSelector } from "react-redux";
-import {Delete, Add, Visibility} from '@mui/icons-material'
+import {Delete, Add, Visibility, Search} from '@mui/icons-material'
 import { useNavigate } from "react-router-dom";
 import { useRemoveSchoolMutation } from "../../api/school/SchoolApi";
 
@@ -38,6 +39,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
+
+
 
 
 
@@ -72,6 +76,7 @@ export default function AdminDashboard() {
     const [confirmPassword , setConfirmPassword] = React.useState("")
     const [successMessage, setSuccessMessage] = useState("")
     const [showAlert , setShowAlert ] = useState(false)
+    const [searchTerm, setSearchTerm] = useState("")
 
     const navigate = useNavigate()
 
@@ -133,11 +138,26 @@ export default function AdminDashboard() {
   }
  },[])
 
+ const handleSearchTerm = (e) => {
+  setSearchTerm(e.target.value)
+ }
+
 
   return (
     <div className="">
       <AdminNavbar />
-      <div className="flex justify-end px-6">
+      <div className="flex justify-between items-center px-6 bg-gray-50">
+        <div className="grid grid-cols-1 gap-4">
+          <input
+            onChange={handleSearchTerm}
+            value={searchTerm}
+            type="text"
+            name="schoolName"
+            required
+            placeholder="Search school"
+            className="w-[360px] h-[44px] border-[1px] rounded-[8px] border-[#D0D5DD] outline-none px-4"
+          />
+        </div>
         <Box sx={{ "& > :not(style)": { m: 1 } }} onClick={handleOpen}>
           <Fab color="secondary" aria-label="add">
             <Add />
@@ -242,13 +262,17 @@ export default function AdminDashboard() {
       </Modal>
 
       {/* End Modal */}
+
+     
       <div className="flex items-center justify-center">
-        {successMessage && <div className="bg-green-100 p-4 font-bold text-center w-96 rounded-lg">
-          <p className=" text-green-700 ">
-            {" "}
-            {successMessage.length > 0 && successMessage}
-          </p>
-        </div>}
+        {successMessage && (
+          <div className="bg-green-100 p-4 font-bold text-center w-96 rounded-lg">
+            <p className=" text-green-700 ">
+              {" "}
+              {successMessage.length > 0 && successMessage}
+            </p>
+          </div>
+        )}
       </div>
       <div className="flex justify-center items-center">
         <div className=" w-[97vw] ">
@@ -279,8 +303,14 @@ export default function AdminDashboard() {
                     <StyledTableCell>No data yet</StyledTableCell>
                   </StyledTableRow>
                 ) : (
-                  allSchools?.allSchools?.map(
-                    ({ schoolName, email, id, address }) => (
+                  allSchools?.allSchools
+                    ?.filter(({ schoolName }) =>
+                      schoolName
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                    )
+                    .map(({ schoolName, email, id, address }) => (
+                      
                       <StyledTableRow key={id}>
                         <StyledTableCell component="th" scope="row">
                           {schoolName || "Eirrr"}
@@ -306,11 +336,13 @@ export default function AdminDashboard() {
                           </IconButton>
                         </StyledTableCell>
                       </StyledTableRow>
-                    )
-                  )
+                    ))
+                    
                 )}
               </TableBody>
             </Table>
+
+            
           </TableContainer>
         </div>
       </div>

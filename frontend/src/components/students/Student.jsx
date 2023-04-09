@@ -69,10 +69,10 @@ const Student = ({
     } else {
       setShowError(false);
     }
-    setTimeout(() => {
-      setShowError(false);
-      window.location.reload();
-    }, 4000);
+    // setTimeout(() => {
+    //   setShowError(false);
+    //   window.location.reload();
+    // }, 4000);
   }, [successMessage]);
 
   // Display error message
@@ -136,6 +136,7 @@ const Student = ({
     setIsHovered(false);
   };
 
+  
   return (
     <div
       onMouseOver={handleMouseOver}
