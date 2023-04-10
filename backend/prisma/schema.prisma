@@ -27,6 +27,8 @@ model User{
   stage Stage?
   address UserAddress?
   score Scores[]
+  school School? @relation(fields: [schoolId], references: [id])
+  schoolId String?
   profilePic String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -76,6 +78,7 @@ model School{
   dateOfestablishment String?
   address SchoolAddress[]
   announcement Announcement[]
+  students User[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

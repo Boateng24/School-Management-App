@@ -297,16 +297,29 @@ export const schoolforgotPassword = async (
     const token = await createAccessToken(currentSchool.id);
 
     await resetSchoolPassService(email, currentSchool, token);
-    await prisma.school.update({
-      where: {
-        id: currentSchool.id,
-      },
-      data: {
-        password: req.body.password as string,
-      },
-    });
     res.json({ success: true });
   } catch (error) {
     next(error.message);
   }
 };
+
+export const resetPassword = async (req:Request, res:Response, next:NextFunction) =>{
+  try {
+      const {password, confirmPassword} = req.body
+     if(password !== confirmPassword){
+      return res.status(400).json({message: "Password does not match"})
+     }
+
+     await prisma.school.update({
+      data:{
+        password: await hashedPassword(password)
+      },
+      where:{
+        id: <unknown>req.query.id as string
+      }
+     })
+     return res.status(200).json({message: "reset password successful"})
+  } catch (error) {
+    next(error)
+  }
+}

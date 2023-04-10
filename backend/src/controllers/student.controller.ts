@@ -132,3 +132,26 @@ export const allJuniorHighStudents = async(req:Request, res:Response, next:NextF
         next(error)
     }
 }
+
+
+export const findallstudentsBySchool = async(req:Request, res:Response, next:NextFunction) => {
+    try {
+        const findStudentsByAdmin = await prisma.school.findMany({
+            where:{
+                id: req.params.id
+            },
+            select:{
+                students:{
+                    where:{
+                        role:{
+                            equals:"student"
+                        }
+                    }
+                }
+            }
+        })
+        return res.status(200).json({findStudentsByAdmin, success:true})
+    } catch (error) {
+        next(error)
+    }
+}
