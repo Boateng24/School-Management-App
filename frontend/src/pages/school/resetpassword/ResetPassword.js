@@ -1,16 +1,75 @@
 import pic from "../../../assets/pic.png";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { Button, IconButton, Snackbar } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 // import { schoolLogin } from "../../features/auth/schoolLoginSlice";
 
 const ForgotPassword = () => {
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [showError, setShowError] = useState(false);
+  const [open, setOpen] = useState(false);
+  const { error } = useSelector((state) => state.schoolResetPassword);
+
+  const handleNewPasswordChange = (e) => setNewPassword(e.target.value);
+  const handleConfirmNewPasswordChange = (e) =>
+    setConfirmNewPassword(e.target.value);
   const dispatch = useDispatch();
 
-  const handleForgotPassword = (e) => {
+  const validation = newPassword === confirmNewPassword;
+ 
+  const handleResetPassword = (e) => {
     e.preventDefault();
+    setShowError(true);
+    if (validation) {
+      setNewPassword("");
+      setConfirmNewPassword("");
+    }
+    
   };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setShowError(false);
+  };
+
+  // Display error message
+  const action = (
+    <>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
+
   return (
     <div className="flex">
+      <div>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          open={showError}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message={
+            validation
+              ? "Password reset successfully"
+              : "Passwords do not match"
+          }
+          action={action}
+        />
+      </div>
       <div className="hidden lg:flex min-w-[50vw] h-[100vh] bg-[#29365f] align-center justify-center flex-col">
         <h1 className="text-5xl mt-16 px-16 text-white font-bold">
           School Management System
@@ -24,7 +83,7 @@ const ForgotPassword = () => {
         <img src={pic} width="700" alt="background" />
       </div>
       <div className=" flex h-[100vh] flex-1 justify-center items-center">
-        <form action="" onSubmit={handleForgotPassword}>
+        <form onSubmit={handleResetPassword}>
           <h1 className="text-3xl text-gray-700 text-center font-[600] mb-8">
             Reset Password
           </h1>
@@ -34,8 +93,8 @@ const ForgotPassword = () => {
               New Password
             </label>
             <input
-              // onChange={onChange}
-              //   value={title}
+              onChange={handleNewPasswordChange}
+              value={newPassword}
               type="password"
               required
               name="newPassword"
@@ -51,8 +110,8 @@ const ForgotPassword = () => {
               Confirm New Password
             </label>
             <input
-              // onChange={onChange}
-              //   value={title}
+              onChange={handleConfirmNewPasswordChange}
+              value={confirmNewPassword}
               type="password"
               required
               name="confirmNewPassword"
@@ -69,15 +128,6 @@ const ForgotPassword = () => {
             >
               Save new password
             </button>
-            {/* <div className="w-[360px]  text-gray-500 h-[44px] text-center rounded-[8px] mt-4">
-              Already have an account?{" "}
-              <span>
-                {" "}
-                <Link to="/" className="underline">
-                  Login
-                </Link>
-              </span>
-            </div> */}
           </div>
         </form>
       </div>

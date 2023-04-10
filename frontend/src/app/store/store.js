@@ -9,6 +9,7 @@ import { studentsApi } from "../../api/students/StudentsApi";
 import { adminApi } from "../../api/superadmin/SuperAdminApi";
 import loginUserSlice from "../../features/auth/loginUserSlice";
 import schoolForgotPasswordSlice  from "../../features/auth/forgotPasswordSlice";
+import  schoolResetPasswordSlice  from "../../features/auth/resetPasswordSlice";
 import AdminLoginSlice from "../../features/auth/AdminLoginSlice";
 
 const store = configureStore({
@@ -18,6 +19,7 @@ const store = configureStore({
     logoutSchool: logoutSchoolSlice,
     loginUser: loginUserSlice,
     schoolForgotPassword: schoolForgotPasswordSlice,
+    schoolResetPassword: schoolResetPasswordSlice,
     superAdmin: AdminLoginSlice,
     [studentsApi.reducerPath]: studentsApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
