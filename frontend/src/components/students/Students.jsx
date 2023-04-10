@@ -151,11 +151,6 @@ const Students = () => {
     </>
   );
 
-  const filtered = (search) => {
-    return myData.fetchstudents?.filter(student => student.fullname.toLowerCase().includes(searchTerm.toLowerCase()))
-  }
-
-  console.log('Filtered', filtered);
 
   return (
     <div className=" w-[94vw]  mt-[120px] m-auto">
