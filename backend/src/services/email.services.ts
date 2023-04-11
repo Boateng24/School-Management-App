@@ -107,7 +107,7 @@ export const resetSchoolPassService = async(email:string, currentSchool:School, 
            from: process.env.SENDER_EMAIL,
            to: email,
            subject: 'Password reset link',
-           html: `<a href="/forgotPassword/" + ${currentSchool.id} + '/' + ${token}>click this link to confirm password reset</a>`,
+           html: `<a href="http://localhost:3000/resetPassword" + ${currentSchool.id} + '/' + ${token}>click this link to confirm password reset</a>`,
          };
 
          const resetschoolPass = transporter.sendMail(mailDetails, (err) => {
