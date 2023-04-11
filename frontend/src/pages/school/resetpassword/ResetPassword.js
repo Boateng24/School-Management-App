@@ -18,6 +18,7 @@ const ForgotPassword = () => {
   const dispatch = useDispatch();
 
   const validation = newPassword === confirmNewPassword;
+
  
   const handleResetPassword = (e) => {
     e.preventDefault();
@@ -94,6 +95,7 @@ const ForgotPassword = () => {
             </label>
             <input
               onChange={handleNewPasswordChange}
+             
               value={newPassword}
               type="password"
               required
