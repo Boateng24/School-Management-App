@@ -13,6 +13,6 @@ schoolRouter.delete('/schoolLogout', logoutSchool)
 schoolRouter.patch('/school/update/:id', updateSchoolDetails)
 schoolRouter.delete('/school/delete/:id', deleteSchool)
 schoolRouter.post('/schoolforgotPassword', schoolforgotPassword)
-schoolRouter.post('/resetPassword', resetPassword)
+schoolRouter.patch('/resetPassword', resetPassword)
 
 export default schoolRouter
