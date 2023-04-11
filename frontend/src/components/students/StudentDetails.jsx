@@ -76,6 +76,7 @@ const StudentDetails = () => {
   }, []);
 
   const currentStudentDetails = details.filter(({ id }) => id === studentId);
+  console.log( currentStudentDetails);
 
 
   return (

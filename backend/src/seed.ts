@@ -54,9 +54,21 @@ const userMain = async () => {
 
 const schoolMain = async () => {
   try {
-    await prisma.school.deleteMany({});
+    await prisma.school.deleteMany();
+    const findStudent = await prisma.user.findMany({
+      where: {
+        role: {
+          equals: 'student',
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+    const studentIds = findStudent.map((student) => student.id);
+
     for (let i = 0; i < 100; i++) {
-      await prisma.school.create({
+      const school = await prisma.school.create({
         data: {
           schoolName: faker.company.name(),
           email: faker.helpers.unique(faker.internet.email),
@@ -73,11 +85,22 @@ const schoolMain = async () => {
           },
         },
       });
+
+      await prisma.school.update({
+        where: { id: school.id },
+        data: {
+          students: {
+            connect: studentIds.map((id) => ({ id })),
+          },
+        },
+      });
     }
   } catch (error: any) {
     return error;
   }
 };
+
+
 
 const studentScoresMain = async () => {
   try {
@@ -156,7 +179,7 @@ export const superAdminCred = async () => {
           fullname: process.env.SUPERADMINNAME,
           email: process.env.SUPERADMINEMAIL1,
           password: await hashedPassword(process.env.SUPERADMINTUFF),
-          role: Role.superAdmin,
+          role: Role.superAdmin 
         },
         {
           fullname: process.env.SUPERADMINNAME,

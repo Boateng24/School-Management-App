@@ -1,26 +1,74 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { adminLogin } from "../../features/auth/AdminLoginSlice";
+import { Navigate, redirect } from "react-router-dom";
 
 const AdminLogin = () => {
-  const [email , setEmail] = useState('')
-  const [password , setPassword] = useState('')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { loggedInAdmin, error } = useSelector((state) => state.superAdmin);
+  const [errorMessage, setErrorMessage] = useState(error || "");
 
-  const handleEmail = e => setEmail(e.target.value)
-  const handlePassword = e => setPassword(e.target.value)
 
-  const dispatch = useDispatch()
+ 
+  const handleEmail = (e) => setEmail(e.target.value);
+  const handlePassword = (e) => setPassword(e.target.value);
+ 
+
+  const dispatch = useDispatch();
 
   const handleAdminLogin = (e) => {
-    e.preventDefault()
-    dispatch(adminLogin({
-      email, 
-      password
-    }))
-  }
+    e.preventDefault();
+    dispatch(
+      adminLogin({
+        email,
+        password,
+      })
+    );
+  };
 
+  React.useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
+    }
+
+    return () => {
+      setInterval(() => {
+        setErrorMessage("");
+      }, [5000]);
+    };
+  }, [error]);
+
+    // React.useEffect(() => {
+    //   if (loggedInAdmin === null) {
+    //       return redirect("/admin-login");
+    //   }
+    // }, []);
+
+ 
+
+  if (loggedInAdmin?.loggedInUser?.role === "superAdmin") {
+    return (
+      <Navigate to={`${loggedInAdmin?.loggedInUser?.id}`} />
+    );
+  }
+ 
+
+
+  // const checkConditions = errorMessage && email && password
   return (
     <div className="bg-gray-200 h-screen flex justify-center items-center flex-col">
+     
+      {error && (
+        <p
+          className={
+            errorMessage.length > 0 && "bg-red-100 text-red-700 border-2 border-red-300 w-96 p-4 rounded-lg font-bold"
+          }
+        >
+          {" "}
+          {errorMessage}
+        </p>
+      )}
       <h1 className="font-bold text-3xl text-center text-gray-600 pt-8 mb-6">
         Admin Login
       </h1>

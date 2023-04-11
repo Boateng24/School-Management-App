@@ -49,7 +49,7 @@ const StudentsDashboard = () => {
 
   // Find announcements
   const {data} = useFindAnnouncementQuery();
-  console.log('Announcement' , data);
+ 
  
 
   return (

@@ -65,14 +65,14 @@ const Student = ({
       setShowError(true);
       setTimeout(() => {
         window.location.reload();
-      }, 6000);
+      }, 4000);
     } else {
       setShowError(false);
     }
-    setTimeout(() => {
-      setShowError(false);
-      // window.location.reload();
-    }, 4000);
+    // setTimeout(() => {
+    //   setShowError(false);
+    //   window.location.reload();
+    // }, 4000);
   }, [successMessage]);
 
   // Display error message
@@ -136,6 +136,7 @@ const Student = ({
     setIsHovered(false);
   };
 
+  
   return (
     <div
       onMouseOver={handleMouseOver}
@@ -205,7 +206,7 @@ const Student = ({
         <p className="w-96 text-right mt-2 mx-8">{gender}</p>
       </div>
       <div className="flex w-[10%] justify-end py-4">
-        {isHovered && (
+        {true && (
           <IconButton onClick={handleOpen}>
             <DeleteIcon />
           </IconButton>

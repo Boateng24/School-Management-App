@@ -140,7 +140,7 @@ export const getSchool = async (
         dateOfestablishment: true,
       },
     });
-
+  
     res.status(200).json({ findSchool, success: true });
   } catch (error) {
     next(error);
@@ -210,8 +210,10 @@ export const deleteSchool = async (
         id: req.params.id,
       },
     });
-    if (!schoolExists)
-      res.status(404).json({ message: 'school not found', sucess: false });
+    if (!schoolExists){
+       return res.status(404).json({ message: 'school not found', sucess: false })
+      }
+     
 
     // will allow it when we are ready to protect the routes
 
@@ -287,21 +289,37 @@ export const schoolforgotPassword = async (
         email,
       },
     });
+    if(!currentSchool){
+      return res.status(404).json({message:"School not found"});
+    }
     console.log(currentSchool.id);
 
     const token = await createAccessToken(currentSchool.id);
 
     await resetSchoolPassService(email, currentSchool, token);
-    await prisma.school.update({
-      where: {
-        id: currentSchool.id,
-      },
-      data: {
-        password: req.body.password as string,
-      },
-    });
     res.json({ success: true });
   } catch (error) {
     next(error.message);
   }
 };
+
+export const resetPassword = async (req:Request, res:Response, next:NextFunction) =>{
+  try {
+      const {password, confirmPassword} = req.body
+     if(password !== confirmPassword){
+      return res.status(400).json({message: "Password does not match"})
+     }
+
+     await prisma.school.update({
+      data:{
+        password: await hashedPassword(password)
+      },
+      where:{
+        id: <unknown>req.query.id as string
+      }
+     })
+     return res.status(200).json({message: "reset password successful"})
+  } catch (error) {
+    next(error)
+  }
+}

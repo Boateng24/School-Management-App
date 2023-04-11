@@ -4,20 +4,16 @@ import {
   Button,
   FormControl,
   IconButton,
-  InputLabel,
   MenuItem,
   Modal,
   Select,
   Snackbar,
-  Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import SchoolIcon from "@mui/icons-material/School";
-import VerifiedIcon from "@mui/icons-material/Verified";
-// import AddIcon from "@mui/icons-material/Add";
 import Student from "./Student";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   useAddStudentMutation,
   useFindAllStudentsQuery,
@@ -56,8 +52,6 @@ const Students = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [addNewStudent, setAddNewStudent] = useAddStudentMutation();
 
-  
-
   const style = {
     position: "absolute",
     top: "50%",
@@ -81,7 +75,8 @@ const Students = () => {
     fetchStudents();
   }, []);
 
-  
+  console.log("All students", myData?.fetchstudents);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -155,6 +150,7 @@ const Students = () => {
       </IconButton>
     </>
   );
+
 
   return (
     <div className=" w-[94vw]  mt-[120px] m-auto">
@@ -381,10 +377,11 @@ const Students = () => {
           </div>
         </div>
         <div className="h-[90%] ">
-          {myData?.fetchstudents
-            // .filter(({ firstname }) =>
-            // firstname.toLowerCase().includes(searchTerm.toLocaleLowerCase())
-            // )
+          {
+            myData?.fetchstudents
+            ?.filter(({ fullname }) =>
+            fullname.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+            )
             ?.map(
               ({
                 id,
