@@ -294,9 +294,7 @@ export const schoolforgotPassword = async (
     }
     console.log(currentSchool.id);
 
-    const token = await createAccessToken(currentSchool.id);
-
-    await resetSchoolPassService(email, currentSchool, token);
+    await resetSchoolPassService(email, currentSchool);
     res.json({ success: true });
   } catch (error) {
     next(error.message);

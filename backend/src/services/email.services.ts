@@ -1,8 +1,15 @@
 import * as nodemailer from 'nodemailer';
 import { User, School } from '@prisma/client';
+import fs from 'fs';
+import path from 'path';
 
-export const newUserEmailService = async (email:string, newUser:User, password:string, token:unknown) => {
- try {
+export const newUserEmailService = async (
+  email: string,
+  newUser: User,
+  password: string,
+  token: unknown
+) => {
+  try {
     const transporter = nodemailer.createTransport({
       host: process.env.NODEMAILER_HOST,
       port: (<unknown>process.env.NODEMAILER_PORT) as number,
@@ -30,96 +37,103 @@ export const newUserEmailService = async (email:string, newUser:User, password:s
           `,
     };
 
-  const sendUserMail = transporter.sendMail(mailDetails, (err) => {
+    const sendUserMail = transporter.sendMail(mailDetails, (err) => {
       if (err) {
         console.log(err);
       } else {
         console.log('email sent successfully');
       }
     });
-    return sendUserMail
- } catch (error) {
-    return error.message
- }
+    return sendUserMail;
+  } catch (error) {
+    return error.message;
+  }
 };
 
+export const resetUserPassEmailService = async (
+  email: string,
+  currentUser: User,
+  token: unknown
+) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.NODEMAILER_HOST,
+      port: (<unknown>process.env.NODEMAILER_PORT) as number,
+      auth: {
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.GOOGLE_APP_PASSWORD,
+      },
+    });
 
-export const resetUserPassEmailService = async(email:string, currentUser:User, token:unknown) => {
-    try {
-        const transporter = nodemailer.createTransport({
-          host: process.env.NODEMAILER_HOST,
-          port: (<unknown>process.env.NODEMAILER_PORT) as number,
-          auth: {
-            user: process.env.SENDER_EMAIL,
-            pass: process.env.GOOGLE_APP_PASSWORD,
-          },
-        });
+    transporter.verify(function (error, success) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Server is ready to take our messages');
+      }
+    });
 
-        transporter.verify(function (error, success) {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Server is ready to take our messages');
-          }
-        });
+    const mailDetails = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: 'Password reset link',
+      html: `<a href="/forgotPassword/" + ${currentUser.id} + '/' + ${token}>click this link to confirm password reset</a>`,
+    };
 
-        const mailDetails = {
-          from: process.env.SENDER_EMAIL,
-          to: email,
-          subject: 'Password reset link',
-          html: `<a href="/forgotPassword/" + ${currentUser.id} + '/' + ${token}>click this link to confirm password reset</a>`,
-        };
+    const resetPasswordMail = transporter.sendMail(mailDetails, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('email sent successfully');
+      }
+    });
+    return resetPasswordMail;
+  } catch (error) {
+    return error.message;
+  }
+};
 
-        const resetPasswordMail = transporter.sendMail(mailDetails, (err) => {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log('email sent successfully');
-          }
-        });
-        return resetPasswordMail
-    } catch (error) {
-        return error.message
-    }
-}
+export const resetSchoolPassService = async (
+  email: string,
+  currentSchool: School,
+) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.NODEMAILER_HOST,
+      port: (<unknown>process.env.NODEMAILER_PORT) as number,
+      auth: {
+        user: process.env.SENDER_EMAIL,
+        pass: process.env.GOOGLE_APP_PASSWORD,
+      },
+    });
 
+    transporter.verify(function (error, success) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Server is ready to take our messages');
+      }
+    });
 
-export const resetSchoolPassService = async(email:string, currentSchool:School, token:unknown) => {
-    try {
-         const transporter = nodemailer.createTransport({
-           host: process.env.NODEMAILER_HOST,
-           port: (<unknown>process.env.NODEMAILER_PORT) as number,
-           auth: {
-             user: process.env.SENDER_EMAIL,
-             pass: process.env.GOOGLE_APP_PASSWORD,
-           },
-         });
+    const mailDetails = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: 'Password reset link',
+      html: fs
+        .readFileSync(path.join(__dirname, '../views/index.html'), 'utf8')
+        .replace('{{currentSchool.id}}', currentSchool.id)
+        .replace('{{schoolName}}', currentSchool.schoolName),
+    };
 
-         transporter.verify(function (error, success) {
-           if (error) {
-             console.log(error);
-           } else {
-             console.log('Server is ready to take our messages');
-           }
-         });
-
-         const mailDetails = {
-           from: process.env.SENDER_EMAIL,
-           to: email,
-           subject: 'Password reset link',
-           html: `<a href="http://localhost:3000/resetPassword" + ${currentSchool.id} + '/' + ${token}>click this link to confirm password reset</a>`,
-         };
-
-         const resetschoolPass = transporter.sendMail(mailDetails, (err) => {
-           if (err) {
-             console.log(err);
-           } else {
-             console.log('email sent successfully');
-           }
-         });
-         return resetschoolPass
-
-    } catch (error) {
-        return error.message
-    }
-}
+    const resetschoolPass = transporter.sendMail(mailDetails, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('email sent successfully');
+      }
+    });
+    return resetschoolPass;
+  } catch (error) {
+    return error.message;
+  }
+};
