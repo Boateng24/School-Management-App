@@ -3,7 +3,7 @@
        "lib": [
           "es5",
           "es6",
-          "DOM",
+          "DOM"
           
        ],
        "target": "es6",
@@ -15,8 +15,8 @@
        "experimentalDecorators": true,
        "sourceMap": true,
        "esModuleInterop": true,
-       "types": ["./src/@types"],
        "typeRoots": [
+           "./src/@types",
            "./node_modules/@types",
            "backend/src/@types"
        ]
